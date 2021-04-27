@@ -1,0 +1,3 @@
+name: 'sfdc_fivetran_formula'
+version: '0.1.0'
+config-version: 2

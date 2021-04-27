@@ -1,0 +1,3 @@
+﻿field,object,formula,sql,_fivetran_synced
+opporunity_test_formula,opportunity_data,"amount times probability",amount * probability,2021-03-29 05:05:17.531 +0000
+account_test_formula,account_data,"multiple number of employees by 2",number_of_employees * 2,2021-03-29 05:05:17.411 +0000
