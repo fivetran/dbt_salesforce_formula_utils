@@ -5,7 +5,7 @@ profile: 'integration_tests'
 config-version: 2
 
 vars:
-  salesforce_integration_tests:
+  salesforce_formula_integration_tests:
     salesforce_schema:                     salesforce_formula_integration_tests
 
 seeds:

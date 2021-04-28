@@ -7,7 +7,7 @@
 with account_view as (
     select 
         *,
-        {{ sfdc_fivetran_formula.sfdc_formula_pivot(join_to_table='account_data') }}
+        {{ salesforce_formula_utils.sfdc_formula_pivot(join_to_table='account_data') }}
     from {{ source('salesforce', 'account_data') }}
 )
 
