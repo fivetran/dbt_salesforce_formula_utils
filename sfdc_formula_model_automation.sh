@@ -10,7 +10,7 @@ echo "{{
 with $3_view as (
     select
         *,
-        {{ sfdc_fivetran_formula.sfdc_formula_pivot(join_to_table='$3') }}
+        {{ salesforce_formula_utils.sfdc_formula_pivot(join_to_table='$3') }}
     from {{ source('$2','$3') }}
 )
 
