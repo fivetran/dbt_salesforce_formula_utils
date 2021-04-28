@@ -7,6 +7,7 @@ This macro is intended to be used within a salesforce dbt project model. To leve
 ```yml
 packages:
   - git: https://github.com/fivetran/salesforce_formula_utils.git
+    revision: main
     warn-unpinned: false
 ```
 
@@ -23,7 +24,7 @@ You can either manually leverage the macro in your models, or generate new model
 2. Leverage the [sfdc_formula_model_automation](sfdc_formula_model_automation.sh) script within this project to automatically create models locally via the command line. Below is an example command to copy and edit.
 
 ```bash
-source dbt_modules/salesforce_formula_utils/automate.sh "path/to/directory" salesforce_schema desired_table
+source dbt_modules/salesforce_formula_utils/automate.sh "path/to/directory" salesforce desired_table
 ```
 
 ## Macro Descriptions
@@ -59,13 +60,13 @@ This bash script is intended to be used in order to automatically create the des
 
 **Usage:**
 ```bash
-source dbt_modules/salesforce_formula_utils/automate.sh "path/to/directory" schema desired_table
+source dbt_modules/salesforce_formula_utils/automate.sh "path/to/directory" salesforce desired_table
 ```
 
 **Example**
-Assuming the path to your directory is `"../salesforce"` and the table you want to generate the model for is `opportunity` and your schema is `salesforce_formula`.
+Assuming the path to your directory is `"../salesforce"` and the table you want to generate the model for is `opportunity`.
 ```bash
-source dbt_modules/salesforce_formula_utils/automate.sh "../salesforce" salesforce_formula opportunity
+source dbt_modules/salesforce_formula_utils/automate.sh "../salesforce" salesforce opportunity
 ```
 
 ## Contributions
