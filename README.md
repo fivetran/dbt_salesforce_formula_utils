@@ -9,7 +9,7 @@ In order to use this macro it is expected that you have set up your own dbt proj
 This macro is intended to be used within a salesforce dbt project model. To leverage the macro, you will add the below configuration to your `packages.yml` file (if you do not have a `packages.yml` file you can create one).
 ```yml
 packages:
-  - git: https://github.com/fivetran/salesforce_formula_utils.git
+  - git: https://github.com/fivetran/dbt_salesforce_formula_utils.git
     revision: main
     warn-unpinned: false
 ```
