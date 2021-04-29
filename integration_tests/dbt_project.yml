@@ -6,12 +6,12 @@ config-version: 2
 
 vars:
   salesforce_formula_integration_tests:
-    salesforce_schema:                     salesforce_formula_integration_tests
+    salesforce_schema:  salesforce_formula_integration_tests
 
 seeds:
   salesforce_formula_integration_tests:
     +quote_columns: "{{ true if target.type == 'redshift' else false }}"
-    opportunity_data:
+    opportunity:
       +columns_types:
         amount: float
         probability: float

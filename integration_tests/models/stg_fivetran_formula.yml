@@ -2,11 +2,11 @@ version: 2
 
 models:
 
-  - name: example_account_view
+  - name: account_view
     description: Represents an individual account, which is an organization or person involved with your business (such as customers, competitors, and partners).
     tests:
       - dbt_expectations.expect_table_row_count_to_equal_other_table:
-          compare_model: ref("account_data")
+          compare_model: ref("account")
     columns:
     - name: id
       description: The unique, system-generated ID assigned during creation
@@ -109,11 +109,11 @@ models:
     - name: multiple number of employees by 2
       description: Test formula created from joining the fivetran_formula using the sfdc_formula_pivot macro.
 
-  - name: example_opportunity_view
+  - name: opportunity_view
     description: Represents an opportunity, which is a sale or pending deal.
     tests:
       - dbt_expectations.expect_table_row_count_to_equal_other_table:
-          compare_model: ref("opportunity_data")
+          compare_model: ref("opportunity")
     columns:
     - name: id
       description: The unique, system-generated ID assigned during creation.
@@ -189,3 +189,173 @@ models:
       description: Type of opportunity. For example, Existing Business or New Business.
     - name: amount times probability
       description: Test formula created from joining the fivetran_formula using the sfdc_formula_pivot macro.
+
+  - name: user_view
+    description: Represents a user in your organization.
+    tests:
+      - dbt_expectations.expect_table_row_count_to_equal_other_table:
+          compare_model: ref("user")
+    columns:
+    - name: id
+      description: The unique, system-generated ID assigned during creation.
+    - name: _fivetran_synced 
+      description: The time at which fivetran last synced this record 
+    - name: _fivetran_deleted 
+      description: True, if this field has been deleted
+    - name: about_me
+      description: Information about the user, such as areas of interest or skills.
+    - name: account_id
+      description: ID of the Account associated with a Customer Portal user. This field is null for Salesforce users.
+    - name: alias
+      description: Required. The user’s alias. For example, jsmith.
+    - name: badge_text
+      description: The community role, displayed on the user profile page just below the user name.
+    - name: banner_photo_url
+      description: The URL for the user's banner photo.
+    - name: call_center_id
+      description: If Salesforce CRM Call Center is enabled, represents the call center to which this user is assigned.
+    - name: city
+      description: The city associated with the user. Up to 40 characters allowed.
+    - name: community_nickname
+      description: Name used to identify this user in the Community application, which includes the ideas and answers features.
+    - name: company_name
+      description: The name of the user’s company.
+    - name: contact_id
+      description: ID of the Contact associated with this account. The contact must have a value in the AccountId field or an error occurs.
+    - name: country
+      description: The country associated with the user.
+    - name: country_code
+      description: The ISO country code associated with the user.
+    - name: default_group_notification_frequency
+      description: The default frequency for sending the user's Chatter group email notifications when the user joins groups.
+    - name: delegated_approver_id
+      description: Id of the user who is a delegated approver for this user.
+    - name: department
+      description: The company department associated with the user.
+    - name: digest_frequency
+      description: The frequency at which the system sends the user’s Chatter personal email digest.
+    - name: division
+      description: The division associated with this user, similar to Department and unrelated to DefaultDivision.
+    - name: email
+      description: Required. The user’s email address.
+    - name: email_encoding_key
+      description: Required. The email encoding for the user, such as ISO-8859-1 or UTF-8.
+    - name: email_preferences_auto_bcc
+      description: Determines whether the user receives copies of sent emails. This option applies only if compliance BCC emails are not enabled.
+    - name: employee_number
+      description: The user’s employee number.
+    - name: extension
+      description: The user’s phone extension number.
+    - name: fax
+      description: The user’s fax number.
+    - name: federation_identifier
+      description: Indicates the value that must be listed in the Subject element of a Security Assertion Markup Language (SAML) IDP certificate to authenticate the user for a client application using single sign-on.
+    - name: first_name
+      description: The user’s first name.
+    - name: forecast_enabled
+      description: Indicates whether the user is enabled as a forecast manager (true) or not (false).
+    - name: full_photo_url
+      description: The URL for the user's profile photo.
+    - name: geocode_accuracy
+      description: The level of accuracy of a location’s geographical coordinates compared with its physical address.
+    - name: individual_id
+      description: ID of the data privacy record associated with this user. This field is available if Data Protection and Privacy is enabled.
+    - name: is_active
+      description: Indicates whether the user has access to log in (true) or not (false).
+    - name: is_profile_photo_active
+      description: Indicates whether a user has a profile photo (true) or not (false).
+    - name: language_locale_key
+      description: Required. The user’s language, such as “French” or “Chinese (Traditional).”
+    - name: last_login_date
+      description: The date and time when the user last successfully logged in. This value is updated if 60 seconds have elapsed since the user’s last login.
+    - name: last_name
+      description: Required. The user’s last name.
+    - name: last_referenced_date
+      description: The timestamp for when the current user last viewed a record related to this record.
+    - name: last_viewed_date
+      description: The timestamp for when the current user last viewed this record. If this value is null, this record might only have been referenced (LastReferencedDate) and not viewed.
+    - name: latitude
+      description: Used with Longitude to specify the precise geolocation of an address.
+    - name: locale_sid_key
+      description: Required. This field is a restricted picklist field. The value of the field affects formatting and parsing of values, especially numeric values, in the user interface.
+    - name: longitude
+      description: Used with Latitude to specify the precise geolocation of an address.
+    - name: manager_id
+      description: The Id of the user who manages this user.
+    - name: medium_banner_photo_url
+      description: The URL for the medium-sized user profile banner photo.
+    - name: mobile_phone
+      description: The user’s mobile or cellular phone number.
+    - name: name
+      description: Concatenation of FirstName and LastName.
+    - name: offline_trial_expiration_date
+      description: The date and time when the user’s Connect Offline trial expires.
+    - name: phone
+      description: The user’s phone number.
+    - name: postal_code
+      description: The user’s postal or ZIP code.
+    - name: profile_id
+      description: Required. ID of the user’s Profile. Use this value to cache metadata based on profile. In earlier releases, this was RoleId.
+    - name: receives_admin_info_emails
+      description: Indicates whether the user receives email for administrators from Salesforce (true) or not (false).
+    - name: receives_info_emails
+      description: Indicates whether the user receives informational email from Salesforce (true) or not (false).
+    - name: sender_email
+      description: The email address used as the From address when the user sends emails. This address is the same value shown in Setup on the My Email Settings page.
+    - name: sender_name
+      description: The name used as the email sender when the user sends emails. This name is the same value shown in Setup on the My Email Settings page.
+    - name: signature
+      description: The signature text added to emails.
+    - name: small_banner_photo_url
+      description: The URL for the small user profile banner photo.
+    - name: small_photo_url
+      description: The URL for a thumbnail of the user's profile photo.
+    - name: state
+      description: The state associated with the User.
+    - name: state_code
+      description: The ISO state code associated with the user.
+    - name: street
+      description: The street address associated with the User.
+    - name: time_zone_sid_key
+      description: Required. This field is a restricted picklist field. A User time zone affects the offset used when displaying or entering times in the user interface.
+    - name: title
+      description: The user’s business title, such as “Vice President.”
+    - name: username
+      description: Contains the name that a user enters to log in. The value for this field must be in the form of an email address, using all lowercase characters. It must also be unique across all organizations.
+    - name: user_role_id
+      description: ID of the user’s UserRole.
+    - name: user_type
+      description: The category of user license.
+  
+  - name: user_role_view
+    description: Represents a user role in your organization.
+    tests:
+      - dbt_expectations.expect_table_row_count_to_equal_other_table:
+          compare_model: ref("user_role")
+    columns:
+    - name: id
+      description: The unique, system-generated ID assigned during creation
+    - name: _fivetran_synced 
+      description: The time at which fivetran last synced this record 
+    - name: _fivetran_deleted 
+      description: True, if this field has been deleted
+    - name: case_access_for_account_owner
+      description: The case access level for the account owner.
+    - name: contact_access_for_account_owner
+      description: The contact access level for the account owner.
+    - name: developer_name
+      description: The unique name of the object in the API.
+    - name: forecast_user_id
+      description: The ID of the forecast manager associated with this role.
+    - name: may_forecast_manager_share
+      description: Indicates whether the forecast manager can manually share their own forecast.
+    - name: name
+      description: Required. Name of the role. Corresponds to Label on the user interface.
+    - name: opportunity_access_for_account_owner
+      description: Required. The opportunity access level for the account owner.
+    - name: parent_role_id
+      description: The ID of the parent role.
+    - name: portal_type
+      description: This value indicates the type of portal for the role
+    - name: rollup_description
+      description: Description of the forecast rollup.

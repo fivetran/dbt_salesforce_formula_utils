@@ -10,6 +10,7 @@ packages:
     revision: main
     warn-unpinned: false
 ```
+> Note: In order to use the macros included in this package you will need to have a properly configured source package with a source named `salesforce`. To see an example of a properly configured Salesforce source yml you can reference [integration_tests](integration_tests/models/src_fivetran_formula.yml). You are also welcome to copy/paste this source configuration into your dbt root project and modify for your Salesforce use case.
 
 Once the package is added, you may use the macro within your salesforce models. We highly recommend the models be materialized as views. See the Macro Descriptions below for details about the macro.
 
