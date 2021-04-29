@@ -15,7 +15,7 @@ packages:
 ```
 > **Note**: In order to use the macros included in this package you will need to have a properly configured source package with a source named `salesforce`. To see an example of a properly configured Salesforce source yml you can reference [integration_tests](integration_tests/models/src_fivetran_formula.yml). You are also welcome to copy/paste this source configuration into your dbt root project and modify for your Salesforce use case.
 
-Once the package is added, you may use the macro within your salesforce models. To do so you will create a new file in your models folder and name it `your_table_name_here_view.sql`. Then add the below snippet into the file. You will then update the `your_table_name_here` argument to be the table for which you are generating the model:
+Once the package is added, you may use the macro within your salesforce models. To do so you will create a new file in your models folder and name it (`your_table_name_here`_view.sql). Then add the below snippet into the file. You will then update the `your_table_name_here` argument to be the table for which you are generating the model:
 ```sql
 {{ salesforce_formula_utils.sfdc_formula_view('your_table_name_here') }}
 ```
