@@ -26,7 +26,7 @@ Additionally, you can reference the [integration_tests](integration_tests/models
 If you have multiple models you need to create, you can also Leverage the [sfdc_formula_model_automation](sfdc_formula_model_automation.sh) script within this project to automatically create models locally via the command line. Below is an example command to copy and edit.
 
 ```bash
-source dbt_modules/dbt_salesforce_formula_utils/automate.sh "path/to/directory" desired_table
+source dbt_modules/dbt_salesforce_formula_utils/automate.sh "path/to/directory" "desired_table_,desired_table_2,desired_table_infinity"
 ```
 
 ## Macro Descriptions
@@ -68,17 +68,17 @@ This macro is designed to look within the users source defined `salesforce_schem
 
 ## Automation Bash Script
 ### sfdc_formula_model_automation.sh ([source](sfdc_formula_model_automation.sh))
-This bash script is intended to be used in order to automatically create the desired salesforce models via the command line within your dbt project. This bash script will generate a model file within your dbt project that is a contains the `sfdc_formula_view` macro for the appropriately defined table. In order for this command to work you must be within the root directory of your dbt project. 
+This bash script is intended to be used in order to automatically create the desired salesforce models via the command line within your dbt project. This bash script will generate a model file within your dbt project that contains the `sfdc_formula_view` macro for the appropriately defined table(s). In order for this command to work you must be within the root directory of your dbt project. 
 
 **Usage:**
 ```bash
-source dbt_modules/dbt_salesforce_formula_utils/sfdc_formula_model_automation.sh "path/to/directory" desired_table
+source dbt_modules/dbt_salesforce_formula_utils/sfdc_formula_model_automation.sh "path/to/directory" "desired_table(s)"
 ```
 
 **Example**
-Assuming the path to your directory is `"../dbt_salesforce"` and the table you want to generate the model for is `opportunity`.
+Assuming the path to your directory is `"../dbt_salesforce"` and the table(s) you want to generate the model for are `opportunity` and `account`.
 ```bash
-source dbt_modules/dbt_salesforce_formula_utils/sfdc_formula_model_automation.sh "../dbt_salesforce" opportunity
+source dbt_modules/dbt_salesforce_formula_utils/sfdc_formula_model_automation.sh "../dbt_salesforce" "opportunity,account"
 ```
 
 ## Contributions
