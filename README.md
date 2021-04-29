@@ -51,7 +51,7 @@ This macro pivots the dictionary results generated from the [sfdc_fet_formula_co
 * `join_to_table` (required): The table with which you are joining the formula fields.
 ----
 
-### sfdc_fet_formula_column_values ([source](macros/sfdc_fet_formula_column_values.sql))
+### sfdc_get_formula_column_values ([source](macros/sfdc_fet_formula_column_values.sql))
 This macro is designed to look within the users source defined `salesforce_schema` for the `fivetran_formula` table. The macro will then filter to only include records from the `join_to_table` argument, and search for distinct combinations of the `field` and `sql` columns. The distinct combination of columns for the join_table argument are then returned as a dictionary.
 > Note: This macro will not work accurately unless you have a `src.yml` configured appropriately. For reference, look within this packages [integration_tests](integration_tests/models/fivetran_formula_src.yml) folder for an example of a source configuration.
 
@@ -68,17 +68,17 @@ This macro is designed to look within the users source defined `salesforce_schem
 
 ## Automation Bash Script
 ### sfdc_formula_model_automation.sh ([source](sfdc_formula_model_automation.sh))
-This bash script is intended to be used in order to automatically create the desired salesforce models via the command line within your dbt project. This bash script will generate a model file within your dbt project that is a `select * from` the table you pass in as an argument. Additionally, this generated model will append the appropriately configured `sfdc_formula_pivot` macro to your model sql. In order for this command to work you must be within the root directory of your dbt project. 
+This bash script is intended to be used in order to automatically create the desired salesforce models via the command line within your dbt project. This bash script will generate a model file within your dbt project that is a contains the `sfdc_formula_view` macro for the appropriately defined table. In order for this command to work you must be within the root directory of your dbt project. 
 
 **Usage:**
 ```bash
-source dbt_modules/dbt_salesforce_formula_utils/automate.sh "path/to/directory" salesforce desired_table
+source dbt_modules/dbt_salesforce_formula_utils/sfdc_formula_model_automation.sh "path/to/directory" desired_table
 ```
 
 **Example**
-Assuming the path to your directory is `"../salesforce"` and the table you want to generate the model for is `opportunity`.
+Assuming the path to your directory is `"../dbt_salesforce"` and the table you want to generate the model for is `opportunity`.
 ```bash
-source dbt_modules/dbt_salesforce_formula_utils/automate.sh "../salesforce" salesforce opportunity
+source dbt_modules/dbt_salesforce_formula_utils/sfdc_formula_model_automation.sh "../dbt_salesforce" opportunity
 ```
 
 ## Contributions
