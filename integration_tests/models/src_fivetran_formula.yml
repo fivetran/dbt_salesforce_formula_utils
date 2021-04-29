@@ -1,14 +1,13 @@
 version: 2
 
 sources:
-  - name: salesforce
-    schema: "{{ var('salesforce_schema', 'salesforce') }}"
-    database: "{{ var('salesforce_database', target.database) }}"
-    loader: fivetran
+  - name: salesforce #This should always be salesforce
+    schema: 'salesforce_formula_integration_tests' #Modify this to be where your Salesforce data resides
+    database: "{{ var('salesforce_database', target.database) }}" #Modify this to be the database where your Salesforce data resides
     
     #This source yml contains the following Salesforce tables: fivetran_formula, opportunity, account, user, user_role.
     #If you would like to include additional source tables you can copy add them in a similar fashion, then paste within your
-    #root dbt project.
+    #root dbt project. Similarly, if you do not have these tables you can remove them.
 
     tables:
       - name: fivetran_formula
@@ -204,7 +203,6 @@ sources:
           description: The website of this account.
 
       - name: user
-        freshness: null
         description: Represents a user in your organization.
         columns:
         - name: id
@@ -339,7 +337,6 @@ sources:
           description: The category of user license.
       
       - name: user_role
-        freshness: null
         description: Represents a user role in your organization.
         columns:
         - name: id

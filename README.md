@@ -2,6 +2,9 @@
 
 This package includes macros to be used within a Salesforce dbt project to accurately map Salesforce Formulas to existing tables.
 
+## Installation Instructions
+In order to use this macro it is expected that you have set up your own dbt project. If you have not, you can reference the [dbt installation docs](https://docs.getdbt.com/dbt-cli/installation) for the latest installation instructions, and then reference [the dbt package docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
+
 ## Macro Instructions
 This macro is intended to be used within a salesforce dbt project model. To leverage the macro, you will add the below configuration to your `packages.yml` file (if you do not have a `packages.yml` file you can create one).
 ```yml
@@ -12,29 +15,34 @@ packages:
 ```
 > **Note**: In order to use the macros included in this package you will need to have a properly configured source package with a source named `salesforce`. To see an example of a properly configured Salesforce source yml you can reference [integration_tests](integration_tests/models/src_fivetran_formula.yml). You are also welcome to copy/paste this source configuration into your dbt root project and modify for your Salesforce use case.
 
-Once the package is added, you may use the macro within your salesforce models. We highly recommend the models be materialized as views. See the Macro Descriptions below for details about the macro.
-
- Additionally, reference the [integration_tests](integration_tests/models/) folder for an `account` and `opportunity` model examples for how to use the macro within your models.
-
-You can either manually leverage the macro in your models, or generate new models with our automation script. See below for details:
-1. Install the package and manually use the macro within your models. See below for an example of how to configure the macro.
+Once the package is added, you may use the macro within your salesforce models. To do so you will create a new file in your models folder and name it `your_table_name_here_view.sql`. Then add the below snippet into the file. You will then update the `your_table_name_here` argument to be the table for which you are generating the model:
 ```sql
-{{ salesforce_formula_utils.sfdc_formula_pivot(join_to_table='fivetran_sfdc_example_model') }}
+{{ salesforce_formula_utils.sfdc_formula_view('your_table_name_here') }}
 ```
-
-2. Leverage the [sfdc_formula_model_automation](sfdc_formula_model_automation.sh) script within this project to automatically create models locally via the command line. Below is an example command to copy and edit.
+Additionally, you can reference the [integration_tests](integration_tests/models/) folder for examples on how to use the macro within your models.
+If you have multiple models you need to create, you can also Leverage the [sfdc_formula_model_automation](sfdc_formula_model_automation.sh) script within this project to automatically create models locally via the command line. Below is an example command to copy and edit.
 
 ```bash
-source dbt_modules/salesforce_formula_utils/automate.sh "path/to/directory" salesforce desired_table
+source dbt_modules/salesforce_formula_utils/automate.sh "path/to/directory" desired_table
 ```
 
 ## Macro Descriptions
+### sfdc_formula_view ([source](macros/sfdc_formula_view.sql))
+This macro generates the final sql needed to join the Salesforce formula fields to the desired table.
+
+**Usage:**
+```sql
+{{ salesforce_formula_utils.sfdc_formula_view(join_to_table_first='fivetran_sfdc_example_table') }}
+```
+**Args:**
+* `join_to_table_first` (required): The table with which you are joining the formula fields.
+----
 ### sfdc_formula_pivot ([source](macros/sfdc_formula_pivot.sql))
 This macro pivots the dictionary results generated from the [sfdc_fet_formula_column_values](macros/sfdc_fet_formula_column_values.sql) macro to populate the formula field and sql for each record within the designated table this macro is used.
 
 **Usage:**
 ```sql
-{{ salesforce_formula_utils.sfdc_formula_pivot(join_to_table='fivetran_sfdc_example_model') }}
+{{ salesforce_formula_utils.sfdc_formula_pivot(join_to_table='fivetran_sfdc_example_table') }}
 ```
 **Args:**
 * `join_to_table` (required): The table with which you are joining the formula fields.
@@ -46,7 +54,7 @@ This macro is designed to look within the users source defined `salesforce_schem
 
 **Usage:**
 ```sql
-{{ salesforce_formula_utils.sfdc_get_formula_column_values(fivetran_formula='salesforce', key='field', value='sql', join_to_table='fivetran_sfdc_example_model') }}
+{{ salesforce_formula_utils.sfdc_get_formula_column_values(fivetran_formula='salesforce', key='field', value='sql', join_to_table='fivetran_sfdc_example_table') }}
 ```
 **Args:**
 * `fivetran_formula` (required): The source configuration for the `salesforce.fivetran_formula` table.
