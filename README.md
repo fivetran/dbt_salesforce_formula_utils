@@ -19,6 +19,9 @@ Once the package is added, you may use the macro within your salesforce models. 
 ```sql
 {{ salesforce_formula_utils.sfdc_formula_view('your_table_name_here') }}
 ```
+
+Once you have created all your desired models and copied/modified the sql snippet into each model you will execute `dbt deps` to install the macro package, then execute `dbt run` to generate the models.
+
 Additionally, you can reference the [integration_tests](integration_tests/models/) folder for examples on how to use the macro within your models.
 If you have multiple models you need to create, you can also Leverage the [sfdc_formula_model_automation](sfdc_formula_model_automation.sh) script within this project to automatically create models locally via the command line. Below is an example command to copy and edit.
 
