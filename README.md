@@ -17,7 +17,7 @@ packages:
 
 Once the package is added, you may use the macro within your salesforce models. To do so you will create a new file in your models folder and name it (`your_table_name_here`_view.sql). Then add the below snippet into the file. You will then update the `your_table_name_here` argument to be the table for which you are generating the model:
 ```sql
-{{ salesforce_formula_utils.sfdc_formula_view('your_table_name_here') }}
+{{ dbt_salesforce_formula_utils.sfdc_formula_view('your_table_name_here') }}
 ```
 
 Once you have created all your desired models and copied/modified the sql snippet into each model you will execute `dbt deps` to install the macro package, then execute `dbt run` to generate the models.
@@ -26,7 +26,7 @@ Additionally, you can reference the [integration_tests](integration_tests/models
 If you have multiple models you need to create, you can also Leverage the [sfdc_formula_model_automation](sfdc_formula_model_automation.sh) script within this project to automatically create models locally via the command line. Below is an example command to copy and edit.
 
 ```bash
-source dbt_modules/salesforce_formula_utils/automate.sh "path/to/directory" desired_table
+source dbt_modules/dbt_salesforce_formula_utils/automate.sh "path/to/directory" desired_table
 ```
 
 ## Macro Descriptions
@@ -35,7 +35,7 @@ This macro generates the final sql needed to join the Salesforce formula fields 
 
 **Usage:**
 ```sql
-{{ salesforce_formula_utils.sfdc_formula_view(join_to_table_first='fivetran_sfdc_example_table') }}
+{{ dbt_salesforce_formula_utils.sfdc_formula_view(join_to_table_first='fivetran_sfdc_example_table') }}
 ```
 **Args:**
 * `join_to_table_first` (required): The table with which you are joining the formula fields.
@@ -45,7 +45,7 @@ This macro pivots the dictionary results generated from the [sfdc_fet_formula_co
 
 **Usage:**
 ```sql
-{{ salesforce_formula_utils.sfdc_formula_pivot(join_to_table='fivetran_sfdc_example_table') }}
+{{ dbt_salesforce_formula_utils.sfdc_formula_pivot(join_to_table='fivetran_sfdc_example_table') }}
 ```
 **Args:**
 * `join_to_table` (required): The table with which you are joining the formula fields.
@@ -57,7 +57,7 @@ This macro is designed to look within the users source defined `salesforce_schem
 
 **Usage:**
 ```sql
-{{ salesforce_formula_utils.sfdc_get_formula_column_values(fivetran_formula='salesforce', key='field', value='sql', join_to_table='fivetran_sfdc_example_table') }}
+{{ dbt_salesforce_formula_utils.sfdc_get_formula_column_values(fivetran_formula='salesforce', key='field', value='sql', join_to_table='fivetran_sfdc_example_table') }}
 ```
 **Args:**
 * `fivetran_formula` (required): The source configuration for the `salesforce.fivetran_formula` table.
@@ -72,13 +72,13 @@ This bash script is intended to be used in order to automatically create the des
 
 **Usage:**
 ```bash
-source dbt_modules/salesforce_formula_utils/automate.sh "path/to/directory" salesforce desired_table
+source dbt_modules/dbt_salesforce_formula_utils/automate.sh "path/to/directory" salesforce desired_table
 ```
 
 **Example**
 Assuming the path to your directory is `"../salesforce"` and the table you want to generate the model for is `opportunity`.
 ```bash
-source dbt_modules/salesforce_formula_utils/automate.sh "../salesforce" salesforce opportunity
+source dbt_modules/dbt_salesforce_formula_utils/automate.sh "../salesforce" salesforce opportunity
 ```
 
 ## Contributions
