@@ -6,6 +6,7 @@ This package includes macros to be used within a Salesforce dbt project to accur
 In order to use this macro it is expected that you have set up your own dbt project. If you have not, you can reference the [dbt installation docs](https://docs.getdbt.com/dbt-cli/installation) for the latest installation instructions, and then reference [the dbt package docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
 
 ## Macro Instructions
+### Installing the Macro Package
 This macro is intended to be used within a salesforce dbt project model. To leverage the macro, you will add the below configuration to your `packages.yml` file (if you do not have a `packages.yml` file you can create one).
 ```yml
 packages:
@@ -15,18 +16,19 @@ packages:
 ```
 > **Note**: In order to use the macros included in this package you will need to have a properly configured source package with a source named `salesforce`. To see an example of a properly configured Salesforce source yml you can reference [integration_tests](integration_tests/models/src_fivetran_formula.yml). You are also welcome to copy/paste this source configuration into your dbt root project and modify for your Salesforce use case.
 
+### Model Creation
 Once the package is added, you may use the macro within your salesforce models. To do so you will create a new file in your models folder and name it (`your_table_name_here`_view.sql). Then add the below snippet into the file. You will then update the `your_table_name_here` argument to be the table for which you are generating the model:
 ```sql
-{{ dbt_salesforce_formula_utils.sfdc_formula_view('your_table_name_here') }}
+{{ dbt_salesforce_formula_utils.sfdc_formula_view('your_source_table_name_here') }}
 ```
 
-Once you have created all your desired models and copied/modified the sql snippet into each model you will execute `dbt deps` to install the macro package, then execute `dbt run` to generate the models.
+Once you have created all your desired models and copied/modified the sql snippet into each model you will execute `dbt deps` to install the macro package, then execute `dbt run` to generate the models. Additionally, you can reference the [integration_tests](integration_tests/models/) folder for examples on how to use the macro within your models.
 
-Additionally, you can reference the [integration_tests](integration_tests/models/) folder for examples on how to use the macro within your models.
+### Model Creation Automation
 If you have multiple models you need to create, you can also Leverage the [sfdc_formula_model_automation](sfdc_formula_model_automation.sh) script within this project to automatically create models locally via the command line. Below is an example command to copy and edit.
 
 ```bash
-source dbt_modules/dbt_salesforce_formula_utils/automate.sh "path/to/directory" "desired_table_,desired_table_2,desired_table_infinity"
+source dbt_modules/dbt_salesforce_formula_utils/sfdc_formula_model_automation.sh "path/to/directory" "desired_table_,desired_table_2,desired_table_infinity"
 ```
 
 ## Macro Descriptions
@@ -72,7 +74,7 @@ This bash script is intended to be used in order to automatically create the des
 
 **Usage:**
 ```bash
-source dbt_modules/dbt_salesforce_formula_utils/sfdc_formula_model_automation.sh "path/to/directory" "desired_table(s)"
+source dbt_modules/dbt_salesforce_formula_utils/sfdc_formula_model_automation.sh "../path/to/directory" "desired_table(s)"
 ```
 
 **Example**

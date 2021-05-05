@@ -3,7 +3,7 @@ version: 2
 sources:
   - name: salesforce #This should always be salesforce
     schema: 'salesforce_formula_integration_tests' #Modify this to be where your Salesforce data resides
-    database: "{{ var('salesforce_database', target.database) }}" #Modify this to be the database where your Salesforce data resides
+    database: #Add the database where your Salesforce data resides. Eg. 'my_salesforce_database'. By default the target.database is used.
     
     #This source yml contains the following Salesforce tables: fivetran_formula, opportunity, account, user, user_role.
     #If you would like to include additional source tables you can copy add them in a similar fashion, then paste within your
