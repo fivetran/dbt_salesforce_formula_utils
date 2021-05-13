@@ -10,9 +10,8 @@ In order to use this macro it is expected that you have set up your own dbt proj
 This macro is intended to be used within a salesforce dbt project model. To leverage the macro, you will add the below configuration to your `packages.yml` file (if you do not have a `packages.yml` file you can create one).
 ```yml
 packages:
-  - git: https://github.com/fivetran/dbt_salesforce_formula_utils.git
-    revision: main
-    warn-unpinned: false
+  - package: fivetran/salesforce_formula_utils
+    version: [">=0.1.0", "<0.2.0"]
 ```
 > **Note**: In order to use the macros included in this package you will need to have a properly configured source package with a source named `salesforce`. To see an example of a properly configured Salesforce source yml you can reference [integration_tests](integration_tests/models/src_fivetran_formula.yml). You are also welcome to copy/paste this source configuration into your dbt root project and modify for your Salesforce use case.
 
