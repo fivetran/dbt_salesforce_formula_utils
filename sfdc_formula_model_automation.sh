@@ -6,5 +6,5 @@ for i in ${variable//,/ }
     # call your procedure/other scripts here below
     mkdir -p $1/models
     echo "" >> $1/models/"$i"_view.sql
-    echo "{{ dbt_salesforce_formula_utils.sfdc_formula_view('$i') }}" >> $1/models/"$i"_view.sql
+    echo "{{ salesforce_formula_utils.sfdc_formula_view('$i') }}" >> $1/models/"$i"_view.sql
 done

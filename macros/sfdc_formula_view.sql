@@ -8,7 +8,7 @@
 }}
     select 
         *,
-        {{ dbt_salesforce_formula_utils.sfdc_formula_pivot(join_to_table=join_to_table_first) }}
+        {{ salesforce_formula_utils.sfdc_formula_pivot(join_to_table=join_to_table_first) }}
     from {{ source('salesforce',join_to_table_first) }}
 
 {%- endmacro -%}
