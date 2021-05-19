@@ -7,20 +7,20 @@
 {#--  #}
 
     {%- set target_relation = adapter.get_relation(database=fivetran_formula.database,
-                                          schema=fivetran_formula.schema,
-                                         identifier=fivetran_formula.identifier) -%}
+        schema=fivetran_formula.schema,
+        identifier=fivetran_formula.identifier) -%}
 
     {%- call statement('get_column_values', fetch_result=true) %}
 
         {%- if not target_relation and default is none -%}
 
-          {{ exceptions.raise_compiler_error("In get_column_values(): relation " ~ fivetran_formula ~ " does not exist and no default value was provided.") }}
+            {{ exceptions.raise_compiler_error("In get_column_values(): relation " ~ fivetran_formula ~ " does not exist and no default value was provided.") }}
 
         {%- elif not target_relation and default is not none -%}
 
-          {{ log("Relation " ~ fivetran_formula ~ " does not exist. Returning the default value: " ~ default) }}
+            {{ log("Relation " ~ fivetran_formula ~ " does not exist. Returning the default value: " ~ default) }}
 
-          {{ return(default) }}
+            {{ return(default) }}
 
         {%- else -%}
 
