@@ -16,10 +16,23 @@ packages:
 > **Note**: In order to use the macros included in this package you will need to have a properly configured source package with a source named `salesforce`. To see an example of a properly configured Salesforce source yml you can reference [integration_tests](integration_tests/models/src_fivetran_formula.yml). You are also welcome to copy/paste this source configuration into your dbt root project and modify for your Salesforce use case.
 
 ### Model Creation
-Once the package is added, you may use the macro within your salesforce models. To do so you will create a new file in your models folder and name it (`your_table_name_here`_view.sql). Then add the below snippet into the file. You will then update the `your_table_name_here` argument to be the table for which you are generating the model:
+Once the package is added, you may use the macro within your salesforce models. To do so you will create a new file in your models folder and name it (`your_table_name_here`.sql). Then add the below snippet into the file. You will then update the `your_table_name_here` argument to be the table for which you are generating the model:
 ```sql
 {{ salesforce_formula_utils.sfdc_formula_view('your_source_table_name_here') }}
 ```
+
+### Formula Fields that Reference Other Formula Fields
+This macro has been created to allow for two degrees of formula field reference. For example:
+- :white_check_mark: : A formula field references standard fields from the base Salesforce table.
+- :white_check_mark: : A formula field references another formula field that does not reference other formula fields.
+- :x:                : A formula field references another formula field that references another formula field (etc.).
+
+If you have a formula field that would fall under the :x: example, then you can exclude it from all your models by configuring the `sfdc_exclude_formulas` variable within your root `dbt_project.yml` file with a list of all the fields you would like to exclude from all models. See below for an example:
+```yml
+vars:
+  sfdc_exclude_formulas: ('field_that_references_other_formula','other_triple_ref_field','field_i_just_dont_want')
+```
+> **Note**: You should not add this variable to your `dbt_project.yml` file if you do not need to exclude any fields.
 
 Once you have created all your desired models and copied/modified the sql snippet into each model you will execute `dbt deps` to install the macro package, then execute `dbt run` to generate the models. Additionally, you can reference the [integration_tests](integration_tests/models/) folder for examples on how to use the macro within your models.
 
@@ -41,6 +54,7 @@ This macro generates the final sql needed to join the Salesforce formula fields 
 **Args:**
 * `join_to_table_first` (required): The table with which you are joining the formula fields.
 ----
+
 ### sfdc_formula_pivot ([source](macros/sfdc_formula_pivot.sql))
 This macro pivots the dictionary results generated from the [sfdc_fet_formula_column_values](macros/sfdc_fet_formula_column_values.sql) macro to populate the formula field and sql for each record within the designated table this macro is used.
 
@@ -52,8 +66,19 @@ This macro pivots the dictionary results generated from the [sfdc_fet_formula_co
 * `join_to_table` (required): The table with which you are joining the formula fields.
 ----
 
+### sfdc_formula_refactor ([source](macros/sfdc_formula_refactor.sql))
+This macro checks the dictionary results generated from the [sfdc_fet_formula_column_values](macros/sfdc_fet_formula_column_values.sql) macro to determine if any formula fields reference other formula fields. If a formula references another generated formula field, then the macro will insert the first formula sql into the second formula. This ensures formulas that reference another formula field will be generated successfully. 
+
+**Usage:**
+```sql
+{{ salesforce_formula_utils.salesforce_formula_utils.sfdc_formula_refactor(join_to_table='fivetran_sfdc_example_table') }}
+```
+**Args:**
+* `join_to_table` (required): The table with which you are joining the formula fields.
+----
+
 ### sfdc_get_formula_column_values ([source](macros/sfdc_fet_formula_column_values.sql))
-This macro is designed to look within the users source defined `salesforce_schema` for the `fivetran_formula` table. The macro will then filter to only include records from the `join_to_table` argument, and search for distinct combinations of the `field` and `sql` columns. The distinct combination of columns for the join_table argument are then returned as a dictionary.
+This macro is designed to look within the users source defined `salesforce_schema` for the `fivetran_formula` table. The macro will then filter to only include records from the `join_to_table` argument, and search for distinct combinations of the `field` and `sql` columns. The distinct combination of columns for the join_table argument are then returned as a dictionary. Further, if there are any formula fields that are a third degree referential formula (eg. a formula field is contains a field that is a formula field, and that formula field also references another formula field) or greater then you can add those fields to the `sfdc_exclude_formulas` variable within your root `dbt_project.yml` file to exclude them from the macro as they will fail in the final view creation.
 > Note: This macro will not work accurately unless you have a `src.yml` configured appropriately. For reference, look within this packages [integration_tests](integration_tests/models/fivetran_formula_src.yml) folder for an example of a source configuration.
 
 **Usage:**

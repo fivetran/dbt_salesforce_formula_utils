@@ -33,6 +33,7 @@
 
             from {{ target_relation }}
             where object = '{{ join_to_table }}'
+                and key not in {{ var('sfdc_exclude_formulas',"('')") }}
             group by 1, 2
             order by count(*) desc
 
