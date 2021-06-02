@@ -40,6 +40,7 @@ This macro generates the final sql needed to join the Salesforce formula fields 
 ```
 **Args:**
 * `join_to_table_first` (required): The table with which you are joining the formula fields.
+* `source_name` (optional, default 'salesforce'): The dbt source containing the table you want to join with formula fields. Must also contain the `fivetran_formula` table.
 ----
 ### sfdc_formula_pivot ([source](macros/sfdc_formula_pivot.sql))
 This macro pivots the dictionary results generated from the [sfdc_fet_formula_column_values](macros/sfdc_fet_formula_column_values.sql) macro to populate the formula field and sql for each record within the designated table this macro is used.
@@ -50,6 +51,7 @@ This macro pivots the dictionary results generated from the [sfdc_fet_formula_co
 ```
 **Args:**
 * `join_to_table` (required): The table with which you are joining the formula fields.
+* `source_name` (optional, default 'salesforce'): The dbt source containing the table you want to join with formula fields. Must also contain the `fivetran_formula` table.
 ----
 
 ### sfdc_get_formula_column_values ([source](macros/sfdc_fet_formula_column_values.sql))
@@ -61,7 +63,7 @@ This macro is designed to look within the users source defined `salesforce_schem
 {{ salesforce_formula_utils.sfdc_get_formula_column_values(fivetran_formula='salesforce', key='field', value='sql', join_to_table='fivetran_sfdc_example_table') }}
 ```
 **Args:**
-* `fivetran_formula` (required): The source configuration for the `salesforce.fivetran_formula` table.
+* `fivetran_formula` (required): The source configuration for the `fivetran_formula` table. If this is in a different source than the default `salesforce`, that source will also apply to the `join_to_table` parameter.
 * `key` (required): The key column within `fivetran_formula` you are querying. This argument is typically `field`.
 * `value` (required): The value column within `fivetran_formula` you are querying. This argument is typically `sql`.
 * `join_to_table` (required): The table with which you are joining the formula fields.
