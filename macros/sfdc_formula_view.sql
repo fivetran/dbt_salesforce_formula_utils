@@ -10,7 +10,7 @@
     
     select 
         {{ dbt_utils.star(source(source_name,join_to_table_first), except=old_formula_fields) }},
-        {{ salesforce_formula_utils.sfdc_formula_pivot(join_to_table=join_to_table_first) }}
+        {{ salesforce_formula_utils.sfdc_formula_pivot(join_to_table=join_to_table_first, source_name=source_name) }}
     from {{ source(source_name,join_to_table_first) }}
 
 {%- endmacro -%}
