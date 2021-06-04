@@ -15,7 +15,11 @@
         --The adjustment will replace the field name with the true sql of the other formual field.
         {%- for field, sql in key_val -%}
             {%- if field in value -%}
-                {{ temp_array.append( value | replace(field,"(" ~ sql ~ ")") )| default("", True) }}
+                {%- if sql == 'null_value' -%}
+                    {{ temp_array.append( value | replace(field,"(null)") )| default("", True) }}
+                {% else %}
+                    {{ temp_array.append( value | replace(field,"(" ~ sql ~ ")") )| default("", True) }}
+                {% endif %}
             {%- endif -%}
         {%- endfor -%}
 
