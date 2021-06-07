@@ -67,7 +67,7 @@ This macro pivots the dictionary results generated from the [sfdc_fet_formula_co
 ----
 
 ### sfdc_formula_refactor ([source](macros/sfdc_formula_refactor.sql))
-This macro checks the dictionary results generated from the [sfdc_fet_formula_column_values](macros/sfdc_fet_formula_column_values.sql) macro to determine if any formula fields reference other formula fields. If a formula references another generated formula field, then the macro will insert the first formula sql into the second formula. This ensures formulas that reference another formula field will be generated successfully. 
+This macro checks the dictionary results generated from the [sfdc_get_formula_column_values](macros/sfdc_fet_formula_column_values.sql) macro to determine if any formula fields reference other formula fields. If a formula references another generated formula field, then the macro will insert the first formula sql into the second formula. This ensures formulas that reference another formula field will be generated successfully. 
 
 **Usage:**
 ```sql
