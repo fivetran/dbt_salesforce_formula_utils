@@ -56,7 +56,7 @@ This macro generates the final sql needed to join the Salesforce formula fields 
 ----
 
 ### sfdc_formula_pivot ([source](macros/sfdc_formula_pivot.sql))
-This macro pivots the dictionary results generated from the [sfdc_fet_formula_column_values](macros/sfdc_fet_formula_column_values.sql) macro to populate the formula field and sql for each record within the designated table this macro is used.
+This macro pivots the dictionary results generated from the [sfdc_get_formula_column_values](macros/sfdc_get_formula_column_values.sql) macro to populate the formula field and sql for each record within the designated table this macro is used.
 
 **Usage:**
 ```sql
