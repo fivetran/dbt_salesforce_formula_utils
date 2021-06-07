@@ -77,7 +77,7 @@ This macro checks the dictionary results generated from the [sfdc_get_formula_co
 * `join_to_table` (required): The table with which you are joining the formula fields.
 ----
 
-### sfdc_get_formula_column_values ([source](macros/sfdc_fet_formula_column_values.sql))
+### sfdc_get_formula_column_values ([source](macros/sfdc_get_formula_column_values.sql))
 This macro is designed to look within the users source defined `salesforce_schema` for the `fivetran_formula` table. The macro will then filter to only include records from the `join_to_table` argument, and search for distinct combinations of the `field` and `sql` columns. The distinct combination of columns for the join_table argument are then returned as a dictionary. Further, if there are any formula fields that are a third degree referential formula (eg. a formula field is contains a field that is a formula field, and that formula field also references another formula field) or greater then you can add those fields to the `sfdc_exclude_formulas` variable within your root `dbt_project.yml` file to exclude them from the macro as they will fail in the final view creation.
 > Note: This macro will not work accurately unless you have a `src.yml` configured appropriately. For reference, look within this packages [integration_tests](integration_tests/models/fivetran_formula_src.yml) folder for an example of a source configuration.
 
