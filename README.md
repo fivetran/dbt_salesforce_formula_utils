@@ -53,6 +53,7 @@ This macro generates the final sql needed to join the Salesforce formula fields 
 ```
 **Args:**
 * `join_to_table_first` (required): The table with which you are joining the formula fields.
+* `source_name` (optional, default 'salesforce'): The dbt source containing the table you want to join with formula fields. Must also contain the `fivetran_formula` table.
 ----
 
 ### sfdc_formula_pivot ([source](macros/sfdc_formula_pivot.sql))
@@ -64,6 +65,7 @@ This macro pivots the dictionary results generated from the [sfdc_get_formula_co
 ```
 **Args:**
 * `join_to_table` (required): The table with which you are joining the formula fields.
+* `source_name` (optional, default 'salesforce'): The dbt source containing the table you want to join with formula fields. Must also contain the `fivetran_formula` table.
 ----
 
 ### sfdc_formula_refactor ([source](macros/sfdc_formula_refactor.sql))
@@ -87,7 +89,7 @@ Further, if there are any formula fields that are a third degree referential for
 {{ salesforce_formula_utils.sfdc_get_formula_column_values(fivetran_formula='salesforce', key='field', value='sql', join_to_table='fivetran_sfdc_example_table') }}
 ```
 **Args:**
-* `fivetran_formula` (required): The source configuration for the `salesforce.fivetran_formula` table.
+* `fivetran_formula` (required): The source configuration for the `fivetran_formula` table. If this is in a different source than the default `salesforce`, that source will also apply to the `join_to_table` parameter.
 * `key` (required): The key column within `fivetran_formula` you are querying. This argument is typically `field`.
 * `value` (required): The value column within `fivetran_formula` you are querying. This argument is typically `sql`.
 * `join_to_table` (required): The table with which you are joining the formula fields.
