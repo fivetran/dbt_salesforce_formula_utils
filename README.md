@@ -20,6 +20,13 @@ Once the package is added, you may use the macro within your salesforce models. 
 ```sql
 {{ salesforce_formula_utils.sfdc_formula_view('your_source_table_name_here') }}
 ```
+### Changing the Salesforce Schema Name
+By default the macros within this package will reference a schema named `salesforce` within your `src.yml`. However, if your salesforce schema is has a different name, then you can update the `salesforce_source_name` variable to reference the proper source name within the macros. Refer to the below snippet for an example of setting a new salesforce source name variable within your `dbt_project.yml`:
+```yml
+## dbt_project.yml
+vars:
+  salesforce_source_name: "different_salesforce_source_name"
+```
 
 ### Formula Fields that Reference Other Formula Fields
 This macro has been created to allow for two degrees of formula field reference. For example:
@@ -29,6 +36,7 @@ This macro has been created to allow for two degrees of formula field reference.
 
 If you have a formula field that would fall under the :x: example, exclude it from all your models by configuring the `sfdc_exclude_formulas` variable within your root `dbt_project.yml` file. Configure this variable as a set of all the fields you would like to exclude from all models. See below for an example:
 ```yml
+## dbt_project.yml
 vars:
   sfdc_exclude_formulas: ('field_that_references_other_formula','other_triple_ref_field','field_i_just_dont_want')
 ```
@@ -53,7 +61,6 @@ This macro generates the final sql needed to join the Salesforce formula fields 
 ```
 **Args:**
 * `join_to_table_first` (required): The table with which you are joining the formula fields.
-* `source_name` (optional, default 'salesforce'): The dbt source containing the table you want to join with formula fields. Must also contain the `fivetran_formula` table.
 ----
 
 ### sfdc_formula_pivot ([source](macros/sfdc_formula_pivot.sql))
@@ -65,7 +72,6 @@ This macro pivots the dictionary results generated from the [sfdc_get_formula_co
 ```
 **Args:**
 * `join_to_table` (required): The table with which you are joining the formula fields.
-* `source_name` (optional, default 'salesforce'): The dbt source containing the table you want to join with formula fields. Must also contain the `fivetran_formula` table.
 ----
 
 ### sfdc_formula_refactor ([source](macros/sfdc_formula_refactor.sql))
