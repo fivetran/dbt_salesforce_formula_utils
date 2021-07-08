@@ -15,7 +15,7 @@
 {%- set old_formula_fields = dbt_utils.get_column_values(source(source_name, 'fivetran_formula'),'field') | upper -%}
     
     select 
-        {{ dbt_utils.star(source(source_name,join_to_table_first), except=old_formula_fields) | upper }}, --Querying the source table and excluding the old formula fields if they are present.
+        {{ dbt_utils.star(source(source_name,join_to_table_first), except=old_formula_fields) }}, --Querying the source table and excluding the old formula fields if they are present.
         {{ salesforce_formula_utils.sfdc_formula_pivot(join_to_table=join_to_table_first, source_name=source_name) }} -- Adds the results of the sfdc_formula_pivot macro as the remainder of the sql query.
     from {{ source(source_name,join_to_table_first) }}
 
