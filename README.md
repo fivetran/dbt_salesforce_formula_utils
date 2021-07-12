@@ -54,6 +54,7 @@ This macro generates the final sql needed to join the Salesforce formula fields 
 **Args:**
 * `join_to_table_first` (required): The table with which you are joining the formula fields.
 * `source_name` (optional, default 'salesforce'): The dbt source containing the table you want to join with formula fields. Must also contain the `fivetran_formula` table.
+* `reserved_table_name` (optional, defauly is `join_to_table_first`): If the source table is a reserved word within your warehouse the macro will fail. As such, this argument allows users to change the compiled query to leverage a non-reserved word if needed. 
 ----
 
 ### sfdc_formula_pivot ([source](macros/sfdc_formula_pivot.sql))

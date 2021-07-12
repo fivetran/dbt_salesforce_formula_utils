@@ -18,7 +18,7 @@
             {% if 'left join' in v %}
                 {%- set v =  v | replace('join','join ' + source(source_name,'fivetran_formula') | string ) -%}
                 {%- set v =  v | replace('fivetran_formula','') -%}
-            {% endif %} --What about if join and from are in the names
+            {% endif %}
 
             --To ensure the reference is unique across view sql the index of the loop is used in the reference name
             , ( {{ v }} ) as view_sql_{{ loop.index }}
