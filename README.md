@@ -11,7 +11,7 @@ This macro is intended to be used within a salesforce dbt project model. To leve
 ```yml
 packages:
   - package: fivetran/salesforce_formula_utils
-    version: [">=0.1.0", "<0.2.0"]
+    version: [">=0.2.0", "<0.3.0"]
 ```
 > **Note**: In order to use the macros included in this package you will need to have a properly configured source package with a source named `salesforce`. To see an example of a properly configured Salesforce source yml you can reference [integration_tests](integration_tests/models/src_fivetran_formula.yml). You are also welcome to copy/paste this source configuration into your dbt root project and modify for your Salesforce use case.
 
@@ -73,10 +73,33 @@ This macro checks the dictionary results generated from the [sfdc_get_formula_co
 
 **Usage:**
 ```sql
-{{ salesforce_formula_utils.salesforce_formula_utils.sfdc_formula_refactor(join_to_table='fivetran_sfdc_example_table') }}
+{{ salesforce_formula_utils.sfdc_formula_refactor(join_to_table='fivetran_sfdc_example_table',source_name='salesforce') }}
 ```
 **Args:**
 * `join_to_table` (required): The table with which you are joining the formula fields.
+* `source_name` (optional): The name of the source defined. Default is `salesforce`.
+----
+### sfdc_formula_view_fields ([source](macros/sfdc_formula_view_fields.sql))
+This macro checks the dictionary results generated from the [sfdc_get_formula_column_values](macros/sfdc_fet_formula_column_values.sql) macro and returns the field name with the index of the view sql to be used in the primary select statement of the [sfdc_formula_view](macros/sfdc_formula_view) macro.
+
+**Usage:**
+```sql
+{{ salesforce_formula_utils.sfdc_formula_field_views(join_to_table='fivetran_sfdc_example_table',source_name='salesforce') }}
+```
+**Args:**
+* `join_to_table` (required): The table with which you are joining the formula fields.
+* `source_name` (optional): The name of the source defined. Default is `salesforce`.
+----
+### sfdc_formula_view_sql ([source](macros/sfdc_formula_view_sql.sql))
+This macro checks the dictionary results generated from the [sfdc_get_formula_column_values](macros/sfdc_fet_formula_column_values.sql) macro and returns the view_sql value results while also replacing the `from` and `join` syntax to be specific to the source defined. Additionally, the where logic will be applied to ensure the view_sql is properly joined to the base table.
+
+**Usage:**
+```sql
+{{ salesforce_formula_utils.sfdc_formula_view_sql(join_to_table='fivetran_sfdc_example_table',source_name='salesforce') }}
+```
+**Args:**
+* `join_to_table` (required): The table with which you are joining the formula fields.
+* `source_name` (optional): The name of the source defined. Default is `salesforce`.
 ----
 
 ### sfdc_get_formula_column_values ([source](macros/sfdc_get_formula_column_values.sql))
