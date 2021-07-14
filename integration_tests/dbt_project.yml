@@ -15,3 +15,6 @@ seeds:
       +columns_types:
         amount: float
         probability: float
+    fivetran_formula:
+      +column_types:
+        view_sql: "{{ 'varchar(100)'  if target.type in ('redshift','postgres') else 'string'}}"
