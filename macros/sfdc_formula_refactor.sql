@@ -10,28 +10,30 @@
         
         {%- set temp_array = [] -%} --Creating a temporary array for the key (field name) and value (sql) pairs to be created within.
         {{ temp_array.append(key)|default("", True)  }} --The key will always be appended without additional adjustments.
+        {{ temp_array.append(" " ~ value ~ " ")|default("", True)  }} --The value will start off as being the original sql value with spaces on both ends to allow for string searching.
 
-        --If the field name is found within the sql of another field. Then an adjustment to the sql will take place
-        --The adjustment will replace the field name with the true sql of the other formual field.
         {%- for field, sql in key_val -%}
-            {%- if field in value -%}
-                {%- if sql == 'null_value' -%}
-                    {{ temp_array.append( value | replace(field,"(null)") )| default("", True) }}
-                {% else %}
-                    {{ temp_array.append( value | replace(field,"(" ~ sql ~ ")") )| default("", True) }}
+            --If the last item in the list contains the another field then insert that sql into the sql and append a new item onto the list.
+            {%- if " " ~ field ~ " " in temp_array[-1] -%}
+                {{ temp_array.append( temp_array[-1] | replace(field,"(" ~ sql ~ ")") )| default("", True) }}
+            {% endif %}
+
+            --If a sql field contains the string'null_value' then replace it with a true null
+            {%- if 'null_value' in temp_array[-1] -%}
+                    {{ temp_array.append( temp_array[-1] | replace('null_value','null') )| default("", True) }}
+            {% endif %}
+
+            --One last for loop to perform recursive searching on all fields to allow for more dynamic referential formula capture
+            {% for k,v in key_val %}
+                {% if " " ~ k ~ " " in temp_array[-1] %} 
+                    {{ temp_array.append( temp_array[-1] | replace(k,"( " ~ v ~ " )") )| default("", True) }}
                 {% endif %}
-            {%- endif -%}
+            {% endfor %}
         {%- endfor -%}
 
-        --If a the temp array length only contains one value, then that means there was no adjustment need.
-        --As such, the original sql value will be appened to the temporary array
-        {% if temp_array | length < 2 %}
-            {{ temp_array.append( value )| default("", True) }}
-        {% endif %}
-
-        --The key (formula field name) and value (sql) within the temporary array are appended to a permanent adjusted_key_val array.
+        --The key (formula field name) and latest value (sql) within the temporary array are appended to a permanent adjusted_key_val array.
         --This array is then used within the final sfdc_formula_view macro.
-        {{ adjusted_key_val.append(temp_array | list)|default("", True) }}
+        {{ adjusted_key_val.append((temp_array[0],temp_array[-1]) ) }}
     {% endfor -%}
 
     --Create a new variable and set the value to the list generated from adjusted_key_val.

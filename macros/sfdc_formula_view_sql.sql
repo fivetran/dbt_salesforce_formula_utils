@@ -11,13 +11,13 @@
 
             --The select statement must explicitly query from and join from the source, not the target. The replace filters point the query to the source.
             {% if ' from ' in v %}
-                {%- set v =  v | replace('from','from ' + source(source_name,'fivetran_formula') | string ) -%}
-                {%- set v =  v | replace('fivetran_formula','') -%}
+                {%- set v = v | replace('from','from ' + source(source_name,'fivetran_formula') | string ) -%}
+                {%- set v = v | replace('fivetran_formula','') -%}
             {% endif %}
             
             {% if 'left join' in v %}
-                {%- set v =  v | replace('join','join ' + source(source_name,'fivetran_formula') | string ) -%}
-                {%- set v =  v | replace('fivetran_formula','') -%}
+                {%- set v = v | replace('join','join ' + source(source_name,'fivetran_formula') | string ) -%}
+                {%- set v = v | replace('fivetran_formula','') -%}
             {% endif %}
 
             --To ensure the reference is unique across view sql the index of the loop is used in the reference name

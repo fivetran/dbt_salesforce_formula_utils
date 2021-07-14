@@ -16,6 +16,7 @@
 {%- set old_formula_fields = dbt_utils.get_column_values(source(source_name, 'fivetran_formula'),'field') | upper -%} --In Snowflake the fields are case sensitive in order to determine if there are duplicates.
     
     select  
+        
 
         {{ dbt_utils.star(source(source_name,join_to_table_first), relation_alias=reserved_table_name, except=old_formula_fields) }}, --Querying the source table and excluding the old formula fields if they are present.
         
