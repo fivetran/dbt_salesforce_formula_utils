@@ -1,5 +1,5 @@
 name: 'salesforce_formula_utils'
-version: '0.3.1'
+version: '0.3.2'
 config-version: 2
 
 require-dbt-version: ">=0.20.0"
