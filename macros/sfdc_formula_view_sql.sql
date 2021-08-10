@@ -1,7 +1,8 @@
-{%- macro sfdc_formula_view_sql(join_to_table, source_name = 'salesforce') -%}
+{%- macro sfdc_formula_view_sql(join_to_table, source_name = 'salesforce', inclusion_fields=none) -%}
 
+    {%- set not_null_value = true -%}
     --Generate the key value pair from the formula field table with the below macro.
-    {%- set key_val = salesforce_formula_utils.sfdc_get_formula_column_values(source(source_name, 'fivetran_formula'), 'field', 'view_sql', join_to_table, no_nulls = true) -%}
+    {%- set key_val = salesforce_formula_utils.sfdc_get_formula_column_values(source(source_name, 'fivetran_formula'), 'field', 'view_sql', join_to_table, inclusion_fields, not_null_value) -%}
 
     {%- set view_sql_ref = [] -%}
     
