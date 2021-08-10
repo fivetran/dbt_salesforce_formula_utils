@@ -1,7 +1,7 @@
-{%- macro sfdc_formula_pivot(join_to_table, source_name='salesforce') -%}
+{%- macro sfdc_formula_pivot(join_to_table, source_name='salesforce', added_inclusion_fields=none) -%}
 
     -- The results generated from sfdc_formula_refactor are set to the key_val variable.
-    {%- set key_val = salesforce_formula_utils.sfdc_formula_refactor(join_to_table, source_name) -%}
+    {%- set key_val = salesforce_formula_utils.sfdc_formula_refactor(join_to_table, source_name, added_inclusion_fields) -%}
 
     -- k being the field name and v being the sql.
     {% for k, v in key_val %}

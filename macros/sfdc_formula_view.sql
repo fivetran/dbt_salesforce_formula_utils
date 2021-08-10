@@ -1,4 +1,4 @@
-{%- macro sfdc_formula_view(join_to_table_first, source_name='salesforce', reserved_table_name=join_to_table_first) -%}
+{%- macro sfdc_formula_view(join_to_table_first, source_name='salesforce', reserved_table_name=join_to_table_first, inclusion_fields=none) -%}
 
 -- Best practice for this model is to be materialized as view. That is why we have set that here.
 {{
@@ -21,7 +21,7 @@
         
         {{ salesforce_formula_utils.sfdc_formula_view_fields(join_to_table=join_to_table_first, source_name=source_name) }} --Adds the field names for records that leverage the view_sql logic.
         
-        {{ salesforce_formula_utils.sfdc_formula_pivot(join_to_table=join_to_table_first, source_name=source_name) }} --Adds the results of the sfdc_formula_pivot macro as the remainder of the sql query.
+        {{ salesforce_formula_utils.sfdc_formula_pivot(join_to_table=join_to_table_first, source_name=source_name, added_inclusion_fields=inclusion_fields) }} --Adds the results of the sfdc_formula_pivot macro as the remainder of the sql query.
     
     from {{ source(source_name,join_to_table_first) }} as {{ reserved_table_name }}
     
