@@ -5,12 +5,11 @@
 
     -- k being the field name and v being the sql.
     {% for k, v in key_val %}
-        {% if v == 'null_value' %}
+        , {%- if v == 'null_value' %}
             null as {{ k }} -- Switching the string null to a true null as we will no longer need to iterate through a nonetype.
-        {% else %}
+        {% else -%}
             {{ v }} as {{ k }}
-        {% endif %}
-        {%- if not loop.last -%},{%- endif -%}
+        {% endif -%}
     {% endfor %}
 
 {%- endmacro -%}

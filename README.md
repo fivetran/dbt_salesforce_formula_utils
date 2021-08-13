@@ -15,14 +15,15 @@ packages:
     version: [">=0.4.0", "<0.5.0"]
 ```
 > **Note**: In order to use the macros included in this package you will need to have a properly configured source package with a source named `salesforce`. To see an example of a properly configured Salesforce source yml you can reference [integration_tests](integration_tests/models/src_fivetran_formula.yml). You are also welcome to copy/paste this source configuration into your dbt root project and modify for your Salesforce use case.
-
-### Model Creation: All relevant formula fields
+## Model Creation
+The salesforce_formula_utils macro may be used in one of two ways. You may either use the macro to create a table with **all** relevant formula fields applied, or you may use the macro to include **only** specified formula fields. Refer to the two options below for more details.
+### Option 1: Generate all relevant formula fields
 If you would like your model to generate all the formula fields related to your source table then you may create a new file in your models folder and name it (`your_table_name_here`.sql). You will then add the below snippet into the file. Finally, update the `source_table` argument to be the source table name for which you are generating the model:
 ```sql
 {{ salesforce_formula_utils.sfdc_formula_view(source_table='your_source_table_name_here') }}
 ```
-### Model Creation: Only include specified formula fields
-If you would like your model to generate only a specified subset of your formula fields related to your source table then you may create a new file in your models folder and name it (`your_table_name_here`.sql). You will then add the below snippet into the file. Finally, update the `source_table` argument to be the source table name for which you are generating the model and update the `fields_to_include` argument to contain all the fields (in **lowercase**) from your source that you would like to be included in the final output:
+### Option 2: Generate only specified formula fields
+If you would like your model to generate only a specified subset of your formula fields related to your source table then you may create a new file in your models folder and name it (`your_table_name_here`.sql). You will then add the below snippet into the file. Finally, update the `source_table` argument to be the source table name for which you are generating the model and update the `fields_to_include` argument to contain all the fields from your source that you would like to be included in the final output. Be sure that the fields you would like to include are enclosed within parenthesis:
 ```sql
 {{ salesforce_formula_utils.sfdc_formula_view(source_table='your_source_table_name_here', fields_to_include=('i_want_this_field','also_this_one','maybe_a_third_as_well','lets_add_more')) }}
 ```
@@ -129,7 +130,7 @@ Further, if there are any formula fields that are a third degree referential for
 * `value` (required): The value column within `fivetran_formula` you are querying. This argument is typically `sql`.
 * `join_to_table` (required): The table with which you are joining the formula fields.
 * `added_inclusion_fields` (optional, default is none): The list of fields you want to be included in the macro. If no fields are selected then all fields will be included.
-* `not_null_value` (optional, default is true): Used by the macro to identify if the `null` fields within the `view_sql` column should be included.
+* `no_nulls` (optional, default is true): Used by the macro to identify if the `null` fields within the `view_sql` column should be included.
 ----
 
 ### sfdc_star_exact_ ([source](macros/sfdc_star_exact.sql))

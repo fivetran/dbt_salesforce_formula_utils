@@ -17,7 +17,7 @@
     
     select
 
-        {{ salesforce_formula_utils.sfdc_star_exact(source(source_name,source_table), relation_alias=reserved_table_name, except=old_formula_fields) }}, --Querying the source table and excluding the old formula fields if they are present.
+        {{ salesforce_formula_utils.sfdc_star_exact(source(source_name,source_table), relation_alias=reserved_table_name, except=old_formula_fields) }} --Querying the source table and excluding the old formula fields if they are present.
         
         {{ salesforce_formula_utils.sfdc_formula_view_fields(join_to_table=source_table, source_name=source_name, inclusion_fields=fields_to_include) }} --Adds the field names for records that leverage the view_sql logic.
         
