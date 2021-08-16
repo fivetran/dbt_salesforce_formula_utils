@@ -1,4 +1,4 @@
-{% macro sfdc_get_formula_column_values(fivetran_formula, key, value, join_to_table, no_nulls = false) -%}
+{% macro sfdc_get_formula_column_values(fivetran_formula, key, value, join_to_table, added_inclusion_fields=none, no_nulls = false) -%}
 
 {#-- Prevent querying of db in parsing mode. This works because this macro does not create any new refs. #}
     {%- if not execute -%}
@@ -27,7 +27,13 @@
                         end as value
             from {{ target_relation }}
             where object = '{{ join_to_table }}'    -- This filters the query to only include the formula fields referenced by the source table.
+
+            {% if added_inclusion_fields is not none %} -- If a users has designated fields_to_include then those will be the only fields included in the macro.
+                and {{ key | lower }} in {{ added_inclusion_fields | lower }}
+            {% else %}
                 and {{ key }} not in {{ var('sfdc_exclude_formulas',"('')") }} -- Excludes any formula fields the user may have set within the sfdc_exclude_formulas variable. Default is an empty string.
+            {% endif %}
+
             {% if no_nulls == true %}
                 and {{ value }} is not null
             {% else %}
