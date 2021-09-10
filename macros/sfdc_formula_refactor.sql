@@ -9,13 +9,13 @@
     {%- for key, value in key_val %}
         
         {%- set temp_array = [] -%} --Creating a temporary array for the key (field name) and value (sql) pairs to be created within.
-        {{ temp_array.append(key)|default("", True)  }} --The key will always be appended without additional adjustments.
-        {{ temp_array.append(" " ~ value ~ " ")|default("", True)  }} --The value will start off as being the original sql value with spaces on both ends to allow for string searching.
+        {{ temp_array.append(key | lower)|default("", True)  }} --The key will always be appended without additional adjustments.
+        {{ temp_array.append(" " ~ value | lower ~ " ")|default("", True)  }} --The value will start off as being the original sql value with spaces on both ends to allow for string searching.
 
         {%- for field, sql in key_val -%}
             --If the last item in the list contains the another field then insert that sql into the sql and append a new item onto the list.
-            {%- if " " ~ field ~ " " in temp_array[-1] -%}
-                {{ temp_array.append( temp_array[-1] | replace(field,"(" ~ sql ~ ")") )| default("", True) }}
+            {%- if " " ~ field | lower ~ " " in temp_array[-1] -%}
+                {{ temp_array.append( temp_array[-1] | replace(field,"(" ~ sql | lower ~ ")") )| default("", True) }}
             {% endif %}
 
             --If a sql field contains the string'null_value' then replace it with a true null
@@ -25,8 +25,8 @@
 
             --One last for loop to perform recursive searching on all fields to allow for more dynamic referential formula capture
             {% for k,v in key_val %}
-                {% if " " ~ k ~ " " in temp_array[-1] %} 
-                    {{ temp_array.append( temp_array[-1] | replace(k,"( " ~ v ~ " )") )| default("", True) }}
+                {% if " " ~ k | lower ~ " " in temp_array[-1] %} 
+                    {{ temp_array.append( temp_array[-1] | replace(k,"( " ~ v | lower ~ " )") )| default("", True) }}
                 {% endif %}
             {% endfor %}
         {%- endfor -%}
