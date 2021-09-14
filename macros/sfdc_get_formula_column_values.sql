@@ -26,7 +26,7 @@
                     else lower( {{ value }} )
                         end as value
             from {{ target_relation }}
-            where object = lower('{{ join_to_table }}')   -- This filters the query to only include the formula fields referenced by the source table.
+            where lower(object) = lower('{{ join_to_table }}')   -- This filters the query to only include the formula fields referenced by the source table.
                 and {{ key }} not in {{ var('sfdc_exclude_formulas',"('')") }} -- Excludes any formula fields the user may have set within the sfdc_exclude_formulas variable. Default is an empty string.
             {% if no_nulls == true %}
                 and {{ value }} is not null
