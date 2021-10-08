@@ -1,7 +1,7 @@
-{%- macro sfdc_formula_view_sql(join_to_table, source_name = 'salesforce') -%}
+{%- macro sfdc_formula_view_sql(join_to_table, source_name = 'salesforce', inclusion_fields=none, not_null_value=true) -%}
 
     --Generate the key value pair from the formula field table with the below macro.
-    {%- set key_val = salesforce_formula_utils.sfdc_get_formula_column_values(source(source_name, 'fivetran_formula'), 'field', 'view_sql', join_to_table, no_nulls = true) -%}
+    {%- set key_val = salesforce_formula_utils.sfdc_get_formula_column_values(source(source_name, 'fivetran_formula'), 'field', 'view_sql', join_to_table, inclusion_fields, not_null_value) -%}
 
     {%- set view_sql_ref = [] -%}
     
@@ -11,13 +11,13 @@
 
             --The select statement must explicitly query from and join from the source, not the target. The replace filters point the query to the source.
             {% if ' from ' in v %}
-                {%- set v = v | replace('from','from ' + source(source_name,'fivetran_formula') | string ) -%}
-                {%- set v = v | replace('fivetran_formula','') -%}
+                {%- set v = v | replace(' from ',' from ' + source(source_name,'fivetran_formula') | string ) -%}
+                {% if target.type == 'bigquery' %} {%- set v = v | replace('`fivetran_formula`','') -%} {% else %} {%- set v = v | replace('fivetran_formula','') -%} {% endif %}
             {% endif %}
             
-            {% if 'left join' in v %}
-                {%- set v = v | replace('join','join ' + source(source_name,'fivetran_formula') | string ) -%}
-                {%- set v = v | replace('fivetran_formula','') -%}
+            {% if ' left join ' in v %}
+                {%- set v = v | replace(' left join ',' left join ' + source(source_name,'fivetran_formula') | string ) -%}
+                {% if target.type == 'bigquery' %} {%- set v = v | replace('`fivetran_formula`','') -%} {% else %} {%- set v = v | replace('fivetran_formula','') -%} {% endif %}
             {% endif %}
 
             --To ensure the reference is unique across view sql the index of the loop is used in the reference name
