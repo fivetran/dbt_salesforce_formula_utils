@@ -20,16 +20,16 @@
         {%- else -%}
             -- Query used to obtain the unique groupings for key (field) and value (sql) from the formula_field table
             select
-                {{ key }} as key,
+                lower( {{ key }} ) as key,
                 case when {{ value }} is null
                     then 'null_value'               -- Since none type values cannot be iterated over in a dataframe, this is set to string 'null_value' and is changed later back to null.
-                    else {{ value }}
+                    else lower( {{ value }} )
                         end as value
             from {{ target_relation }}
-            where object = '{{ join_to_table }}'    -- This filters the query to only include the formula fields referenced by the source table.
+            where lower(object) = lower('{{ join_to_table }}')    -- This filters the query to only include the formula fields referenced by the source table.
 
             {% if added_inclusion_fields is not none %} -- If a users has designated fields_to_include then those will be the only fields included in the macro.
-                and {{ key | lower }} in {{ added_inclusion_fields | lower }}
+                and {{ key | lower }} in ({% for inclusion_fields in added_inclusion_fields %}'{{ inclusion_fields | lower }}' {% if not loop.last %},{% endif %}{% endfor %})
             {% else %}
                 and {{ key }} not in {{ var('sfdc_exclude_formulas',"('')") }} -- Excludes any formula fields the user may have set within the sfdc_exclude_formulas variable. Default is an empty string.
             {% endif %}
