@@ -23,7 +23,7 @@ If you would like your model to generate all the formula fields related to your 
 {{ salesforce_formula_utils.sfdc_formula_view(source_table='your_source_table_name_here') }}
 ```
 ### Option 2: Generate only specified formula fields
-If you would like your model to generate only a specified subset of your formula fields related to your source table then you may create a new file in your models folder and name it (`your_table_name_here`.sql). You will then add the below snippet into the file. Finally, update the `source_table` argument to be the source table name for which you are generating the model and update the `fields_to_include` argument to contain all the fields from your source that you would like to be included in the final output. Be sure that the fields you would like to include are enclosed within brackets as an array (ie. `[]`):
+If you would like your model to generate only a specified subset of your formula fields related to your source table then you may create a new file in your models folder and name it (`your_table_name_here`.sql). You will then add the below snippet into the file. Finally, update the `source_table` argument to be the source table name for which you are generating the model and update the `fields_to_include` argument to contain all the fields from your source that you would like to be included in the final output. Be sure that the field(s) you would like to include are enclosed within brackets as an array (ie. `[]`):
 ```sql
 {{ salesforce_formula_utils.sfdc_formula_view(source_table='your_source_table_name_here', fields_to_include=['i_want_this_field','also_this_one','maybe_a_third_as_well','lets_add_more']) }}
 ```
