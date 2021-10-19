@@ -12,4 +12,4 @@
     - Previously, if a formula field existed as a base field for another table then it would be erroneously excluded. With this update those fields will not be excluded.
 
 ## Contributors
-- [nhrebinka ](https://github.com/nhrebinka) ([#30](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/30))
+- [nhrebinka](https://github.com/nhrebinka) ([#30](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/30))
