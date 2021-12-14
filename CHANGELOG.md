@@ -1,3 +1,11 @@
+# dbt_salesforce_formula_utils v0.5.1
+## Fixes
+- Modified the `sfdc_formula_view` macro to wrap the arguments within an additional parenthesis. This is required for Snowflake warehouses with mixed casing enabled. ([#32](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/32))
+- Updated the `sfdc_old_formula_fields` macro to properly work with mixed-quoting styles in Snowflake. This was fixed by setting the target relation in the macro to explicitly be set to a table relation. ([#32](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/32))
+
+## Contributors
+- @morgankrey-amplitude ([#32](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/32))
+
 # dbt_salesforce_formula_utils v0.5.0
 
 ## 🚨 Breaking changes

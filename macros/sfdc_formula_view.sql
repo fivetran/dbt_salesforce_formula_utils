@@ -13,7 +13,7 @@
     This allows users with the Fivetran legacy Salesforce fields to ignore them and be replaced by the new fields.
 */
 
-{%- set old_formula_fields = salesforce_formula_utils.sfdc_old_formula_values(source(source_name, 'fivetran_formula'), 'field', source_table) | upper -%}  --In Snowflake the fields are case sensitive in order to determine if there are duplicates.
+{%- set old_formula_fields = (salesforce_formula_utils.sfdc_old_formula_values(source(source_name, 'fivetran_formula'),'field',source_table)) | upper -%}  --In Snowflake the fields are case sensitive in order to determine if there are duplicates.
 
     select
 
