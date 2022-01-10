@@ -1,3 +1,7 @@
+# dbt_salesforce_formula_utils v0.6.1
+## Fixes
+- Modified the `sfdc_formula_view_sql` macro to remove extranneous double quotes on Redshift databases ([#36](https://github.com/fivetran/dbt_salesforce_formula_utils/issues/36))
+
 # dbt_salesforce_formula_utils v0.6.0
 🎉 dbt v1.0.0 Compatibility 🎉
 ## 🚨 Breaking Changes 🚨
