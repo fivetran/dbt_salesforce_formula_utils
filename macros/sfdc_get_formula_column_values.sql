@@ -20,10 +20,10 @@
         {%- else -%}
             -- Query used to obtain the unique groupings for key (field) and value (sql) from the formula_field table
             select
-                lower( {{ key }} ) as key,
+                {{ key }} as key,
                 case when {{ value }} is null
                     then 'null_value'               -- Since none type values cannot be iterated over in a dataframe, this is set to string 'null_value' and is changed later back to null.
-                    else lower( {{ value }} )
+                    else {{ value }}
                         end as value
             from {{ target_relation }}
             where lower(object) = lower('{{ join_to_table }}')    -- This filters the query to only include the formula fields referenced by the source table.
