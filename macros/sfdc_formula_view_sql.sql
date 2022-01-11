@@ -24,10 +24,6 @@
                 {% else %} {%- set v = v | replace('fivetran_formula','') -%} {% endif %}
             {% endif %}
 
-            --Replace source table name with an alias main_table
-            {%- set v = v | replace('.' + join_to_table + ' ','.' + join_to_table + ' as main_table ') -%}
-            {%- set v = v | replace(join_to_table + '.','main_table.') -%}
-
             --To ensure the reference is unique across view sql the index of the loop is used in the reference name
             , ( {{ v }} ) as view_sql_{{ loop.index }}
 
