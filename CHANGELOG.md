@@ -1,3 +1,12 @@
+# dbt_salesforce_formula_utils v0.6.1
+
+## Fixes
+- Modified the `sfdc_formula_view_sql` macro to remove extranneous double quotes on Redshift databases ([#36](https://github.com/fivetran/dbt_salesforce_formula_utils/issues/36))
+- Formulas were previously being lower cased within the macro to be consistent across the board. However, this resulted in some translations to be incorrect if they required specific casing. A fix has been implemented to rely on the casing within the `fivetran_formula` table instead of casing within the macro. ((#37)[https://github.com/fivetran/dbt_salesforce_formula_utils/pull/37])
+
+## Under the Hood
+- Removal of the `main_table` aliasing within the translated `view_sql` formulas. This would result in errors when self joins were being conducted. Therefore, this logic is not handled natively within the Salesforce connector. ((#38)[https://github.com/fivetran/dbt_salesforce_formula_utils/pull/38])
+
 # dbt_salesforce_formula_utils v0.6.0
 🎉 dbt v1.0.0 Compatibility 🎉
 ## 🚨 Breaking Changes 🚨
