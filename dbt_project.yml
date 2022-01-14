@@ -2,4 +2,4 @@ name: 'salesforce_formula_utils'
 version: '0.6.0'
 config-version: 2
 
-require-dbt-version: [">=1.0.0", "<2.0.0"]
+
