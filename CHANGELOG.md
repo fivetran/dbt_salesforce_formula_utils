@@ -1,7 +1,7 @@
 # dbt_salesforce_formula_utils v0.6.2
 
 ## Fixes
-- Resolving dependency issues for use of `include_fields` feature of `sfdc_formula_view` macro. Previously if the list of `include_fields` included formulas that referenced other formulas excluded from `include_fields`, an error was served for the excluded formulas. 
+- Resolving dependency issues for use of `include_fields` feature of `sfdc_formula_view` macro. Previously if the list of `include_fields` included formulas that referenced other formulas excluded from `include_fields`, an error was served for the excluded formulas. ((#42)[https://github.com/fivetran/dbt_salesforce_formula_utils/issues/42])
 - All formula references will now be included until the final output model where `include_fields` is used to filter returned columns.
 - Unused `*inclusion_fields` arguments have been removed from macros.
 # dbt_salesforce_formula_utils v0.6.1
