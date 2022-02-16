@@ -5,7 +5,7 @@
 
 --Only run the below code if the key_val for view_sql contains data
 {% if key_val is not none %}
-    {%- for k, v in key_val if k in inclusion_fields %}
+    {%- for k, v in key_val if k in inclusion_fields and k is not none %}
         , view_sql_{{ loop.index }}.{{ k }}
     {% endfor -%}
 {% endif %}
