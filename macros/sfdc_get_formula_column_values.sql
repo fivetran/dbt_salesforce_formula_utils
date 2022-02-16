@@ -29,7 +29,7 @@
             where lower(object) = lower('{{ join_to_table }}')    -- This filters the query to only include the formula fields referenced by the source table.
 
             {% if added_inclusion_fields is not none %} -- If a users has designated fields_to_include then those will be the only fields included in the macro.
-                and {{ key | lower }} in ({% for inclusion_fields in added_inclusion_fields %}'{{ inclusion_fields | lower }}' {% if not loop.last %},{% endif %}{% endfor %})
+                and {{ key | lower }}
             {% else %}
                 and {{ key }} not in {{ var('sfdc_exclude_formulas',"('')") }} -- Excludes any formula fields the user may have set within the sfdc_exclude_formulas variable. Default is an empty string.
             {% endif %}
