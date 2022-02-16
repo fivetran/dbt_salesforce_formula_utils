@@ -1,5 +1,6 @@
 {%- macro sfdc_formula_pivot(join_to_table, source_name='salesforce', added_inclusion_fields=none) -%}
 
+-- only execute if there is specified inclusion fields
 {% if added_inclusion_fields is not none %}
     -- The results generated from sfdc_formula_refactor are set to the key_val variable.
     {%- set key_val = salesforce_formula_utils.sfdc_formula_refactor(join_to_table, source_name) -%}
