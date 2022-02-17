@@ -15,6 +15,11 @@
 
 {%- set old_formula_fields = (salesforce_formula_utils.sfdc_old_formula_values(source(source_name, 'fivetran_formula'),'field',source_table)) | upper -%}  --In Snowflake the fields are case sensitive in order to determine if there are duplicates.
 
+-- defaults to all formula fields if fields_to_include is none
+{% if fields_to_include is none %}
+    {% set fields_to_include = old_formula_fields | lower %}
+{% endif %}
+
     select
 
         {{ salesforce_formula_utils.sfdc_star_exact(source(source_name,source_table), relation_alias=reserved_table_name, except=old_formula_fields) }} --Querying the source table and excluding the old formula fields if they are present.

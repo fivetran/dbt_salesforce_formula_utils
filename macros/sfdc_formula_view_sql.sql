@@ -7,7 +7,7 @@
 
     --Only run the below code if the key_val for the view sql has data
     {% if key_val is not none %}
-        {% for k, v in key_val %}
+        {% for k, v in key_val if k in inclusion_fields %}
 
             --The select statement must explicitly query from and join from the source, not the target. The replace filters point the query to the source.
             {% if ' from ' in v %}
