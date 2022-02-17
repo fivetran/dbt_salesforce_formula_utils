@@ -1,4 +1,4 @@
-{% macro sfdc_old_formula_values(table, column, join_to_table, order_by='count(*) desc', max_records=none, default=none) -%}x
+{% macro sfdc_current_formula_values(table, column, join_to_table, order_by='count(*) desc', max_records=none, default=none) -%}x
 
     {#-- Prevent querying of db in parsing mode. This works because this macro does not create any new refs. #}
     {%- if not execute -%}

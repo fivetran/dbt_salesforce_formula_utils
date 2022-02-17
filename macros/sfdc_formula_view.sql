@@ -13,11 +13,16 @@
     This allows users with the Fivetran legacy Salesforce fields to ignore them and be replaced by the new fields.
 */
 
-{%- set old_formula_fields = (salesforce_formula_utils.sfdc_old_formula_values(source(source_name, 'fivetran_formula'),'field',source_table)) | upper -%}  --In Snowflake the fields are case sensitive in order to determine if there are duplicates.
+{%- set current_formula_fields = (salesforce_formula_utils.sfdc_current_formula_values(source(source_name, 'fivetran_formula'),'field',source_table)) | upper -%}  --In Snowflake the fields are case sensitive in order to determine if there are duplicates.
+
+-- defaults to all formula fields if fields_to_include is none
+{% if fields_to_include is none %}
+    {% set fields_to_include = old_formula_fields | lower %}
+{% endif %}
 
     select
 
-        {{ salesforce_formula_utils.sfdc_star_exact(source(source_name,source_table), relation_alias=reserved_table_name, except=old_formula_fields) }} --Querying the source table and excluding the old formula fields if they are present.
+        {{ salesforce_formula_utils.sfdc_star_exact(source(source_name,source_table), relation_alias=reserved_table_name, except=current_formula_fields) }} --Querying the source table and excluding the old formula fields if they are present.
 
         {{ salesforce_formula_utils.sfdc_formula_view_fields(join_to_table=source_table, source_name=source_name, inclusion_fields=fields_to_include) }} --Adds the field names for records that leverage the view_sql logic.
 

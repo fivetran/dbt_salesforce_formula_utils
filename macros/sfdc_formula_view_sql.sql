@@ -1,13 +1,13 @@
 {%- macro sfdc_formula_view_sql(join_to_table, source_name = 'salesforce', reserved_table_name=join_to_table, inclusion_fields=none, not_null_value=true) -%}
 
     --Generate the key value pair from the formula field table with the below macro.
-    {%- set key_val = salesforce_formula_utils.sfdc_get_formula_column_values(source(source_name, 'fivetran_formula'), 'field', 'view_sql', join_to_table, inclusion_fields, not_null_value) -%}
+    {%- set key_val = salesforce_formula_utils.sfdc_get_formula_column_values(source(source_name, 'fivetran_formula'), 'field', 'view_sql', join_to_table, not_null_value) -%}
 
     {%- set view_sql_ref = [] -%}
 
     --Only run the below code if the key_val for the view sql has data
     {% if key_val is not none %}
-        {% for k, v in key_val %}
+        {% for k, v in key_val if k in inclusion_fields %}
 
             --The select statement must explicitly query from and join from the source, not the target. The replace filters point the query to the source.
             {% if ' from ' in v %}
