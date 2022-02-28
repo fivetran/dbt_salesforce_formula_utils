@@ -17,7 +17,7 @@
 
 -- defaults to all formula fields if fields_to_include is none
 {% if fields_to_include is none %}
-    {% set fields_to_include = old_formula_fields | lower %}
+    {% set fields_to_include = current_formula_fields | lower %}
 {% endif %}
 
     select

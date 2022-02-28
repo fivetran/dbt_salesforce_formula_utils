@@ -1,3 +1,6 @@
+# dbt_salesforce_formula_utils v0.6.3
+## Fixes
+- Adjusted the conditional within the `sfdc_formula_views` macro to reference the properly named `current_formula_fields` variable opposed to the incorrect `old_formula_fields` variable that is not longer referenced.
 # dbt_salesforce_formula_utils v0.6.2
 
 ## Fixes
