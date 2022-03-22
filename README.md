@@ -65,6 +65,7 @@ This macro generates the final sql needed to join the Salesforce formula fields 
 * `source_name` (optional, default 'salesforce'): The dbt source containing the table you want to join with formula fields. Must also contain the `fivetran_formula` table.
 * `reserved_table_name` (optional, default is `source_table`): If the source table is a reserved word within your warehouse the macro will fail. As such, this argument allows users to change the compiled query to leverage a non-reserved word if needed. 
 * `fields_to_include` (optional, default is none): If a users wishes to only run the formula fields macro for designated fields then they may be applied within this variable. This variable will ensure the model only generates the sql for the designated fields. 
+* `base_fields_to_include` (optional, default is none): If a user only wishes to include a select number of non-formula fields from the base table then they may add the fields as a list to this argument.
 > Note: If you populate the `fields_to_include` argument then the package will exclusively look for those fields. If you have designated a field to be excluded within the `sfdc_exclude_formulas` variable, then this will be ignored and the field will be included in the final model.
 ----
 
