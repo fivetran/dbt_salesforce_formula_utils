@@ -17,7 +17,7 @@ packages:
 > **Note**: In order to use the macros included in this package you will need to have a properly configured source package with a source named `salesforce`. To see an example of a properly configured Salesforce source yml you can reference [integration_tests](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/integration_tests/models/src_fivetran_formula.yml). You are also welcome to copy/paste this source configuration into your dbt root project and modify for your Salesforce use case.
 
 ## Package Maintenance
-The Fivetran team maintaining this package **only** maintains the latest version of the package. We highly recommend you stay consistent with the [latest version](https://hub.getdbt.com/fivetran/salesforce_formula_utils/latest/) of the package and refer to the [CHANGELOG](/CHANGELOG.md) and release notes for more information on changes across versions.
+The Fivetran team maintaining this package **only** maintains the latest version of the package. We highly recommend you stay consistent with the [latest version](https://hub.getdbt.com/fivetran/salesforce_formula_utils/latest/) of the package and refer to the [CHANGELOG](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/CHANGELOG.md) and release notes for more information on changes across versions.
 ## Model Creation
 The salesforce_formula_utils macro may be used in one of two ways. You may either use the macro to create a table with **all** relevant formula fields applied, or you may use the macro to include **only** specified formula fields. Refer to the two options below for more details.
 ### Option 1: Generate all relevant formula fields
@@ -43,7 +43,7 @@ vars:
 ```
 > **Note**: You should not add this variable to your `dbt_project.yml` file if you do not need to exclude any fields.
 
-Once you have created all your desired models and copied/modified the sql snippet into each model you will execute `dbt deps` to install the macro package, then execute `dbt run` to generate the models. Additionally, you can reference the [integration_tests](integration_tests/models/) folder for examples on how to use the macro within your models.
+Once you have created all your desired models and copied/modified the sql snippet into each model you will execute `dbt deps` to install the macro package, then execute `dbt run` to generate the models. Additionally, you can reference the [integration_tests](https://github.com/fivetran/dbt_salesforce_formula_utils/tree/main/integration_tests/models) folder for examples on how to use the macro within your models.
 
 ### Model Creation Automation
 If you have multiple models you need to create, you can also Leverage the [sfdc_formula_model_automation](sfdc_formula_model_automation.sh) script within this project to automatically create models locally via the command line. Below is an example command to copy and edit.
@@ -69,7 +69,7 @@ This macro generates the final sql needed to join the Salesforce formula fields 
 ----
 
 ### sfdc_formula_pivot ([source](macros/sfdc_formula_pivot.sql))
-This macro pivots the dictionary results generated from the [sfdc_get_formula_column_values](macros/sfdc_get_formula_column_values.sql) macro to populate the formula field and sql for each record within the designated table this macro is used.
+This macro pivots the dictionary results generated from the [sfdc_get_formula_column_values](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/macros/sfdc_get_formula_column_values.sql) macro to populate the formula field and sql for each record within the designated table this macro is used.
 
 **Usage:**
 ```sql
@@ -82,7 +82,7 @@ This macro pivots the dictionary results generated from the [sfdc_get_formula_co
 ----
 
 ### sfdc_formula_refactor ([source](macros/sfdc_formula_refactor.sql))
-This macro checks the dictionary results generated from the [sfdc_get_formula_column_values](macros/sfdc_get_formula_column_values.sql) macro to determine if any formula fields reference other formula fields. If a formula references another generated formula field, then the macro will insert the first formula sql into the second formula. This ensures formulas that reference another formula field will be generated successfully. 
+This macro checks the dictionary results generated from the [sfdc_get_formula_column_values](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/macros/sfdc_get_formula_column_values.sql) macro to determine if any formula fields reference other formula fields. If a formula references another generated formula field, then the macro will insert the first formula sql into the second formula. This ensures formulas that reference another formula field will be generated successfully. 
 
 **Usage:**
 ```sql
@@ -94,7 +94,7 @@ This macro checks the dictionary results generated from the [sfdc_get_formula_co
 * `added_inclusion_fields` (optional, default is none): The list of fields you want to be included in the macro. If no fields are selected then all fields will be included.
 ----
 ### sfdc_formula_view_fields ([source](macros/sfdc_formula_view_fields.sql))
-This macro checks the dictionary results generated from the [sfdc_get_formula_column_values](macros/sfdc_fet_formula_column_values.sql) macro and returns the field name with the index of the view sql to be used in the primary select statement of the [sfdc_formula_view](macros/sfdc_formula_view) macro.
+This macro checks the dictionary results generated from the [sfdc_get_formula_column_values](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/macros/sfdc_get_formula_column_values.sql) macro and returns the field name with the index of the view sql to be used in the primary select statement of the [sfdc_formula_view](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/macros/sfdc_formula_view.sql) macro.
 
 **Usage:**
 ```sql
@@ -106,7 +106,7 @@ This macro checks the dictionary results generated from the [sfdc_get_formula_co
 * `inclusion_fields` (optional, default is none): The list of fields you want to be included in the macro. If no fields are selected then all fields will be included.
 ----
 ### sfdc_formula_view_sql ([source](macros/sfdc_formula_view_sql.sql))
-This macro checks the dictionary results generated from the [sfdc_get_formula_column_values](macros/sfdc_fet_formula_column_values.sql) macro and returns the view_sql value results while also replacing the `from` and `join` syntax to be specific to the source defined. Additionally, the where logic will be applied to ensure the view_sql is properly joined to the base table.
+This macro checks the dictionary results generated from the [sfdc_get_formula_column_values](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/macros/sfdc_get_formula_column_values.sql) macro and returns the view_sql value results while also replacing the `from` and `join` syntax to be specific to the source defined. Additionally, the where logic will be applied to ensure the view_sql is properly joined to the base table.
 
 **Usage:**
 ```sql
@@ -121,7 +121,7 @@ This macro checks the dictionary results generated from the [sfdc_get_formula_co
 ### sfdc_get_formula_column_values ([source](macros/sfdc_get_formula_column_values.sql))
 This macro is designed to look within the users source defined `salesforce_schema` for the `fivetran_formula` table. The macro will then filter to only include records from the `join_to_table` argument, and search for distinct combinations of the `field` and `sql` columns. The distinct combination of columns for the join_table argument are then returned as a dictionary. 
 Further, if there are any formula fields that are a third degree referential formula (eg. a formula field is contains a field that is a formula field, and that formula field also references another formula field) or greater then you can add those fields to the `sfdc_exclude_formulas` variable within your root `dbt_project.yml` file to exclude them from the macro as they will fail in the final view creation.
-> Note: This macro will not work accurately unless you have a `src.yml` configured appropriately. For reference, look within this packages [integration_tests](integration_tests/models/fivetran_formula_src.yml) folder for an example of a source configuration.
+> Note: This macro will not work accurately unless you have a `src.yml` configured appropriately. For reference, look within this packages [integration_tests](https://github.com/fivetran/dbt_salesforce_formula_utils/tree/main/integration_tests/models) folder for an example of a source configuration.
 
 **Usage:**
 ```sql
@@ -149,7 +149,7 @@ This macro mirrors the [dbt_utils.star()](https://github.com/dbt-labs/dbt-utils#
 ----
 ## Automation Bash Script
 ### sfdc_formula_model_automation.sh ([source](sfdc_formula_model_automation.sh))
-This bash script is intended to be used in order to automatically create the desired salesforce models via the command line within your dbt project. This bash script will generate a model file within your dbt project that contains the `sfdc_formula_view` macro for the appropriately defined table(s). In order for this command to work you must be within the root directory of your dbt project. 
+This bash script is intended to be used in order to automatically create the desired salesforce models via the command line within your dbt project. This bash script will generate a model file within your dbt project that contains the [sfdc_formula_view](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/macros/sfdc_formula_view.sql) macro for the appropriately defined table(s). In order for this command to work you must be within the root directory of your dbt project. 
 
 **Usage:**
 ```bash
