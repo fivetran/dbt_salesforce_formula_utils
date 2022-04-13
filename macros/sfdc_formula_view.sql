@@ -1,4 +1,4 @@
-{%- macro sfdc_formula_view(source_table, source_name='salesforce', reserved_table_name=source_table, fields_to_include=none) -%}
+{%- macro sfdc_formula_view(source_table, source_name='salesforce', reserved_table_name=source_table, fields_to_include=none, base_fields_to_include=[]) -%}
 
 -- Best practice for this model is to be materialized as view. That is why we have set that here.
 {{
@@ -22,8 +22,13 @@
 
     select
 
-        {{ salesforce_formula_utils.sfdc_star_exact(source(source_name,source_table), relation_alias=reserved_table_name, except=current_formula_fields) }} --Querying the source table and excluding the old formula fields if they are present.
-
+        {% if base_fields_to_include %}
+            {% for field in base_fields_to_include %}
+                {{reserved_table_name}}."{{ field }}"{% if not loop.last %},{% endif %}
+            {% endfor %}
+        {% else %}
+            {{ salesforce_formula_utils.sfdc_star_exact(source(source_name,source_table), relation_alias=reserved_table_name, except=current_formula_fields) }} --Querying the source table and excluding the old formula fields if they are present.
+        {% endif %}
         {{ salesforce_formula_utils.sfdc_formula_view_fields(join_to_table=source_table, source_name=source_name, inclusion_fields=fields_to_include) }} --Adds the field names for records that leverage the view_sql logic.
 
         {{ salesforce_formula_utils.sfdc_formula_pivot(join_to_table=source_table, source_name=source_name, added_inclusion_fields=fields_to_include) }} --Adds the results of the sfdc_formula_pivot macro as the remainder of the sql query.
