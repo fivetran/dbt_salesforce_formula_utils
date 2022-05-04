@@ -1,4 +1,4 @@
-{%- macro sfdc_formula_view_sql(join_to_table, source_name = 'salesforce', reserved_table_name=join_to_table, inclusion_fields=none, not_null_value=true) -%}
+{%- macro sfdc_formula_view_sql(join_to_table, source_name = 'salesforce', reserved_table_name=source_table, inclusion_fields=none, not_null_value=true) -%}
 
     --Generate the key value pair from the formula field table with the below macro.
     {%- set key_val = salesforce_formula_utils.sfdc_get_formula_column_values(source(source_name, 'fivetran_formula'), 'field', 'view_sql', join_to_table, not_null_value) -%}
@@ -32,7 +32,7 @@
 
         --A where clause is needed to properly leverage the view sql. The below joins the views to the base table using the base ID.
         {%- for lookup in view_sql_ref %}
-            {% if loop.first %}where {% endif %} {{ reserved_table_name }}.id = view_sql_{{ lookup }}.id
+            {% if loop.first %}where {% endif %} {{ join_to_table }}__table.id = view_sql_{{ lookup }}.id
             {% if not loop.last %}
             and {% endif %}
         {% endfor -%}

@@ -36,7 +36,7 @@ This macro has been created to allow for two degrees of formula field reference.
 - :white_check_mark: : A formula field references another formula field that does not reference other formula fields.
 - :x:     : A formula field references another formula field that references another formula field (etc.).
 
-If you have a formula field that would fall under the :construction: example, exclude it from all your models by configuring the `sfdc_exclude_formulas` variable within your root `dbt_project.yml` file. Configure this variable as a set of all the fields you would like to exclude from all models. See below for an example:
+If you have a formula field that would fall under the :x: example, exclude it from all your models by configuring the `sfdc_exclude_formulas` variable within your root `dbt_project.yml` file. Configure this variable as a set of all the fields you would like to exclude from all models. See below for an example:
 ```yml
 vars:
   sfdc_exclude_formulas: ('field_that_references_other_formula','other_triple_ref_field','field_i_just_dont_want')
@@ -63,7 +63,6 @@ This macro generates the final sql needed to join the Salesforce formula fields 
 **Args:**
 * `source_table` (required): The table with which you are joining the formula fields.
 * `source_name` (optional, default 'salesforce'): The dbt source containing the table you want to join with formula fields. Must also contain the `fivetran_formula` table.
-* `reserved_table_name` (optional, default is `source_table`): If the source table is a reserved word within your warehouse the macro will fail. As such, this argument allows users to change the compiled query to leverage a non-reserved word if needed. 
 * `fields_to_include` (optional, default is none): If a users wishes to only run the formula fields macro for designated fields then they may be applied within this variable. This variable will ensure the model only generates the sql for the designated fields. 
 > Note: If you populate the `fields_to_include` argument then the package will exclusively look for those fields. If you have designated a field to be excluded within the `sfdc_exclude_formulas` variable, then this will be ignored and the field will be included in the final model.
 ----
