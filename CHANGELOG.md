@@ -1,7 +1,7 @@
 # dbt_salesforce_formula_utils v0.6.4
 ## Under the Hood
-- The string `__table` is now prepended to the table alias to match with the data provided within the connector. To ensure consistency across the board, the `reserved_table_name` argument is now ignored in place of the `{{source_table}}__table` format.
-  - The `reserved_table_name` argument is still accepted, but is just ignored for the time being. This will be removed in the next breaking release.
+- The string `__table` is now appended to the table alias to match with the data provided within the connector. To ensure consistency across the board, the `reserved_table_name` argument is now ignored in place of the `{{source_table}}__table` format. ([#51](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/51))
+  - The `reserved_table_name` argument is still accepted, but it will now be ignored for the time being. This will be removed in the next breaking release.
 # dbt_salesforce_formula_utils v0.6.3
 ## Fixes
 - Adjusted the conditional within the `sfdc_formula_views` macro to reference the properly named `current_formula_fields` variable opposed to the incorrect `old_formula_fields` variable that is not longer referenced. ([#46](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/46))
