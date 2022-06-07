@@ -1,3 +1,6 @@
+# dbt_salesforce_formula_utils v0.6.5
+## Features
+- Inclusion of the `materialization` argument to the `sfdc_formula_view` macro. The argument is `view` by default. However, if a user wishes to override the materialization then they may do so with this argument.
 # dbt_salesforce_formula_utils v0.6.4
 ## Under the Hood
 - The string `__table` is now appended to the table alias to match with the data provided within the connector. To ensure consistency across the board, the `reserved_table_name` argument is now ignored in place of the `{{source_table}}__table` format. ([#51](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/51))
