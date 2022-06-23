@@ -1,9 +1,9 @@
-{%- macro sfdc_formula_view(source_table, source_name='salesforce', reserved_table_name=source_table, fields_to_include=none) -%}
+{%- macro sfdc_formula_view(source_table, source_name='salesforce', reserved_table_name=source_table, fields_to_include=none, materialization='view') -%}
 
 -- Best practice for this model is to be materialized as view. That is why we have set that here.
 {{
     config(
-        materialized = 'view'
+        materialized = materialization
     )
 }}
 
