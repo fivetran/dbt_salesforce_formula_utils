@@ -10,6 +10,8 @@ sources:
     #root dbt project. Similarly, if you do not have these tables you can remove them.
 
     tables:
+      - name: fivetran_formula_table
+      
       - name: fivetran_formula
         description: A table containing a mapping of sfdc formulas with a reference to corresponding table objects for the formulas to be applied.
         columns:
