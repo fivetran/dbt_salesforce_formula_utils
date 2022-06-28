@@ -12,7 +12,7 @@ This macro is intended to be used within a salesforce dbt project model. To leve
 ```yml
 packages:
   - package: fivetran/salesforce_formula_utils
-    version: [">=0.6.0", "<0.7.0"]
+    version: [">=0.7.0", "<0.8.0"]
 ```
 > **Note**: In order to use the macros included in this package you will need to have a properly configured source package with a source named `salesforce`. To see an example of a properly configured Salesforce source yml you can reference [integration_tests](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/integration_tests/models/src_fivetran_formula.yml). You are also welcome to copy/paste this source configuration into your dbt root project and modify for your Salesforce use case.
 
@@ -64,6 +64,7 @@ This macro generates the final sql needed to join the Salesforce formula fields 
 * `source_table` (required): The table with which you are joining the formula fields.
 * `source_name` (optional, default 'salesforce'): The dbt source containing the table you want to join with formula fields. Must also contain the `fivetran_formula` table.
 * `fields_to_include` (optional, default is none): If a users wishes to only run the formula fields macro for designated fields then they may be applied within this variable. This variable will ensure the model only generates the sql for the designated fields. 
+* `full_statement_version` (optional, default is false): Allows a user to leverage the `fivetran_formula_table` version of the macro which will generate the formula fields via the complete sql statement, rather than individual formulas being generated within the macro.
 * `materialization` (optional, default is `view`): By default the model will be materialized as a view. If you would like to materialize as a table, you can adjust using this argument.
 > Note: If you populate the `fields_to_include` argument then the package will exclusively look for those fields. If you have designated a field to be excluded within the `sfdc_exclude_formulas` variable, then this will be ignored and the field will be included in the final model.
 ----

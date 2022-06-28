@@ -1,3 +1,6 @@
+# dbt_salesforce_formula_utils v0.7.0
+## Features
+- Addition of the `full_statement_version` argument within the `sfdc_formula_view` macro. This argument is a boolean and will allow users to either leverage the default (`false`) version of the macro to pull individual formulas from the `fivetran_formula` table to be produced in the materialized view, or (`true`) leverage the `fivetran_formula_table` source to generate the entire sql statement that will be materialized in warehouse. ([#55](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/55))
 # dbt_salesforce_formula_utils v0.6.5
 ## Features
 - Inclusion of the `materialization` argument to the `sfdc_formula_view` macro. The argument is `view` by default. However, if a user wishes to override the materialization then they may do so with this argument.
