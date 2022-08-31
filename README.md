@@ -19,7 +19,7 @@ packages:
 ## Package Maintenance
 The Fivetran team maintaining this package **only** maintains the latest version of the package. We highly recommend you stay consistent with the [latest version](https://hub.getdbt.com/fivetran/salesforce_formula_utils/latest/) of the package and refer to the [CHANGELOG](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/CHANGELOG.md) and release notes for more information on changes across versions.
 ## Model Creation
-The salesforce_formula_utils macro may be used in one of two ways. You may either use the macro to create a table with **all** relevant formula fields applied, or you may use the macro to include **only** specified formula fields. Refer to the two options below for more details.
+The salesforce_formula_utils macro may be used in one of three ways. You may either use the macro to create a table with **all** relevant formula fields applied, or you may use the macro to include **only** specified formula fields. Refer to the two options below for more details.
 ### Option 1: Generate all relevant formula fields at once
 If you would like your model to generate all the formula fields at once related to your source table then you will create a new file in your models folder and name it (`your_table_name_here`.sql). You will then add the below snippet into the file. Finally, update the `source_table` argument to be the source table name for which you are generating the model:
 ```sql
@@ -35,7 +35,7 @@ If you would like your model to generate all the formula fields related to your 
     source_table='your_source_table_name_here') 
 }}
 ```
-### Option 2: Generate only specified formula fields
+### Option 3: Generate only specified formula fields
 If you would like your model to generate only a specified subset of your formula fields related to your source table then you may create a new file in your models folder and name it (`your_table_name_here`.sql). You will then add the below snippet into the file. Finally, update the `source_table` argument to be the source table name for which you are generating the model and update the `fields_to_include` argument to contain all the fields from your source that you would like to be included in the final output. Be sure that the field(s) you would like to include are enclosed within brackets as an array (ie. `[]`):
 ```sql
 {{ salesforce_formula_utils.sfdc_formula_view(
