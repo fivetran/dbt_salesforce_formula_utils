@@ -12,29 +12,42 @@ This macro is intended to be used within a salesforce dbt project model. To leve
 ```yml
 packages:
   - package: fivetran/salesforce_formula_utils
-    version: [">=0.6.0", "<0.7.0"]
+    version: [">=0.7.0", "<0.8.0"]
 ```
 > **Note**: In order to use the macros included in this package you will need to have a properly configured source package with a source named `salesforce`. To see an example of a properly configured Salesforce source yml you can reference [integration_tests](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/integration_tests/models/src_fivetran_formula.yml). You are also welcome to copy/paste this source configuration into your dbt root project and modify for your Salesforce use case.
 
 ## Package Maintenance
 The Fivetran team maintaining this package **only** maintains the latest version of the package. We highly recommend you stay consistent with the [latest version](https://hub.getdbt.com/fivetran/salesforce_formula_utils/latest/) of the package and refer to the [CHANGELOG](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/CHANGELOG.md) and release notes for more information on changes across versions.
 ## Model Creation
-The salesforce_formula_utils macro may be used in one of two ways. You may either use the macro to create a table with **all** relevant formula fields applied, or you may use the macro to include **only** specified formula fields. Refer to the two options below for more details.
-### Option 1: Generate all relevant formula fields
+The salesforce_formula_utils macro may be used in one of three ways. You may either use the macro to create a table with **all** relevant formula fields applied, or you may use the macro to include **only** specified formula fields. Refer to the two options below for more details.
+### Option 1: Generate all relevant formula fields at once
+If you would like your model to generate all the formula fields at once related to your source table then you will create a new file in your models folder and name it (`your_table_name_here`.sql). You will then add the below snippet into the file. Finally, update the `source_table` argument to be the source table name for which you are generating the model:
+```sql
+{{ salesforce_formula_utils.sfdc_formula_view(
+    source_table='your_source_table_name_here',
+    full_statement_version=true) 
+}}
+```
+### Option 2: Generate all relevant formula fields individually
 If you would like your model to generate all the formula fields related to your source table then you may create a new file in your models folder and name it (`your_table_name_here`.sql). You will then add the below snippet into the file. Finally, update the `source_table` argument to be the source table name for which you are generating the model:
 ```sql
-{{ salesforce_formula_utils.sfdc_formula_view(source_table='your_source_table_name_here') }}
+{{ salesforce_formula_utils.sfdc_formula_view(
+    source_table='your_source_table_name_here') 
+}}
 ```
-### Option 2: Generate only specified formula fields
+### Option 3: Generate only specified formula fields
 If you would like your model to generate only a specified subset of your formula fields related to your source table then you may create a new file in your models folder and name it (`your_table_name_here`.sql). You will then add the below snippet into the file. Finally, update the `source_table` argument to be the source table name for which you are generating the model and update the `fields_to_include` argument to contain all the fields from your source that you would like to be included in the final output. Be sure that the field(s) you would like to include are enclosed within brackets as an array (ie. `[]`):
 ```sql
-{{ salesforce_formula_utils.sfdc_formula_view(source_table='your_source_table_name_here', fields_to_include=['i_want_this_field','also_this_one','maybe_a_third_as_well','lets_add_more']) }}
+{{ salesforce_formula_utils.sfdc_formula_view(
+    source_table='your_source_table_name_here', 
+    fields_to_include=['i_want_this_field','also_this_one','maybe_a_third_as_well','lets_add_more']) 
+}}
 ```
 ### Formula Fields that Reference Other Formula Fields
 This macro has been created to allow for two degrees of formula field reference. For example:
 - :white_check_mark: : A formula field references standard fields from the base Salesforce table.
 - :white_check_mark: : A formula field references another formula field that does not reference other formula fields.
-- :x:     : A formula field references another formula field that references another formula field (etc.).
+- 🚧     : A formula field references another formula field that references another formula field (etc.). This may be possible for certain situations using Option #1 above.
 
 If you have a formula field that would fall under the :x: example, exclude it from all your models by configuring the `sfdc_exclude_formulas` variable within your root `dbt_project.yml` file. Configure this variable as a set of all the fields you would like to exclude from all models. See below for an example:
 ```yml
@@ -64,6 +77,7 @@ This macro generates the final sql needed to join the Salesforce formula fields 
 * `source_table` (required): The table with which you are joining the formula fields.
 * `source_name` (optional, default 'salesforce'): The dbt source containing the table you want to join with formula fields. Must also contain the `fivetran_formula` table.
 * `fields_to_include` (optional, default is none): If a users wishes to only run the formula fields macro for designated fields then they may be applied within this variable. This variable will ensure the model only generates the sql for the designated fields. 
+* `full_statement_version` (optional, default is false): Allows a user to leverage the `fivetran_formula_table` version of the macro which will generate the formula fields via the complete sql statement, rather than individual formulas being generated within the macro.
 * `materialization` (optional, default is `view`): By default the model will be materialized as a view. If you would like to materialize as a table, you can adjust using this argument.
 > Note: If you populate the `fields_to_include` argument then the package will exclusively look for those fields. If you have designated a field to be excluded within the `sfdc_exclude_formulas` variable, then this will be ignored and the field will be included in the final model.
 ----

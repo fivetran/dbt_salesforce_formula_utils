@@ -10,6 +10,14 @@ sources:
     #root dbt project. Similarly, if you do not have these tables you can remove them.
 
     tables:
+      - name: fivetran_formula_model
+        description: A table containing a Salesforce object and the full model statement to generate the formula model.
+        columns:
+          - name: object
+            description: The Salesforce object (warehouse table).
+          - name: model
+            description: The full model (select statement) which contains all formulas related to the Salesforce object.
+      
       - name: fivetran_formula
         description: A table containing a mapping of sfdc formulas with a reference to corresponding table objects for the formulas to be applied.
         columns:
