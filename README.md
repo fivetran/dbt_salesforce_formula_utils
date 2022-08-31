@@ -47,7 +47,7 @@ If you would like your model to generate only a specified subset of your formula
 This macro has been created to allow for two degrees of formula field reference. For example:
 - :white_check_mark: : A formula field references standard fields from the base Salesforce table.
 - :white_check_mark: : A formula field references another formula field that does not reference other formula fields.
-- :x:     : A formula field references another formula field that references another formula field (etc.).
+- 🚧     : A formula field references another formula field that references another formula field (etc.). This may be possible for certain situations using Option #1 above.
 
 If you have a formula field that would fall under the :x: example, exclude it from all your models by configuring the `sfdc_exclude_formulas` variable within your root `dbt_project.yml` file. Configure this variable as a set of all the fields you would like to exclude from all models. See below for an example:
 ```yml
