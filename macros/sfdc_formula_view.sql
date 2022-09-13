@@ -15,7 +15,7 @@
 
 {% if full_statement_version %}
 
-{%- set table_results = dbt_utils.get_column_values(source(source_name, 'fivetran_formula_model'), 'model') -%}
+{%- set table_results = dbt_utils.get_column_values(table=source(source_name, 'fivetran_formula_model'), column='model', where="object = '" ~ source_table ~ "'") -%}
 
 {{ table_results[0] }}
 
