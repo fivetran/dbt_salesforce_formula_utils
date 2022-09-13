@@ -14,13 +14,22 @@ packages:
   - package: fivetran/salesforce_formula_utils
     version: [">=0.7.0", "<0.8.0"]
 ```
-> **Note**: In order to use the macros included in this package you will need to have a properly configured source package with a source named `salesforce`. To see an example of a properly configured Salesforce source yml you can reference [integration_tests](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/integration_tests/models/src_fivetran_formula.yml). You are also welcome to copy/paste this source configuration into your dbt root project and modify for your Salesforce use case.
+## Source Tables Required
+In order to use the macros included in this package you will need to have a properly configured source package with a source named `salesforce`. To see an example of a properly configured Salesforce source yml you can reference [integration_tests](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/integration_tests/models/src_fivetran_formula.yml). You are also welcome to copy/paste this source configuration into your dbt root project and modify for your Salesforce use case. In particular, you will need to following sources defined in your `src_salesforce.yml` file:
+```yml
+sources:
+  - name: salesforce #It would be best to keep this named salesforce
+    schema: 'salesforce_schema' #Modify this to be where your Salesforce data resides
+    tables:
+      - name: fivetran_formula_model
+        description: Used for the recommended Option 1 version of the formula solution.
+      - name: fivetran_formula
+        description: Used for options 2 and 2 of the original individual formula solution.
 
-## Package Maintenance
-The Fivetran team maintaining this package **only** maintains the latest version of the package. We highly recommend you stay consistent with the [latest version](https://hub.getdbt.com/fivetran/salesforce_formula_utils/latest/) of the package and refer to the [CHANGELOG](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/CHANGELOG.md) and release notes for more information on changes across versions.
+      ## Any other source tables you are creating models for should be defined here as well.
+```
 ## Model Creation
-The salesforce_formula_utils macro may be used in one of three ways. You may either use the macro to create a table with **all** relevant formula fields applied, or you may use the macro to include **only** specified formula fields. Refer to the two options below for more details.
-### Option 1: Generate all relevant formula fields at once
+### (Recommended) Option 1: Generate all relevant formula fields at once
 If you would like your model to generate all the formula fields at once related to your source table then you will create a new file in your models folder and name it (`your_table_name_here`.sql). You will then add the below snippet into the file. Finally, update the `source_table` argument to be the source table name for which you are generating the model:
 ```sql
 {{ salesforce_formula_utils.sfdc_formula_view(
@@ -175,6 +184,8 @@ Assuming the path to your directory is `"../dbt_salesforce"` and the table(s) yo
 ```bash
 source dbt_modules/salesforce_formula_utils/sfdc_formula_model_automation.sh "../dbt_salesforce" "opportunity,account"
 ```
+## Package Maintenance
+The Fivetran team maintaining this package **only** maintains the latest version of the package. We highly recommend you stay consistent with the [latest version](https://hub.getdbt.com/fivetran/salesforce_formula_utils/latest/) of the package and refer to the [CHANGELOG](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/CHANGELOG.md) and release notes for more information on changes across versions.
 
 ## Contributions
 Don't see a model or specific metric you would have liked to be included? Notice any bugs when installing 
