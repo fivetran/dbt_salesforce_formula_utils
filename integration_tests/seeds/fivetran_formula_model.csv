@@ -1,5 +1,5 @@
 object,model
 opportunity,"select opportunity__table.*, (amount * probability) as opportunity_test_formula from salesforce_formula_integration_tests.opportunity as opportunity__table"
-account,"select account_table.*, (number_of_employees * 2) as account_test_formula from salesforce_formula_integration_tests.account as account__table"
+account,"select account__table.*, (number_of_employees * 2) as account_test_formula from salesforce_formula_integration_tests.account as account__table"
 user,"select user__table.*, case when is_active = true then 'active' else 'not active' end as is_active_user from salesforce_formula_integration_tests.user as user__table"
 user_role,"select user_role__table.*, concat(developer_name,id) as developer_and_id from salesforce_formula_integration_tests.user_role as user_role__table"
