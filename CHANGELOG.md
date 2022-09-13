@@ -1,3 +1,6 @@
+# dbt_salesforce_formula_utils v0.7.1
+## Bug Fixes
+- The `dbt_utils.get_column_values` macro for the full_statement_version of the package was not properly filtering for only the relevant source table records within the `fivetran_formula_model` source table. A where clause has been added to remedy this issue.
 # dbt_salesforce_formula_utils v0.7.0
 ## Features
 - Addition of the `full_statement_version` argument within the `sfdc_formula_view` macro. This argument is a boolean and will allow users to either leverage the default (`false`) version of the macro to pull individual formulas from the `fivetran_formula` table to be produced in the materialized view, or (`true`) leverage the `fivetran_formula_model` source to generate the entire sql statement that will be materialized in warehouse. ([#55](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/55))
