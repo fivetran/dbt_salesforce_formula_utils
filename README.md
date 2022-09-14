@@ -24,7 +24,7 @@ sources:
       - name: fivetran_formula_model
         description: Used for the recommended Option 1 version of the formula solution.
       - name: fivetran_formula
-        description: Used for options 2 and 2 of the original individual formula solution.
+        description: Used for options 2 and 3 of the original individual formula solution.
 
       ## Any other source tables you are creating models for should be defined here as well.
 ```
