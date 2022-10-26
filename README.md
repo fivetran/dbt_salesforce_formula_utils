@@ -1,4 +1,15 @@
-[![Apache License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+<p align="center">
+    <a alt="License"
+        href="https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/LICENSE">
+        <img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" /></a>
+    <a alt="dbt-core">
+        <img src="https://img.shields.io/badge/dbt_Core™_version->=1.3.0_<2.0.0-orange.svg" /></a>
+    <a alt="Maintained?">
+        <img src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" /></a>
+    <a alt="PRs">
+        <img src="https://img.shields.io/badge/Contributions-welcome-blueviolet" /></a>
+</p>
+
 # Fivetran Salesforce Formula Utils
 
 This package includes macros to be used within a Salesforce dbt project to accurately map Salesforce Formulas to existing tables.
@@ -12,7 +23,7 @@ This macro is intended to be used within a salesforce dbt project model. To leve
 ```yml
 packages:
   - package: fivetran/salesforce_formula_utils
-    version: [">=0.7.0", "<0.8.0"]
+    version: [">=0.8.0", "<0.9.0"]
 ```
 ## Source Tables Required
 In order to use the macros included in this package you will need to have a properly configured source package with a source named `salesforce`. To see an example of a properly configured Salesforce source yml you can reference [integration_tests](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/integration_tests/models/src_fivetran_formula.yml). You are also welcome to copy/paste this source configuration into your dbt root project and modify for your Salesforce use case. In particular, you will need to following sources defined in your `src_salesforce.yml` file:
@@ -29,7 +40,7 @@ sources:
       ## Any other source tables you are creating models for should be defined here as well.
 ```
 ## Model Creation
-### (Recommended) Option 1: Generate all relevant formula fields at once
+### (Recommended and default) Option 1: Generate all relevant formula fields at once
 If you would like your model to generate all the formula fields at once related to your source table then you will create a new file in your models folder and name it (`your_table_name_here`.sql). You will then add the below snippet into the file. Finally, update the `source_table` argument to be the source table name for which you are generating the model:
 ```sql
 {{ salesforce_formula_utils.sfdc_formula_view(
@@ -41,7 +52,8 @@ If you would like your model to generate all the formula fields at once related 
 If you would like your model to generate all the formula fields related to your source table then you may create a new file in your models folder and name it (`your_table_name_here`.sql). You will then add the below snippet into the file. Finally, update the `source_table` argument to be the source table name for which you are generating the model:
 ```sql
 {{ salesforce_formula_utils.sfdc_formula_view(
-    source_table='your_source_table_name_here') 
+    source_table='your_source_table_name_here',
+    full_statement_version=false) 
 }}
 ```
 ### Option 3: Generate only specified formula fields
@@ -49,7 +61,8 @@ If you would like your model to generate only a specified subset of your formula
 ```sql
 {{ salesforce_formula_utils.sfdc_formula_view(
     source_table='your_source_table_name_here', 
-    fields_to_include=['i_want_this_field','also_this_one','maybe_a_third_as_well','lets_add_more']) 
+    fields_to_include=['i_want_this_field','also_this_one','maybe_a_third_as_well','lets_add_more'],
+    full_statement_version=false) 
 }}
 ```
 ### Formula Fields that Reference Other Formula Fields

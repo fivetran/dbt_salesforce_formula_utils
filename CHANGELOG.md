@@ -1,3 +1,44 @@
+# dbt_salesforce_formula_utils v0.8.0
+
+## 🚨 Breaking Changes 🚨:
+[PR #64](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/64) includes the following breaking changes:
+- The default behavior of the `sfdc_formula_view` macro now has the `full_statement_version` equal to `true`. This means, by default the macro will search for the `fivetran_formula_model` source table (full SQL statement for each object) opposed to the `fivetran_formula` source table (individual formulas). 
+  - Please be sure to update your macros that intend to reference the `fivetran_formula` source table accordingly.
+- Dispatch update for dbt-utils to dbt-core cross-db macros migration. Specifically `{{ dbt_utils.<macro> }}` have been updated to `{{ dbt.<macro> }}` for the below macros:
+    - `any_value`
+    - `bool_or`
+    - `cast_bool_to_text`
+    - `concat`
+    - `date_trunc`
+    - `dateadd`
+    - `datediff`
+    - `escape_single_quotes`
+    - `except`
+    - `hash`
+    - `intersect`
+    - `last_day`
+    - `length`
+    - `listagg`
+    - `position`
+    - `replace`
+    - `right`
+    - `safe_cast`
+    - `split_part`
+    - `string_literal`
+    - `type_bigint`
+    - `type_float`
+    - `type_int`
+    - `type_numeric`
+    - `type_string`
+    - `type_timestamp`
+    - `array_append`
+    - `array_concat`
+    - `array_construct`
+- For `current_timestamp` and `current_timestamp_in_utc` macros, the dispatch AND the macro names have been updated to the below, respectively:
+    - `dbt.current_timestamp_backcompat`
+    - `dbt.current_timestamp_in_utc_backcompat`
+- Dependencies on `fivetran/fivetran_utils` have been upgraded, previously `[">=0.3.0", "<0.4.0"]` now `[">=0.4.0", "<0.5.0"]`.
+
 # dbt_salesforce_formula_utils v0.7.1
 ## Features
 - README edits for easier navigation and understanding of how to use the solution. ([#61](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/61))
