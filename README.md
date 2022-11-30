@@ -15,8 +15,10 @@ packages:
     version: [">=0.7.0", "<0.8.0"]
 ```
 ## Source Tables Required
-In order to use the macros included in this package you will need to have a properly configured source package with a source named `salesforce`. To see an example of a properly configured Salesforce source yml you can reference [integration_tests](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/integration_tests/models/src_fivetran_formula.yml). You are also welcome to copy/paste this source configuration into your dbt root project and modify for your Salesforce use case. In particular, you will need to following sources defined in your `src_salesforce.yml` file:
-```yml
+In order to use the macros included in this package, you will need to have a properly configured source package with a source named `salesforce`. An example of a properly configured Salesforce source yml can be found in the `src_salesforce.yml` file in [integration_tests](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/integration_tests/models/src_fivetran_formula.yml). This integration_tests folder is just for testing purposes - your source file will need to be in the dbt root models folder. You are welcome to copy/paste the [example](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/integration_tests/models/src_fivetran_formula.yml) source configuration into your `src_salesforce.yml` file and modify for your use case. In particular, you will need to following sources defined in your `src_salesforce.yml` file:
+```
+version: 2
+
 sources:
   - name: salesforce #It would be best to keep this named salesforce
     schema: 'salesforce_schema' #Modify this to be where your Salesforce data resides
@@ -26,9 +28,11 @@ sources:
       - name: fivetran_formula
         description: Used for options 2 and 3 of the original individual formula solution.
 
-      ## Any other source tables you are creating models for should be defined here as well.
+      ## Any other source tables you are creating models for should be defined here as well. They aren't required it is best organizational practice and  allows Fivetran to compile data lineage graphs
 ```
 ## Model Creation
+Models should be created in the dbt project root models folder. The models should not be named exclusively after the table you are referencing. For example, if you would like to create a model for all formula fields in the account table, if it is named account.sql then this will cause an overwrite on the account table in your destination and require you to resync the data. We recommend naming the model table_name_view.sql as you can see in the [examples](https://github.com/fivetran/dbt_salesforce_formula_utils/tree/main/integration_tests/models) listed in our integration_tests folder.
+
 ### (Recommended) Option 1: Generate all relevant formula fields at once
 If you would like your model to generate all the formula fields at once related to your source table then you will create a new file in your models folder and name it (`your_table_name_here`.sql). You will then add the below snippet into the file. Finally, update the `source_table` argument to be the source table name for which you are generating the model:
 ```sql
