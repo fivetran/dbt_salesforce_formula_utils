@@ -6,7 +6,7 @@ config-version: 2
 
 vars:
   salesforce_formula_integration_tests:
-    salesforce_schema:  salesforce_formula_integration_tests
+    salesforce_schema:  salesforce_formula_integrations_tests
 
 seeds:
   salesforce_formula_integration_tests:
