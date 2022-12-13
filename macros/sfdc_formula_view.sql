@@ -1,4 +1,4 @@
-{%- macro sfdc_formula_view(source_table, source_name='salesforce', reserved_table_name=source_table, fields_to_include=none, full_statement_version=false, materialization='view') -%}
+{%- macro sfdc_formula_view(source_table, source_name='salesforce', reserved_table_name=source_table, fields_to_include=none, full_statement_version=false, materialization='view', using_quoted_identifiers=false) -%}
 
 -- Best practice for this model is to be materialized as view. That is why we have set that here.
 {{
@@ -14,8 +14,13 @@
 */
 
 {% if full_statement_version %}
+{% if using_quoted_identifiers %}
+{%- set table_results = dbt_utils.get_column_values(table=source(source_name, 'fivetran_formula_model'), column='"model"', where="\"object\" = '" ~ source_table ~ "'") -%}
 
+{% else %}
 {%- set table_results = dbt_utils.get_column_values(table=source(source_name, 'fivetran_formula_model'), column='model', where="object = '" ~ source_table ~ "'") -%}
+
+{% endif %}
 
 {{ table_results[0] }}
 
