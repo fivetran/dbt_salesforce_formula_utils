@@ -1,4 +1,15 @@
-[![Apache License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+<p align="center">
+    <a alt="License"
+        href="https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/LICENSE">
+        <img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" /></a>
+    <a alt="dbt-core">
+        <img src="https://img.shields.io/badge/dbt_Core™_version->=1.3.0_<2.0.0-orange.svg" /></a>
+    <a alt="Maintained?">
+        <img src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" /></a>
+    <a alt="PRs">
+        <img src="https://img.shields.io/badge/Contributions-welcome-blueviolet" /></a>
+</p>
+
 # Fivetran Salesforce Formula Utils
 
 This package includes macros to be used within a Salesforce dbt project to accurately map Salesforce Formulas to existing tables.
@@ -12,7 +23,7 @@ This macro is intended to be used within a salesforce dbt project model. To leve
 ```yml
 packages:
   - package: fivetran/salesforce_formula_utils
-    version: [">=0.7.0", "<0.8.0"]
+    version: [">=0.8.0", "<0.9.0"]
 ```
 ## Source Tables Required
 In order to use the macros included in this package, you will need to have a properly configured source package with a source named `salesforce`. An example of a properly configured Salesforce source yml can be found in the `src_salesforce.yml` file in [integration_tests](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/integration_tests/models/src_fivetran_formula.yml). This integration_tests folder is just for testing purposes - your source file will need to be in the dbt root models folder. You are welcome to copy/paste the [example](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/integration_tests/models/src_fivetran_formula.yml) source configuration into your `src_salesforce.yml` file and modify for your use case. In particular, you will need the following sources defined in your `src_salesforce.yml` file:
@@ -31,9 +42,7 @@ sources:
       ## Any other source tables you are creating models for should be defined here as well. They aren't required it is best organizational practice and  allows Fivetran to compile data lineage graphs
 ```
 ## Model Creation
-Models should be created in the dbt project root models folder. The models should not be named exclusively after the table you are referencing. For example, if you would like to create a model for all formula fields in the account table, if it is named account.sql then this will cause an overwrite on the account table in your destination and require you to resync the data. We recommend naming the model table_name_view.sql as you can see in the [examples](https://github.com/fivetran/dbt_salesforce_formula_utils/tree/main/integration_tests/models) listed in our integration_tests folder.
-
-### (Recommended) Option 1: Generate all relevant formula fields at once
+### (Recommended and default) Option 1: Generate all relevant formula fields at once
 If you would like your model to generate all the formula fields at once related to your source table then you will create a new file in your models folder and name it (`your_table_name_here`.sql). You will then add the below snippet into the file. Finally, update the `source_table` argument to be the source table name for which you are generating the model:
 ```sql
 {{ salesforce_formula_utils.sfdc_formula_view(
@@ -45,7 +54,8 @@ If you would like your model to generate all the formula fields at once related 
 If you would like your model to generate all the formula fields related to your source table then you may create a new file in your models folder and name it (`your_table_name_here`.sql). You will then add the below snippet into the file. Finally, update the `source_table` argument to be the source table name for which you are generating the model:
 ```sql
 {{ salesforce_formula_utils.sfdc_formula_view(
-    source_table='your_source_table_name_here') 
+    source_table='your_source_table_name_here',
+    full_statement_version=false) 
 }}
 ```
 ### Option 3: Generate only specified formula fields
@@ -53,7 +63,8 @@ If you would like your model to generate only a specified subset of your formula
 ```sql
 {{ salesforce_formula_utils.sfdc_formula_view(
     source_table='your_source_table_name_here', 
-    fields_to_include=['i_want_this_field','also_this_one','maybe_a_third_as_well','lets_add_more']) 
+    fields_to_include=['i_want_this_field','also_this_one','maybe_a_third_as_well','lets_add_more'],
+    full_statement_version=false) 
 }}
 ```
 ### Formula Fields that Reference Other Formula Fields

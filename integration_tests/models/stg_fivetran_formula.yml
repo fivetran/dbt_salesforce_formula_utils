@@ -4,9 +4,6 @@ models:
 
   - name: account_view
     description: Represents an individual account, which is an organization or person involved with your business (such as customers, competitors, and partners).
-    tests:
-      - dbt_expectations.expect_table_row_count_to_equal_other_table:
-          compare_model: ref("account")
     columns:
     - name: id
       description: The unique, system-generated ID assigned during creation
@@ -111,9 +108,6 @@ models:
 
   - name: opportunity_view
     description: Represents an opportunity, which is a sale or pending deal.
-    tests:
-      - dbt_expectations.expect_table_row_count_to_equal_other_table:
-          compare_model: ref("opportunity")
     columns:
     - name: id
       description: The unique, system-generated ID assigned during creation.
@@ -192,9 +186,6 @@ models:
 
   - name: user_view
     description: Represents a user in your organization.
-    tests:
-      - dbt_expectations.expect_table_row_count_to_equal_other_table:
-          compare_model: ref("user")
     columns:
     - name: id
       description: The unique, system-generated ID assigned during creation.
@@ -329,9 +320,6 @@ models:
   
   - name: user_role_view
     description: Represents a user role in your organization.
-    tests:
-      - dbt_expectations.expect_table_row_count_to_equal_other_table:
-          compare_model: ref("user_role")
     columns:
     - name: id
       description: The unique, system-generated ID assigned during creation
