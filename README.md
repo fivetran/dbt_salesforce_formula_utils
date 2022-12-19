@@ -26,8 +26,10 @@ packages:
     version: [">=0.8.0", "<0.9.0"]
 ```
 ## Source Tables Required
-In order to use the macros included in this package you will need to have a properly configured source package with a source named `salesforce`. To see an example of a properly configured Salesforce source yml you can reference [integration_tests](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/integration_tests/models/src_fivetran_formula.yml). You are also welcome to copy/paste this source configuration into your dbt root project and modify for your Salesforce use case. In particular, you will need to following sources defined in your `src_salesforce.yml` file:
-```yml
+In order to use the macros included in this package, you will need to have a properly configured source package with a source named `salesforce`. An example of a properly configured Salesforce source yml can be found in the `src_salesforce.yml` file in [integration_tests](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/integration_tests/models/src_fivetran_formula.yml). This integration_tests folder is just for testing purposes - your source file will need to be in the dbt root models folder. You are welcome to copy/paste the [example](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/integration_tests/models/src_fivetran_formula.yml) source configuration into your `src_salesforce.yml` file and modify for your use case. In particular, you will need the following sources defined in your `src_salesforce.yml` file:
+```
+version: 2
+
 sources:
   - name: salesforce #It would be best to keep this named salesforce
     schema: 'salesforce_schema' #Modify this to be where your Salesforce data resides
@@ -37,7 +39,7 @@ sources:
       - name: fivetran_formula
         description: Used for options 2 and 3 of the original individual formula solution.
 
-      ## Any other source tables you are creating models for should be defined here as well.
+      ## Any other source tables you are creating models for should be defined here as well. They aren't required it is best organizational practice and  allows Fivetran to compile data lineage graphs
 ```
 ## Model Creation
 ### (Recommended and default) Option 1: Generate all relevant formula fields at once
@@ -81,7 +83,7 @@ vars:
 Once you have created all your desired models and copied/modified the sql snippet into each model you will execute `dbt deps` to install the macro package, then execute `dbt run` to generate the models. Additionally, you can reference the [integration_tests](https://github.com/fivetran/dbt_salesforce_formula_utils/tree/main/integration_tests/models) folder for examples on how to use the macro within your models.
 
 ### Model Creation Automation
-If you have multiple models you need to create, you can also Leverage the [sfdc_formula_model_automation](sfdc_formula_model_automation.sh) script within this project to automatically create models locally via the command line. Below is an example command to copy and edit.
+If you have multiple models you need to create, you can also Leverage the [sfdc_formula_model_automation](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/sfdc_formula_model_automation.sh) script within this project to automatically create models locally via the command line. Below is an example command to copy and edit.
 
 ```bash
 source dbt_modules/salesforce_formula_utils/sfdc_formula_model_automation.sh "../path/to/directory" "desired_table_1,desired_table_2,desired_table_infinity"
@@ -100,6 +102,7 @@ This macro generates the final sql needed to join the Salesforce formula fields 
 * `source_name` (optional, default 'salesforce'): The dbt source containing the table you want to join with formula fields. Must also contain the `fivetran_formula` table.
 * `fields_to_include` (optional, default is none): If a users wishes to only run the formula fields macro for designated fields then they may be applied within this variable. This variable will ensure the model only generates the sql for the designated fields. 
 * `full_statement_version` (optional, default is false): Allows a user to leverage the `fivetran_formula_table` version of the macro which will generate the formula fields via the complete sql statement, rather than individual formulas being generated within the macro.
+* `using_quoted_identifiers` (optional, default is false): For warehouses with case sensitivity enabled this argument **must** be set to `true` in order for the underlying macros within this project to properly compile and execute successfully. 
 * `materialization` (optional, default is `view`): By default the model will be materialized as a view. If you would like to materialize as a table, you can adjust using this argument.
 > Note: If you populate the `fields_to_include` argument then the package will exclusively look for those fields. If you have designated a field to be excluded within the `sfdc_exclude_formulas` variable, then this will be ignored and the field will be included in the final model.
 ----
