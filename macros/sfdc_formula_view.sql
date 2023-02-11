@@ -15,7 +15,6 @@
 
 {% if full_statement_version %}
 {% if using_quoted_identifiers %}
-{{ print("poop\n") }}
 {%- set table_results = dbt_utils.get_column_values(table=source(source_name, 'fivetran_formula_model'), 
                                                     column='"model"' if target.type in ('snowflake', 'postgres', 'redshift') else '`model`', 
                                                     where=("\"object\" = '" if target.type in ('snowflake', 'postgres', 'redshift') else "`object` = '") ~ source_table ~ "'") -%}
