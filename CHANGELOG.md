@@ -1,7 +1,7 @@
 # dbt_salesforce_formula_utils v0.8.1
 
 ## Features
-- Updated the README for easier use and navigation of the package (add PR).
+- Updated the README for easier use and navigation of the package ([PR #78](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/78)).
 
 # dbt_salesforce_formula_utils v0.8.0
 
