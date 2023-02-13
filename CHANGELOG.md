@@ -1,3 +1,8 @@
+# dbt_salesforce_formula_utils v0.8.1
+
+## Features
+- Updated the README for easier use and navigation of the package (add PR).
+
 # dbt_salesforce_formula_utils v0.8.0
 
 ## 🚨 Breaking Changes 🚨:
