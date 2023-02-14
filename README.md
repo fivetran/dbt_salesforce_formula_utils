@@ -12,7 +12,9 @@
 
 # Fivetran Salesforce Formula Utils
 # 📣 What does this dbt package do?
-This package includes macros to be used within a Salesforce dbt project to accurately map Salesforce Formulas to existing tables.
+This package includes macros and scipts to be used within a dbt project to accurately map Salesforce Formulas to existing tables. It is designed to  work with data from [Fivetran's Salesforce connector](https://fivetran.com/docs/applications/salesforce) in the format described by [this ERD](https://fivetran.com/docs/applications/salesforce#schema).
+
+> Note: this package is distinct from the [Salesforce dbt package](https://github.com/fivetran/dbt_salesforce), which _transforms_ Salesforce data and outputs analytics-ready end models.
 
 # 🎯 How do I use the dbt package?
 ## Step 1: Prerequisites
@@ -21,7 +23,7 @@ To use this dbt package, you must have the following:
 - A **BigQuery**, **Snowflake**, **Redshift**, or **PostgreSQL** destination.
 
 ## Step 2: Install the package
-This macro is intended to be used within a Salesforce dbt project model. To leverage the macro, you will add the below configuration to your `packages.yml` file (if you do not have a `packages.yml` file you can create one).
+The [`sfdc_formula_view`](https://github.com/fivetran/dbt_salesforce_formula_utils#sfdc_formula_view-source) macro is intended to be leveraged within a dbt project that uses the source tables from Fivetran's Salesforce connector. To leverage the macro, you will add the below configuration to your `packages.yml` file (if you do not have a `packages.yml` file, create on in your root dbt project).
 > TIP: Check [dbt Hub](https://hub.getdbt.com/) for the latest installation instructions or [read the dbt docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
 ```yml
 packages:
@@ -38,7 +40,7 @@ version: 2
 
 sources:
   - name: salesforce # It would be best to keep this named salesforce
-    schema: 'salesforce_schema' # Modify this to be where your Salesforce data resides
+    schema: "{{ var('salesforce_schema', 'salesforce') }}" # Configure the salesforce_schema var from your dbt_project.yml (alternatively you can hard-code the schema here if only using one Salesforce connector)
     # Add the database where your Salesforce data resides if different from the target database. Eg. 'my_salesforce_database'. By default the target.database is used.
     tables:
       - name: fivetran_formula_model
@@ -54,7 +56,7 @@ sources:
 
 If you would like your model to generate all the formula fields at once related to your source table then you will need to:
 1. Create a new file in your models folder and name it `your_table_name_here`.sql (e.g. `customer.sql`; this is not necessary but recommended as best practice). 
-2. Add the below snippet calling the `sfdc_formula_view` macro into the file. Update the `source_table` argument to be the source table name for which you are generating the model (e.g. `customer`).
+2. Add the below snippet calling the [`sfdc_formula_view`](https://github.com/fivetran/dbt_salesforce_formula_utils#sfdc_formula_view-source) macro into the file. Update the `source_table` argument to be the source table name for which you are generating the model (e.g. `customer`). Though `full_statement_version` is explicitly included here, it is `true` by default.
 ```sql
 {{ salesforce_formula_utils.sfdc_formula_view(
     source_table='your_source_table_name_here',
@@ -70,11 +72,11 @@ If you would like your model to generate all the formula fields at once related 
 
 If you would like your model to generate all the formula fields related to your source table then you will need to: 
 1. Create a new file in your models folder and name it `your_table_name_here`.sql (e.g. `customer.sql`; this is not necessary but recommended as best practice). 
-2. Add the below snippet calling the `sfdc_formula_view` macro into the file. Update the `source_table` argument to be the source table name for which you are generating the model (e.g. `customer`).
+2. Add the below snippet calling the [`sfdc_formula_view`](https://github.com/fivetran/dbt_salesforce_formula_utils#sfdc_formula_view-source) macro into the file. Update the `source_table` argument to be the source table name for which you are generating the model (e.g. `customer`).
 ```sql
 {{ salesforce_formula_utils.sfdc_formula_view(
     source_table='your_source_table_name_here',
-    full_statement_version=false) 
+    full_statement_version=false)
 }}
 ```
 
@@ -86,7 +88,7 @@ If you would like your model to generate all the formula fields related to your 
 
 If you would like your model to generate only a specified subset of your formula fields related to your source table then you will need to: 
 1. Create a new file in your models folder and name it `your_table_name_here`.sql (e.g. `customer.sql`; this is not necessary but recommended as best practice). 
-2. Add the below snippet calling the `sfdc_formula_view` macro into the file and:
+2. Add the below snippet calling the [`sfdc_formula_view`](https://github.com/fivetran/dbt_salesforce_formula_utils#sfdc_formula_view-source) macro into the file and:
     - Update the `source_table` argument to be the source table name for which you are generating the model (e.g. `customer`).
     - Update the `fields_to_include` argument to contain all the fields from your source that you would like to be included in the final output. Be sure that the field(s) you would like to include are enclosed within brackets as an array (ie. `[]`)
 ```sql
@@ -102,13 +104,15 @@ If you would like your model to generate only a specified subset of your formula
 > This option makes use of the `fivetran_formula` lookup table, which requires the package to combine fields' formulas into a SQL query for each source table. This option does not support double-nested formulas.
 
 ### Automate model creation
-If you have multiple models you need to create, you can also Leverage the [sfdc_formula_model_automation](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/sfdc_formula_model_automation.sh) script within this project to automatically create models locally via the command line. Below is an example command to copy and edit.
+If you have multiple models you need to create, you can also leverage the [sfdc_formula_model_automation](https://github.com/fivetran/dbt_salesforce_formula_utils#sfdc_formula_model_automationsh-source) script within this project to automatically create models locally via the command line. Below is an example command to copy and edit.
 
 ```bash
 source dbt_modules/salesforce_formula_utils/sfdc_formula_model_automation.sh "../path/to/directory" "desired_table_1,desired_table_2,desired_table_infinity"
 ```
 
-By default, these models will run Option #1.
+**Output**: Model files for each table, populated with `{{ salesforce_formula_utils.sfdc_formula_view(source_table='table_name') }}`. By default, these models will run Option #1. To use Options #2 or #3, you will need to add `full_statement_version=false`. For Option #3, you will need to add the `fields_to_include` argument(s).
+
+> Note: In order for this command to work, you must currently be within the root directory of your dbt project. 
 
 ## Step 5: Exclude problematic formula fields
 The `sfdc_formula_view` macro has been created to allow for two degrees of formula field reference. For example:
@@ -144,16 +148,16 @@ This macro generates the final sql needed to join the Salesforce formula fields 
 ```
 **Args:**
 * `source_table` (required): The table with which you are joining the formula fields.
-* `source_name` (optional, default = `'salesforce'`): The dbt source containing the table you want to join with formula fields. Must also contain the `fivetran_formula` table.
-* `fields_to_include` (optional, default = `none`): If a users wishes to only run the formula fields macro for designated fields then they may be applied within this variable. This variable will ensure the model only generates the sql for the designated fields. 
-* `full_statement_version` (optional, default = `true`): Allows a user to leverage the `fivetran_formula_table` version of the macro which will generate the formula fields via the complete sql statement, rather than individual formulas being generated within the macro.
+* `source_name` (optional, default = `'salesforce'`): The dbt source containing the table you want to join with formula fields (as defined [here](https://github.com/fivetran/dbt_salesforce_formula_utils/tree/main#step-3-define-required-source-tables)). Must contain the `fivetran_formula` and `fivetran_formula_model` tables.
+* `fields_to_include` (optional, default = `none`): If a users wishes to only run the formula fields macro for designated fields then they may be applied within this variable. This variable will ensure the model only generates the sql for the designated fields. `full_statement_version` **must** be `false` for this variable to work.
+* `full_statement_version` (optional, default = `true`): Allows a user to leverage the `fivetran_formula_model` version of the macro which will generate the formula fields via the complete sql statement, rather than individual formulas being generated within the macro.
 * `using_quoted_identifiers` (optional, default = `false`): For warehouses with case sensitivity enabled this argument **must** be set to `true` in order for the underlying macros within this project to properly compile and execute successfully. 
 * `materialization` (optional, default = `view`): By default the model will be materialized as a view. If you would like to materialize as a table, you can adjust using this argument.
 > Note: If you populate the `fields_to_include` argument then the package will exclusively look for those fields. If you have designated a field to be excluded within the `sfdc_exclude_formulas` variable, then this will be ignored and the field will be included in the final model.
 ----
 
 ## sfdc_formula_model_automation.sh ([source](sfdc_formula_model_automation.sh))
-This bash script is intended to be used in order to automatically create the desired salesforce models via the command line within your dbt project. This bash script will generate a model file within your dbt project that contains the [sfdc_formula_view](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/macros/sfdc_formula_view.sql) macro for the appropriately defined table(s). In order for this command to work you must be within the root directory of your dbt project. 
+This bash script is intended to be used in order to automatically create the desired salesforce models via the command line within your dbt project. This bash script will generate a model file within your dbt project that contains the [sfdc_formula_view](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/macros/sfdc_formula_view.sql) macro for the appropriately defined table(s). In order for this command to work you must be within the root directory of your dbt project. By default, the resultant models will run Option #1, but can be configured to run Options #2 and #3 by adding `full_statement_version=false` for both and the `fields_to_include` arguments for Option #3.
 
 **Usage:**
 ```bash
