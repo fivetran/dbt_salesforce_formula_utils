@@ -69,7 +69,7 @@ If you would like your model to generate all the formula fields at once related 
 ### Option 2: Generate all relevant formula fields using package-made query
 
 If you would like your model to generate all the formula fields related to your source table then you will need to: 
-1. Create a new file in your models folder and name it `your_table_name_here`.sql (e.g. `customer.sql`; this is not necessary but recommended as best practice). 
+1. Create a new file in your models folder and name it `your_table_name_here.sql` (e.g. `customer.sql`; this is not necessary but recommended as best practice). 
 2. Add the below snippet calling the `sfdc_formula_view` macro into the file. Update the `source_table` argument to be the source table name for which you are generating the model (e.g. `customer`).
 ```sql
 {{ salesforce_formula_utils.sfdc_formula_view(
