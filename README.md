@@ -111,7 +111,7 @@ source dbt_modules/salesforce_formula_utils/sfdc_formula_model_automation.sh "..
 By default, these models will run Option #1.
 
 ## Step 5: Exclude problematic formula fields
-The `sfdc_formula_view` macro has been created to allow for two degrees of formula field reference. For example:
+The `sfdc_formula_view` macro has been created to support double-nested formula field references for most cases using Option #1, however, never if using Options #2 or #3. For example:
 - :white_check_mark: : A formula field references standard fields from the base Salesforce table.
 - :white_check_mark: : A formula field references another formula field that does **not** reference other formula fields.
 - 🚧     : A formula field references another formula field that references another formula field (and so on...). This may be possible for certain situations using Option #1 above, but never for Options 2 & 3.
