@@ -78,7 +78,7 @@ If you would like your model to generate all the formula fields related to your 
 }}
 ```
 
-**Output**: All formulas for the chosen source table will be generated in a `select` statement. This output differs from Option 1 only in the format of compiled code. 
+**Output**: All formulas for the chosen source table will be included in the resulting `select` statement. 
 
 > This option makes use of the `fivetran_formula` lookup table, which requires the package to combine fields' formulas into a SQL query for each source table. This option does not support double-nested formulas and may be incomplete compared to Option #1.
 
