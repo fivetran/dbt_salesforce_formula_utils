@@ -97,7 +97,7 @@ If you would like your model to generate only a specified subset of your formula
 }}
 ```
 
-**Output**: Formulas provided in the `fields_to_include` variable will be generated in a `select` statement for the chosen source table.
+**Output**: Only formulas provided in the `fields_to_include` variable will be included in the resulting `select` statement for the chosen source table.
 
 > This option makes use of the `fivetran_formula` lookup table, which requires the package to combine fields' formulas into a SQL query for each source table. This option does not support double-nested formulas.
 
