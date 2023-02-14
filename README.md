@@ -114,7 +114,8 @@ By default, these models will run Option #1.
 The `sfdc_formula_view` macro has been created to support double-nested formula field references for most cases using Option #1, however, never if using Options #2 or #3. For example:
 - :white_check_mark: : A formula field references standard fields from the base Salesforce table.
 - :white_check_mark: : A formula field references another formula field that does **not** reference other formula fields.
-- 🚧     : A formula field references another formula field that references another formula field (and so on...). This may be possible for certain situations using Option #1 above, but never for Options 2 & 3.
+The `sfdc_formula_view` macro may be able to support some cases of n-nested formula field references if using Option #1 above, however, never if using Options #2 or #3. For example:
+- 🚧     : A formula field references another formula field that references another formula field (and so on...). 
 
 If you have a formula field that is double-nested or is otherwise not compiling, exclude it from all your models by setting the `sfdc_exclude_formulas` variable within your root `dbt_project.yml` file. Configure this variable as a set of all the fields you would like to exclude from all models. See below for an example:
 ```yml
