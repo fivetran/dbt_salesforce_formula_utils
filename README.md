@@ -62,7 +62,7 @@ If you would like your model to generate all the formula fields at once related 
 }}
 ```
 
-**Output**: All formulas for the chosen source table will be generated in a single row `select` statement.
+**Output**: All formulas for the chosen source table will be included in the resulting `select` statement. 
 
 > This option makes use of the `fivetran_formula_model` lookup table, which stores connector-generated SQL queries for each source table. Compared to `fivetran_formula`, which is used in Options 2 & 3, it is typically more complete and supports most double-nested formulas. 
 
