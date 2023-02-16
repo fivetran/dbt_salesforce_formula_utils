@@ -110,7 +110,7 @@ If you have multiple models you need to create, you can also leverage the [sfdc_
 source dbt_modules/salesforce_formula_utils/sfdc_formula_model_automation.sh "../path/to/directory" "desired_table_1,desired_table_2,desired_table_infinity"
 ```
 
-**Output**: Model files for each table, populated with `{{ salesforce_formula_utils.sfdc_formula_view(source_table='table_name') }}`. By default, these models will run Option #1. To use Options #2 or #3, you will need to add `full_statement_version=false`. For Option #3, you will need to add the `fields_to_include` argument(s).
+**Output**: Model files for each table, populated with `{{ salesforce_formula_utils.sfdc_formula_view(source_table='table_name') }}`. By default, these models will run Option #1. To use Options #2 or #3, you will need to manually add `full_statement_version=false` to each model file. For Option #3, you will need to add the `fields_to_include` argument(s) as well.
 
 > Note: In order for this command to work, you must currently be within the root directory of your dbt project. 
 
