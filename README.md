@@ -118,6 +118,7 @@ source dbt_modules/salesforce_formula_utils/sfdc_formula_model_automation.sh "..
 The `sfdc_formula_view` macro has been created to support double-nested formula field references for most cases using Option #1, however, never if using Options #2 or #3. For example:
 - :white_check_mark: : A formula field references standard fields from the base Salesforce table.
 - :white_check_mark: : A formula field references another formula field that does **not** reference other formula fields.
+
 The `sfdc_formula_view` macro may be able to support some cases of n-nested formula field references if using Option #1 above, however, never if using Options #2 or #3. For example:
 - 🚧     : A formula field references another formula field that references another formula field (and so on...). 
 
