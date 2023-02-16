@@ -23,7 +23,7 @@ To use this dbt package, you must have the following:
 - A **BigQuery**, **Snowflake**, **Redshift**, or **PostgreSQL** destination.
 
 ## Step 2: Install the package
-The [`sfdc_formula_view`](https://github.com/fivetran/dbt_salesforce_formula_utils#sfdc_formula_view-source) macro is intended to be leveraged within a dbt project that uses the source tables from Fivetran's Salesforce connector. To leverage the macro, you will add the below configuration to your `packages.yml` file (if you do not have a `packages.yml` file, create on in your root dbt project).
+The [`sfdc_formula_view`](https://github.com/fivetran/dbt_salesforce_formula_utils#sfdc_formula_view-source) macro is intended to be leveraged within a dbt project that uses the source tables from Fivetran's Salesforce connector. To leverage the macro, you will add the below configuration to your `packages.yml` file (if you do not have a `packages.yml` file, create one in your root dbt project).
 > TIP: Check [dbt Hub](https://hub.getdbt.com/) for the latest installation instructions or [read the dbt docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
 ```yml
 packages:
