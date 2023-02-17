@@ -1,5 +1,8 @@
 # dbt_salesforce_formula_utils v0.8.1
 
+## Features
+- Updated the README for easier use and navigation of the package ([PR #78](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/78)).
+
 ## Bug Fixes
 ([PR #77](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/77)) includes the following changes:
 - In v0.8.0, the `using_quoted_identifiers` argument in the `sfdc_formula_view()` macro was erroneously removed, making its default value of `False` immutable. It has been reintroduced.
