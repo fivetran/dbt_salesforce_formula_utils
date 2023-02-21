@@ -1,4 +1,4 @@
-{%- macro sfdc_formula_view(source_table, source_name='salesforce', reserved_table_name=source_table, fields_to_include=none, full_statement_version=true, materialization='view') -%}
+{%- macro sfdc_formula_view(source_table, source_name='salesforce', reserved_table_name=source_table, fields_to_include=none, full_statement_version=true, materialization='view', using_quoted_identifiers=False) -%}
 
 -- Best practice for this model is to be materialized as view. That is why we have set that here.
 {{
@@ -15,7 +15,9 @@
 
 {% if full_statement_version %}
 {% if using_quoted_identifiers %}
-{%- set table_results = dbt_utils.get_column_values(table=source(source_name, 'fivetran_formula_model'), column='"model"', where="\"object\" = '" ~ source_table ~ "'") -%}
+{%- set table_results = dbt_utils.get_column_values(table=source(source_name, 'fivetran_formula_model'), 
+                                                    column='"MODEL"' if target.type in ('snowflake') else '"model"' if target.type in ('postgres', 'redshift', 'snowflake') else '`model`', 
+                                                    where=("\"OBJECT\" = '" if target.type in ('snowflake') else "\"object\" = '" if target.type in ('postgres', 'redshift') else "`object` = '") ~ source_table ~ "'") -%}
 
 {% else %}
 {%- set table_results = dbt_utils.get_column_values(table=source(source_name, 'fivetran_formula_model'), column='model', where="object = '" ~ source_table ~ "'") -%}
