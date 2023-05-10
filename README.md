@@ -139,7 +139,7 @@ Once you have created all your desired models and copied/modified the sql snippe
 Fivetran offers the ability for you to orchestrate your dbt project through [Fivetran Transformations for dbt Core™](https://fivetran.com/docs/transformations/dbt). Learn how to set up your project for orchestration through Fivetran in our [Transformations for dbt Core setup guides](https://fivetran.com/docs/transformations/dbt#setupguide).
 </details>
 
-# :book: Macro & script documentation
+# 📖 Macro & script documentation
 
 ## sfdc_formula_view ([source](macros/sfdc_formula_view.sql))
 This macro generates the final sql needed to join the Salesforce formula fields to the desired table.
