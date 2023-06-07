@@ -7,8 +7,8 @@
 - Incorporated the new `fivetran_utils.drop_schemas_automation` macro into the end of each Buildkite integration test job. ([#82](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/82))
 - Updated the pull request [templates](/.github). ([#82](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/82))
 
-## Contributers:
-- @duncan771 ([#86](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/86))
+## Contributors:
+- [@duncan771](https://github.com/duncan771) ([#86](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/86))
 
 # dbt_salesforce_formula_utils v0.8.1
 
