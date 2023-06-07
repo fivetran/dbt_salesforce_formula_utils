@@ -1,11 +1,14 @@
 # dbt_salesforce_formula_utils v0.8.2
 ## Features
-- Clarify Step 5 of the README that `sfdc_exclude_formulas` works only with Options 2 and 3. ([#88](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/8))
+- Clarify Step 5 of the README that `sfdc_exclude_formulas` works only with Options 2 and 3. ([#88](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/88))
 
 ## Under the Hood:
-- Renamed macro filename from `sfdc_current_formula_fields` to `sfdc_current_formula_values` to be consistent with its macro name. ([#88](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/8))
+- Renamed macro filename from `sfdc_current_formula_fields` to `sfdc_current_formula_values` to be consistent with its macro name. ([#86](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/86))
 - Incorporated the new `fivetran_utils.drop_schemas_automation` macro into the end of each Buildkite integration test job. ([#82](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/82))
 - Updated the pull request [templates](/.github). ([#82](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/82))
+
+## Contributers:
+- @duncan771 ([#86](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/86))
 
 # dbt_salesforce_formula_utils v0.8.1
 
