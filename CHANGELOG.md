@@ -1,4 +1,4 @@
-# dbt_salesforce_formula_utils v0.U8.2
+# dbt_salesforce_formula_utils v0.8.2
 ## Features
 - Clarify Step 5 of the README that `sfdc_exclude_formulas` works only with Options 2 and 3. ([#88](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/8))
 
