@@ -114,15 +114,19 @@ source dbt_modules/salesforce_formula_utils/sfdc_formula_model_automation.sh "..
 
 > Note: In order for this command to work, you must currently be within the root directory of your dbt project. 
 
-## Step 5: Exclude problematic formula fields
-The `sfdc_formula_view` macro has been created to support double-nested formula field references for most cases using Option #1, however, never if using Options #2 or #3. For example:
-- :white_check_mark: : A formula field references standard fields from the base Salesforce table.
-- :white_check_mark: : A formula field references another formula field that does **not** reference other formula fields.
+## Step 5: Exclude problematic formula fields (for Option #2 or #3)
+The `sfdc_formula_view` macro supports double-nested formula field references for most cases using Option #1, however, it does not support Options #2 or #3. 
 
-The `sfdc_formula_view` macro may be able to support some cases of n-nested formula field references if using Option #1 above, however, never if using Options #2 or #3. For example:
+For example:
+- ✅ : A formula field references standard fields from the base Salesforce table.
+- ✅ : A formula field references another formula field that does **not** reference other formula fields.
+
+The `sfdc_formula_view` macro may support some cases of n-nested formula field references using Option #1, however, it does not support Options #2 or #3. 
+
+For example:
 - 🚧     : A formula field references another formula field that references another formula field (and so on...). 
 
-If you have a formula field that is double-nested or is otherwise not compiling, exclude it from all your models by setting the `sfdc_exclude_formulas` variable within your root `dbt_project.yml` file. Configure this variable as a set of all the fields you would like to exclude from all models. See below for an example:
+When using Options #2 or #3 with a formula field that is double-nested or is otherwise not compiling, exclude it from all your models by setting the `sfdc_exclude_formulas` variable within your root `dbt_project.yml` file. Configure this variable as a set of all the fields you would like to exclude from all models. See below for an example:
 ```yml
 vars:
   sfdc_exclude_formulas: ('field_that_references_other_formula','other_triple_ref_field','field_i_just_dont_want')
