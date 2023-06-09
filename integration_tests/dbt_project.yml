@@ -1,5 +1,5 @@
 name: 'salesforce_formula_integration_tests'
-version: '0.8.1'
+version: 0.9.0
 profile: 'integration_tests'
 config-version: 2
 vars:
@@ -16,3 +16,7 @@ seeds:
     fivetran_formula:
       +column_types:
         view_sql: "{{ 'varchar(100)'  if target.type in ('redshift','postgres') else 'string'}}"
+
+dispatch:
+  - macro_namespace: dbt_utils
+    search_order: ['spark_utils', 'dbt_utils']

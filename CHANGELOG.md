@@ -1,9 +1,7 @@
-# dbt_salesforce_formula_utils v0.UPDATE.UPDATE
+# dbt_salesforce_formula_utils v0.9.0
+## 🎉 Feature Update 🎉
+- Databricks compatibility! ([#89](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/89))
 
- ## Under the Hood:
-
-- Incorporated the new `fivetran_utils.drop_schemas_automation` macro into the end of each Buildkite integration test job.
-- Updated the pull request [templates](/.github).
 # dbt_salesforce_formula_utils v0.8.1
 
 ## Features

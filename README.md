@@ -20,7 +20,7 @@ This package includes macros and scipts to be used within a dbt project to accur
 ## Step 1: Prerequisites
 To use this dbt package, you must have the following:
 - At least one Fivetran Salesforce connector syncing data into your destination. 
-- A **BigQuery**, **Snowflake**, **Redshift**, or **PostgreSQL** destination.
+- A **BigQuery**, **Snowflake**, **Redshift**, **PostgreSQL**, or a **Databricks** destination.
 
 ## Step 2: Install the package
 The [`sfdc_formula_view`](https://github.com/fivetran/dbt_salesforce_formula_utils#sfdc_formula_view-source) macro is intended to be leveraged within a dbt project that uses the source tables from Fivetran's Salesforce connector. To leverage the macro, you will add the below configuration to your `packages.yml` file (if you do not have a `packages.yml` file, create one in your root dbt project).
@@ -28,7 +28,7 @@ The [`sfdc_formula_view`](https://github.com/fivetran/dbt_salesforce_formula_uti
 ```yml
 packages:
   - package: fivetran/salesforce_formula_utils
-    version: [">=0.8.0", "<0.9.0"] # we recommend using ranges to capture non-breaking changes automatically
+    version: [">=0.9.0", "<0.10.0"] # we recommend using ranges to capture non-breaking changes automatically
 ```
 
 ## Step 3: Define required source tables
