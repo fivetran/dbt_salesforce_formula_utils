@@ -126,7 +126,7 @@ The `sfdc_formula_view` macro may support some cases of n-nested formula field r
 For example:
 - 🚧     : A formula field references another formula field that references another formula field (and so on...). 
 
-When using Options #2 or #3 with a formula field that is double-nested or is otherwise not compiling, exclude it from all your models by setting the `sfdc_exclude_formulas` variable within your root `dbt_project.yml` file. Configure this variable as a set of all the fields you would like to exclude from all models. See below for an example:
+When using Options #2 or #3 with a formula field that is double-nested or is otherwise not compiling, exclude it from all your models by setting the `sfdc_exclude_formulas` variable within your root `dbt_project.yml` file. Configure this variable as a set of all the fields you would like to exclude from all models. This is for Options #2 or #3 only and will *not* work with Option 1. See below for an example:
 ```yml
 vars:
   sfdc_exclude_formulas: ('field_that_references_other_formula','other_triple_ref_field','field_i_just_dont_want')
