@@ -12,14 +12,14 @@
             --The select statement must explicitly query from and join from the source, not the target. The replace filters point the query to the source.
             {% if ' from ' in v %}
                 {%- set v = v | replace(' from ',' from ' + source(source_name,'fivetran_formula') | string ) -%}
-                {% if target.type == 'bigquery' %} {%- set v = v | replace('`fivetran_formula`','') -%} 
+                {% if target.type == 'bigquery', 'spark', 'databricks' %} {%- set v = v | replace('`fivetran_formula`','') -%} 
                 {% elif target.type == 'redshift' %} {%- set v = v | replace('"fivetran_formula"', '') -%} 
                 {% else %} {%- set v = v | replace('fivetran_formula','') -%} {% endif %}
             {% endif %}
 
             {% if ' left join ' in v %}
                 {%- set v = v | replace(' left join ',' left join ' + source(source_name,'fivetran_formula') | string ) -%}
-                {% if target.type == 'bigquery' %} {%- set v = v | replace('`fivetran_formula`','') -%} 
+                {% if target.type == 'bigquery', 'spark', 'databricks' %} {%- set v = v | replace('`fivetran_formula`','') -%} 
                 {% elif target.type == 'redshift' %} {%- set v = v | replace('"fivetran_formula"', '') -%} 
                 {% else %} {%- set v = v | replace('fivetran_formula','') -%} {% endif %}
             {% endif %}
