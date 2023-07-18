@@ -19,7 +19,7 @@
 
             {% if ' left join ' in v %}
                 {%- set v = v | replace(' left join ',' left join ' + source(source_name,'fivetran_formula') | string ) -%}
-                {% if target.type == 'bigquery', 'spark', 'databricks' %} {%- set v = v | replace('`fivetran_formula`','') -%} 
+                {% if target.type == 'bigquery' %} {%- set v = v | replace('`fivetran_formula`','') -%} 
                 {% elif target.type == 'redshift' %} {%- set v = v | replace('"fivetran_formula"', '') -%} 
                 {% else %} {%- set v = v | replace('fivetran_formula','') -%} {% endif %}
             {% endif %}
