@@ -1,6 +1,6 @@
 # dbt_salesforce_formula_utils v0.9.1
 ## Bugfix
-- Add Databricks to a conditional in the `sfdc_formula_view_sql` macro so backticks correctly compile in said warehouse. ([#94](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/94))
+- Databricks users faced a syntax error resulting from the `sfdc_formula_view_sql` macro not correctly compiling. This update adds the Databricks warehouse to a conditional in the macro that allows the sql to correctly compile. ([PR #94](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/94)) ([PR #92](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/92))
 
 ## Contributors:
 - [@corca](https://github.com/corca) ([PR #92](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/92))
