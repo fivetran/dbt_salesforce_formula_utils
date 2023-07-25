@@ -13,14 +13,14 @@
             {% if ' from ' in v %}
                 {%- set v = v | replace(' from ',' from ' + source(source_name,'fivetran_formula') | string ) -%}
                 {% if target.type in ('bigquery', 'spark', 'databricks') %} {%- set v = v | replace('`fivetran_formula`','') -%} 
-                {% elif target.type == 'redshift' %} {%- set v = v | replace('"fivetran_formula"', '') -%} 
+                {% elif target.type in ('redshift','postgres') %} {%- set v = v | replace('"fivetran_formula"', '') -%} 
                 {% else %} {%- set v = v | replace('fivetran_formula','') -%} {% endif %}
             {% endif %}
 
             {% if ' left join ' in v %}
                 {%- set v = v | replace(' left join ',' left join ' + source(source_name,'fivetran_formula') | string ) -%}
                 {% if target.type in ('bigquery', 'spark', 'databricks') %} {%- set v = v | replace('`fivetran_formula`','') -%} 
-                {% elif target.type == 'redshift' %} {%- set v = v | replace('"fivetran_formula"', '') -%} 
+                {% elif target.type in ('redshift','postgres') %} {%- set v = v | replace('"fivetran_formula"', '') -%} 
                 {% else %} {%- set v = v | replace('fivetran_formula','') -%} {% endif %}
             {% endif %}
 
