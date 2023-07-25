@@ -3,4 +3,4 @@ opporunity_test_formula,opportunity,amount times probability,amount * probabilit
 account_test_formula,account,multiple number of employees by 2,number_of_employees * 2,,2021-03-29 05:05:17.411 +0000
 is_active_user,user,if user is active then word,case when is_active = true then 'active' else 'not active' end,,2021-03-29 05:05:17.411 +0000
 developer_and_id,user_role,developer and id,"concat(developer_name,id)",,2021-03-29 05:05:17.411 +0000
-account_type_c,opportunity,account type,,"select main__table.id, ( CAST( account__alias.type AS STRING ) ) as account_type_c from opportunity as main__table left join account as account__alias on main__table.account_id = account__alias.id",2023-07-19 05:05:17.411 +0000
+account_type_c,opportunity,account type,,"select main__table.id, ( account__alias.type ) as account_type_c from opportunity as main__table left join account as account__alias on main__table.account_id = account__alias.id",2023-07-19 05:05:17.411 +0000
