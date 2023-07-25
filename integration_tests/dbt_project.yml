@@ -6,7 +6,7 @@ vars:
   salesforce_formula_integration_tests:
     salesforce_schema: salesforce_formula_integrations_tests
 
-seeds:
+seeds:dbt 
   salesforce_formula_integration_tests:
     +quote_columns: "{{ true if target.type == 'redshift' else false }}"
     opportunity:
@@ -15,7 +15,7 @@ seeds:
         probability: float
     fivetran_formula:
       +column_types:
-        view_sql: "{{ 'varchar(100)'  if target.type in ('redshift','postgres') else 'string'}}"
+        view_sql: "{{ 'varchar(256)'  if target.type in ('redshift','postgres') else 'string'}}"
 
 dispatch:
   - macro_namespace: dbt_utils
