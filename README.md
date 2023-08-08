@@ -68,6 +68,14 @@ If you would like your model to generate all the formula fields at once related 
 
 > This option makes use of the `fivetran_formula_model` lookup table, which stores connector-generated SQL queries for each source table. Compared to `fivetran_formula`, which is used in Options 2 & 3, it is typically more complete and supports most double-nested formulas. 
 
+
+### (Deprecated) Options 2 and 3
+
+IMPORTANT: Options 2 and 3 will soon no longer be supported. Click 'Expand to view details' if you'd like to still use these options.
+
+<details>
+<summary>Expand to view details</summary>
+
 ### Option 2: Generate all relevant formula fields using package-made query
 
 If you would like your model to generate all the formula fields related to your source table then you will need to: 
@@ -102,6 +110,8 @@ If you would like your model to generate only a specified subset of your formula
 **Output**: Only formulas provided in the `fields_to_include` variable will be included in the resulting `select` statement for the chosen source table.
 
 > This option makes use of the `fivetran_formula` lookup table, which requires the package to combine fields' formulas into a SQL query for each source table. This option does not support double-nested formulas and therefore may be incomplete compared to Option #1.
+</details>
+<br/>
 
 ### Automate model creation
 If you have multiple models you need to create, you can also leverage the [sfdc_formula_model_automation](https://github.com/fivetran/dbt_salesforce_formula_utils#sfdc_formula_model_automationsh-source) script within this project to automatically create models locally via the command line. Below is an example command to copy and edit.

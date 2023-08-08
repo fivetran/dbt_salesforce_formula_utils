@@ -33,7 +33,9 @@
 -- defaults to all formula fields if fields_to_include is none
 {% if fields_to_include is none %}
     {% set fields_to_include = current_formula_fields | lower %}
-{% endif %}
+{% endif %} 
+
+{{ exceptions.warn("WARNING, Deprecated: full_statement_version=false is no longer supported and will stop working on October 1st, 2023. See https://github.com/fivetran/dbt_salesforce_formula_utils#step-4-create-models for more details.") }}
 
     select
 
