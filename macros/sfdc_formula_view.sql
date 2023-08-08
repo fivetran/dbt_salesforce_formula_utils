@@ -35,7 +35,7 @@
     {% set fields_to_include = current_formula_fields | lower %}
 {% endif %} 
 
-{{ exceptions.warn("WARNING, Deprecated: full_statement_version=false is no longer supported and will stop working on October 1st, 2023. See https://github.com/fivetran/dbt_salesforce_formula_utils#step-4-create-models for more details.") }}
+{{ exceptions.warn("\nWARNING, Deprecated: full_statement_version=false is no longer supported and will stop working on October 1st, 2023. Be sure to update your " ~ this.identifier|upper ~ " model to leverage full_statement_version=true before then. See https://github.com/fivetran/dbt_salesforce_formula_utils#step-4-create-models for more details.\n") }}
 
     select
 

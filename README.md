@@ -71,7 +71,7 @@ If you would like your model to generate all the formula fields at once related 
 
 ### (Deprecated) Options 2 and 3
 
-IMPORTANT: Options 2 and 3 will no longer be supported after October 1. Click 'Expand to view details' if you'd like to still use these options for the time being.
+**IMPORTANT**: Options 2 and 3 (which leverage the `full_statement_version=false` config) will no longer be supported after October 1. Click 'Expand to view details' if you'd like to still use these options for the time being.
 
 <details>
 <summary>Expand to view details</summary>
