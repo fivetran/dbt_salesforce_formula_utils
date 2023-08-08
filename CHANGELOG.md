@@ -1,6 +1,6 @@
 # dbt_salesforce_formula_utils v0.9.2
 ##  Documentation Update
-- Fivetran will be deprecating support for Options 2 and 3 by October 1 where you can set `full_statement_version=false`. We've highlighted this change to users of the package in the README.
+- Fivetran will be deprecating support for Options 2 and 3 by October 1 where you can set `full_statement_version=false`. We've highlighted this change to users of the package [in the README](https://github.com/fivetran/dbt_salesforce_formula_utils#step-4-create-models).
 - Users still utilizing either Option 2 or 3 will receive a log message in their `dbt run` indicating deprecation of support for those options.
 
 # dbt_salesforce_formula_utils v0.9.1
