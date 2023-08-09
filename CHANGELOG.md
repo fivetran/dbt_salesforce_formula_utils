@@ -1,3 +1,12 @@
+# dbt_salesforce_formula_utils v0.9.2
+[PR #96](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/96) includes the following updates:
+
+## 🗒️ Documentation Update 🗒️
+- Fivetran will be deprecating support for the `full_statement_version=false` config by October 1, 2023. We've highlighted this change to users of the package [in the README](https://github.com/fivetran/dbt_salesforce_formula_utils#step-4-create-models). 
+
+## 🚇 Under the Hood 🚇
+- Users still utilizing the `full_statement_version=false` config will receive a log message in their `dbt run` indicating deprecation of support for those options.
+
 # dbt_salesforce_formula_utils v0.9.1
 ## Bugfix
 - Databricks users faced a syntax error resulting from the `sfdc_formula_view_sql` macro not correctly compiling. This update adds the Databricks warehouse to a conditional in the macro that allows the sql to correctly compile. ([PR #94](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/94)) ([PR #92](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/92))
