@@ -44,7 +44,7 @@ sources:
     # Add the database where your Salesforce data resides if different from the target database. Eg. 'my_salesforce_database'. By default the target.database is used.
     tables:
       - name: fivetran_formula_model
-        description: Used for the recommended Option 1 version of the formula solution.
+        description: Contains SQL models produced by Fivetran Salesforce connector
 
       ## Any other source tables you are creating models for should be defined here as well. They aren't required, but it is best organizational practice and allows Fivetran to compile data lineage graphs
 ```
@@ -101,7 +101,7 @@ This macro generates the final sql needed to join the Salesforce formula fields 
 ----
 
 ## sfdc_formula_model_automation.sh ([source](sfdc_formula_model_automation.sh))
-This bash script is intended to be used in order to automatically create the desired salesforce models via the command line within your dbt project. This bash script will generate a model file within your dbt project that contains the [sfdc_formula_view](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/macros/sfdc_formula_view.sql) macro for the appropriately defined table(s). In order for this command to work you must be within the root directory of your dbt project. By default, the resultant models will run Option #1, but can be configured to run Options #2 and #3 by adding `full_statement_version=false` for both and the `fields_to_include` arguments for Option #3.
+This bash script is intended to be used in order to automatically create the desired salesforce models via the command line within your dbt project. This bash script will generate a model file within your dbt project that contains the [sfdc_formula_view](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/macros/sfdc_formula_view.sql) macro for the appropriately defined table(s). In order for this command to work you must be within the root directory of your dbt project.
 
 **Usage:**
 ```bash
