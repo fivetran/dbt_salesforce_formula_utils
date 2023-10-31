@@ -52,66 +52,19 @@ sources:
 ```
 
 ## Step 4: Create models
-### (Recommended and default) Option 1: Generate all relevant formula fields using connector-made query
+### Generate models using connector-made query
 
-If you would like your model to generate all the formula fields at once related to your source table then you will need to:
+To create a model that includes all formula fields:
 1. Create a new file in your models folder and name it `your_table_name_here.sql` (e.g. `customer.sql`; this is not necessary but recommended as best practice). 
-2. Add the below snippet calling the [`sfdc_formula_view`](https://github.com/fivetran/dbt_salesforce_formula_utils#sfdc_formula_view-source) macro into the file. Update the `source_table` argument to be the source table name for which you are generating the model (e.g. `customer`). Though `full_statement_version` is explicitly included here, it is `true` by default.
+2. Add the below snippet calling the [`sfdc_formula_view`](https://github.com/fivetran/dbt_salesforce_formula_utils#sfdc_formula_view-source) macro into the file. Update the `source_table` argument to be the source table name for which you are generating the model (e.g. `customer`). 
 ```sql
 {{ salesforce_formula_utils.sfdc_formula_view(
-    source_table='your_source_table_name_here',
-    full_statement_version=true) 
+    source_table='your_source_table_name_here') 
 }}
 ```
 
 **Output**: All formulas for the chosen source table will be included in the resulting `select` statement. 
 
-> This option makes use of the `fivetran_formula_model` lookup table, which stores connector-generated SQL queries for each source table. Compared to `fivetran_formula`, which is used in Options 2 & 3, it is typically more complete and supports most double-nested formulas. 
-
-
-### (Deprecated) Options 2 and 3
-
-**IMPORTANT**: Options 2 and 3 (which leverage the `full_statement_version=false` config) will no longer be supported after October 1. Click 'Expand to view details' if you'd like to still use these options for the time being.
-
-<details>
-<summary>Expand to view details</summary>
-
-### Option 2: Generate all relevant formula fields using package-made query
-
-If you would like your model to generate all the formula fields related to your source table then you will need to: 
-1. Create a new file in your models folder and name it `your_table_name_here.sql` (e.g. `customer.sql`; this is not necessary but recommended as best practice). 
-2. Add the below snippet calling the [`sfdc_formula_view`](https://github.com/fivetran/dbt_salesforce_formula_utils#sfdc_formula_view-source) macro into the file. Update the `source_table` argument to be the source table name for which you are generating the model (e.g. `customer`).
-```sql
-{{ salesforce_formula_utils.sfdc_formula_view(
-    source_table='your_source_table_name_here',
-    full_statement_version=false)
-}}
-```
-
-**Output**: All formulas for the chosen source table will be included in the resulting `select` statement. 
-
-> This option makes use of the `fivetran_formula` lookup table, which requires the package to combine fields' formulas into a SQL query for each source table. This option does not support double-nested formulas and therefore may be incomplete compared to Option #1.
-
-### Option 3: Generate only specified formula fields using package-made query
-
-If you would like your model to generate only a specified subset of your formula fields related to your source table then you will need to: 
-1. Create a new file in your models folder and name it `your_table_name_here.sql` (e.g. `customer.sql`; this is not necessary but recommended as best practice). 
-2. Add the below snippet calling the [`sfdc_formula_view`](https://github.com/fivetran/dbt_salesforce_formula_utils#sfdc_formula_view-source) macro into the file and:
-    - Update the `source_table` argument to be the source table name for which you are generating the model (e.g. `customer`).
-    - Update the `fields_to_include` argument to contain all the fields from your source that you would like to be included in the final output. Be sure that the field(s) you would like to include are enclosed within brackets as an array (ie. `[]`)
-```sql
-{{ salesforce_formula_utils.sfdc_formula_view(
-    source_table='your_source_table_name_here', 
-    fields_to_include=['i_want_this_field','also_this_one','maybe_a_third_as_well','lets_add_more'],
-    full_statement_version=false) 
-}}
-```
-
-**Output**: Only formulas provided in the `fields_to_include` variable will be included in the resulting `select` statement for the chosen source table.
-
-> This option makes use of the `fivetran_formula` lookup table, which requires the package to combine fields' formulas into a SQL query for each source table. This option does not support double-nested formulas and therefore may be incomplete compared to Option #1.
-</details>
-<br/>
 
 ### Automate model creation
 If you have multiple models you need to create, you can also leverage the [sfdc_formula_model_automation](https://github.com/fivetran/dbt_salesforce_formula_utils#sfdc_formula_model_automationsh-source) script within this project to automatically create models locally via the command line. Below is an example command to copy and edit.
@@ -120,30 +73,12 @@ If you have multiple models you need to create, you can also leverage the [sfdc_
 source dbt_modules/salesforce_formula_utils/sfdc_formula_model_automation.sh "../path/to/directory" "desired_table_1,desired_table_2,desired_table_infinity"
 ```
 
-**Output**: Model files for each table, populated with `{{ salesforce_formula_utils.sfdc_formula_view(source_table='table_name') }}`. By default, these models will run Option #1. To use Options #2 or #3, you will need to manually add `full_statement_version=false` to each model file. For Option #3, you will need to add the `fields_to_include` argument(s) as well.
+**Output**: Model files for each table, populated with `{{ salesforce_formula_utils.sfdc_formula_view(source_table='table_name') }}`. 
 
 > Note: In order for this command to work, you must currently be within the root directory of your dbt project. 
 
-## Step 5: Exclude problematic formula fields (for Option #2 or #3)
-The `sfdc_formula_view` macro supports double-nested formula field references for most cases using Option #1, however, it does not support Options #2 or #3. 
 
-For example:
-- ✅ : A formula field references standard fields from the base Salesforce table.
-- ✅ : A formula field references another formula field that does **not** reference other formula fields.
-
-The `sfdc_formula_view` macro may support some cases of n-nested formula field references using Option #1, however, it does not support Options #2 or #3. 
-
-For example:
-- 🚧     : A formula field references another formula field that references another formula field (and so on...). 
-
-When using Options #2 or #3 with a formula field that is double-nested or is otherwise not compiling, exclude it from all your models by setting the `sfdc_exclude_formulas` variable within your root `dbt_project.yml` file. Configure this variable as a set of all the fields you would like to exclude from all models. This is for Options #2 or #3 only and will *not* work with Option 1. See below for an example:
-```yml
-vars:
-  sfdc_exclude_formulas: ('field_that_references_other_formula','other_triple_ref_field','field_i_just_dont_want')
-```
-> **Note**: Do not add this variable to your `dbt_project.yml` file if you do not need to exclude any fields.
-
-## Step 6: Execute models
+## Step 5: Execute models
 Once you have created all your desired models and copied/modified the sql snippet into each model you will execute `dbt deps` to install the macro package, then execute `dbt run` to generate the models. Additionally, you can reference the [integration_tests](https://github.com/fivetran/dbt_salesforce_formula_utils/tree/main/integration_tests/models) folder for examples on how to use the macro within your models.
 
 ## (Optional) Step 7: Orchestrate your models with Fivetran Transformations for dbt Core™
@@ -164,12 +99,9 @@ This macro generates the final sql needed to join the Salesforce formula fields 
 ```
 **Args:**
 * `source_table` (required): The table with which you are joining the formula fields.
-* `source_name` (optional, default = `'salesforce'`): The dbt source containing the table you want to join with formula fields (as defined [here](https://github.com/fivetran/dbt_salesforce_formula_utils/tree/main#step-3-define-required-source-tables)). Must contain the `fivetran_formula` and `fivetran_formula_model` tables.
-* `fields_to_include` (optional, default = `none`): If a users wishes to only run the formula fields macro for designated fields then they may be applied within this variable. This variable will ensure the model only generates the sql for the designated fields. `full_statement_version` **must** be `false` for this variable to work.
-* `full_statement_version` (optional, default = `true`): Allows a user to leverage the `fivetran_formula_model` version of the macro which will generate the formula fields via the complete sql statement, rather than individual formulas being generated within the macro.
+* `source_name` (optional, default = `'salesforce'`): The dbt source containing the table you want to join with formula fields (as defined [here](https://github.com/fivetran/dbt_salesforce_formula_utils/tree/main#step-3-define-required-source-tables)). Must contain the `fivetran_formula_model` table.
 * `using_quoted_identifiers` (optional, default = `false`): For warehouses with case sensitivity enabled this argument **must** be set to `true` in order for the underlying macros within this project to properly compile and execute successfully. 
 * `materialization` (optional, default = `view`): By default the model will be materialized as a view. If you would like to materialize as a table, you can adjust using this argument.
-> Note: If you populate the `fields_to_include` argument then the package will exclusively look for those fields. If you have designated a field to be excluded within the `sfdc_exclude_formulas` variable, then this will be ignored and the field will be included in the final model.
 ----
 
 ## sfdc_formula_model_automation.sh ([source](sfdc_formula_model_automation.sh))
