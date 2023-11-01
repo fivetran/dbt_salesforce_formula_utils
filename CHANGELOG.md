@@ -1,3 +1,12 @@
+# dbt_salesforce_formula_utils v0.9.3
+[PR #101](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/101) includes the following updates:
+
+## 🗒️ Documentation Update 🗒️
+- Fivetran has deprecated support for the `full_statement_version=false`. We've removed mention of this obsolete method [in the README](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/README.md). 
+
+## 🚇 Under the Hood 🚇
+- Users will not see functional differences from v0.9.2. However, due to changes in the Fivetran Salesforce connector, users still utilizing the `full_statement_version=false` should expect formula field values to be null.
+
 # dbt_salesforce_formula_utils v0.9.2
 [PR #96](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/96) includes the following updates:
 
