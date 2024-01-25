@@ -66,7 +66,7 @@ To create a model that includes all formula fields:
 If you have multiple models you need to create, you can also leverage the [sfdc_formula_model_automation](https://github.com/fivetran/dbt_salesforce_formula_utils#sfdc_formula_model_automationsh-source) script within this project to automatically create models locally via the command line. Below is an example command to copy and edit.
 
 ```bash
-source dbt_modules/salesforce_formula_utils/sfdc_formula_model_automation.sh "../path/to/directory" "desired_table_1,desired_table_2,desired_table_infinity"
+source dbt_packages/salesforce_formula_utils/sfdc_formula_model_automation.sh "../path/to/directory" "desired_table_1,desired_table_2,desired_table_infinity"
 ```
 
 **Output**: Model files for each table, populated with `{{ salesforce_formula_utils.sfdc_formula_view(source_table='table_name') }}`. 
@@ -105,13 +105,13 @@ This bash script is intended to be used in order to automatically create the des
 
 **Usage:**
 ```bash
-source dbt_modules/salesforce_formula_utils/sfdc_formula_model_automation.sh "../path/to/directory" "desired_table(s)"
+source dbt_packages/salesforce_formula_utils/sfdc_formula_model_automation.sh "../path/to/directory" "desired_table(s)"
 ```
 
 **Example**
 Assuming the path to your directory is `"../dbt_salesforce"` and the table(s) you want to generate the model for are `opportunity` and `account`.
 ```bash
-source dbt_modules/salesforce_formula_utils/sfdc_formula_model_automation.sh "../dbt_salesforce" "opportunity,account"
+source dbt_packages/salesforce_formula_utils/sfdc_formula_model_automation.sh "../dbt_salesforce" "opportunity,account"
 ```
 
 ## Under the hood macros
