@@ -86,7 +86,7 @@ Fivetran offers the ability for you to orchestrate your dbt project through [Fiv
 
 # 📖 Macro & script documentation
 
-## sfdc_formula_view ([source](macros/sfdc_formula_view.sql))
+## sfdc_formula_view ([source](/macros/sfdc_formula_view.sql))
 This macro generates the final sql needed to join the Salesforce formula fields to the desired table.
 
 **Usage:**
