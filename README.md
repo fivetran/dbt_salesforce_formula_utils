@@ -118,7 +118,7 @@ source dbt_packages/salesforce_formula_utils/sfdc_formula_model_automation.sh ".
 <details><summary>Expand to view documenation</summary>
 <br>
 
-### sfdc_formula_pivot ([source](macros/sfdc_formula_pivot.sql))
+### sfdc_formula_pivot ([source](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/macros/sfdc_formula_pivot.sql))
 This macro pivots the dictionary results generated from the [sfdc_get_formula_column_values](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/macros/sfdc_get_formula_column_values.sql) macro to populate the formula field and sql for each record within the designated table this macro is used.
 
 **Usage:**
@@ -131,7 +131,7 @@ This macro pivots the dictionary results generated from the [sfdc_get_formula_co
 * `added_inclusion_fields` (optional, default = `none`): The list of fields you want to be included in the macro. If no fields are selected then all fields will be included.
 ----
 
-### sfdc_formula_refactor ([source](macros/sfdc_formula_refactor.sql))
+### sfdc_formula_refactor ([source](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/macros/sfdc_formula_refactor.sql))
 This macro checks the dictionary results generated from the [sfdc_get_formula_column_values](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/macros/sfdc_get_formula_column_values.sql) macro to determine if any formula fields reference other formula fields. If a formula references another generated formula field, then the macro will insert the first formula sql into the second formula. This ensures formulas that reference another formula field will be generated successfully. 
 
 **Usage:**
@@ -143,7 +143,7 @@ This macro checks the dictionary results generated from the [sfdc_get_formula_co
 * `source_name` (optional, default = `salesforce`): The name of the source defined.
 * `added_inclusion_fields` (optional, default = `none`): The list of fields you want to be included in the macro. If no fields are selected then all fields will be included.
 ----
-### sfdc_formula_view_fields ([source](macros/sfdc_formula_view_fields.sql))
+### sfdc_formula_view_fields ([source](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/macros/sfdc_formula_view_fields.sql))
 This macro checks the dictionary results generated from the [sfdc_get_formula_column_values](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/macros/sfdc_get_formula_column_values.sql) macro and returns the field name with the index of the view sql to be used in the primary select statement of the [sfdc_formula_view](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/macros/sfdc_formula_view.sql) macro.
 
 **Usage:**
@@ -155,7 +155,7 @@ This macro checks the dictionary results generated from the [sfdc_get_formula_co
 * `source_name` (optional): The name of the source defined. Default is `salesforce`.
 * `inclusion_fields` (optional, default = `none`): The list of fields you want to be included in the macro. If no fields are selected then all fields will be included.
 ----
-### sfdc_formula_view_sql ([source](macros/sfdc_formula_view_sql.sql))
+### sfdc_formula_view_sql ([source](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/macros/sfdc_formula_view_sql.sql))
 This macro checks the dictionary results generated from the [sfdc_get_formula_column_values](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/macros/sfdc_get_formula_column_values.sql) macro and returns the view_sql value results while also replacing the `from` and `join` syntax to be specific to the source defined. Additionally, the where logic will be applied to ensure the view_sql is properly joined to the base table.
 
 **Usage:**
@@ -168,7 +168,7 @@ This macro checks the dictionary results generated from the [sfdc_get_formula_co
 * `inclusion_fields` (optional, default = `none`): The list of fields you want to be included in the macro. If no fields are selected then all fields will be included.
 ----
 
-### sfdc_get_formula_column_values ([source](macros/sfdc_get_formula_column_values.sql))
+### sfdc_get_formula_column_values ([source](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/macros/sfdc_get_formula_column_values.sql))
 This macro is designed to look within the users source defined `salesforce_schema` for the `fivetran_formula` table. The macro will then filter to only include records from the `join_to_table` argument, and search for distinct combinations of the `field` and `sql` columns. The distinct combination of columns for the join_table argument are then returned as a dictionary. 
 Further, if there are any formula fields that are a third degree referential formula (eg. a formula field is contains a field that is a formula field, and that formula field also references another formula field) or greater then you can add those fields to the `sfdc_exclude_formulas` variable within your root `dbt_project.yml` file to exclude them from the macro as they will fail in the final view creation.
 > Note: This macro will not work accurately unless you have a `src.yml` configured appropriately. For reference, look within this packages [integration_tests](https://github.com/fivetran/dbt_salesforce_formula_utils/tree/main/integration_tests/models) folder for an example of a source configuration.
@@ -186,7 +186,7 @@ Further, if there are any formula fields that are a third degree referential for
 * `no_nulls` (optional, default = `true`): Used by the macro to identify if the `null` fields within the `view_sql` column should be included.
 ----
 
-### sfdc_star_exact ([source](macros/sfdc_star_exact.sql))
+### sfdc_star_exact ([source](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/macros/sfdc_star_exact.sql))
 This macro mirrors the [dbt_utils.star()](https://github.com/dbt-labs/dbt-utils#star-source) macro with the minor adjustment to properly work with the return results of the [dbt_utils.get_column_values()](https://github.com/dbt-labs/dbt-utils#get_column_values-source). The major change being how the return result of the dbt_utils.get_column_values() macro returns results with single quotes, while the dbt_utils.star() macro exclusively requires double quotes.
 **Usage:**
 ```sql
