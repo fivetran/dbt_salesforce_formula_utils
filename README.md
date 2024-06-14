@@ -86,7 +86,7 @@ Fivetran offers the ability for you to orchestrate your dbt project through [Fiv
 
 # 📖 Macro & script documentation
 
-## sfdc_formula_view ([source](macros/sfdc_formula_view.sql))
+## sfdc_formula_view ([source](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/macros/sfdc_formula_view.sql))
 This macro generates the final sql needed to join the Salesforce formula fields to the desired table.
 
 **Usage:**
@@ -100,7 +100,7 @@ This macro generates the final sql needed to join the Salesforce formula fields 
 * `materialization` (optional, default = `view`): By default the model will be materialized as a view. If you would like to materialize as a table, you can adjust using this argument.
 ----
 
-## sfdc_formula_model_automation.sh ([source](sfdc_formula_model_automation.sh))
+## sfdc_formula_model_automation.sh ([source](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/sfdc_formula_model_automation.sh))
 This bash script is intended to be used in order to automatically create the desired salesforce models via the command line within your dbt project. This bash script will generate a model file within your dbt project that contains the [sfdc_formula_view](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/macros/sfdc_formula_view.sql) macro for the appropriately defined table(s). In order for this command to work you must be within the root directory of your dbt project.
 
 **Usage:**
