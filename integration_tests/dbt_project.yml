@@ -6,6 +6,9 @@ vars:
   salesforce_formula_integration_tests:
     salesforce_schema: salesforce_formula_integrations_tests
 
+models:
+  +schema: "salesforce_formula_{{ var('directed_schema','dev') }}"
+
 seeds:
   salesforce_formula_integration_tests:
     +quote_columns: "{{ true if target.type == 'redshift' else false }}"
