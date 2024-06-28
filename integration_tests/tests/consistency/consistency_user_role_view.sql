@@ -5,17 +5,28 @@
 
 -- this test is to make sure the rows counts are the same between versions
 with prod as (
-    select count(*) as prod_rows
+    select *
     from {{ target.schema }}_salesforce_formula_prod.user_role_view
 ),
 
 dev as (
-    select count(*) as dev_rows
+    select *
     from {{ target.schema }}_salesforce_formula_dev.user_role_view
+),
+
+final as (
+    -- test will fail if any rows from prod are not found in dev
+    (select * from prod
+    except distinct
+    select * from dev)
+
+    union all -- union since we only care if rows are produced
+
+    -- test will fail if any rows from dev are not found in prod
+    (select * from dev
+    except distinct
+    select * from prod)
 )
 
--- test will return values and fail if the row counts don't match
 select *
-from prod
-join dev
-    on prod.prod_rows != dev.dev_rows
+from final
