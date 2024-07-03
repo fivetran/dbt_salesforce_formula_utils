@@ -2,7 +2,7 @@
 [PR #109](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/109) includes the following updates:
 
 ## 🚨 Breaking Changes 🚨
-- The parameter `full_statement_version=false` has been fully sunset from the `sfdc_formula_view` macro. You will now need to remove this parameter to avoid a compilation error.
+- As announced in the [v0.9.2 August 2023 release](https://github.com/fivetran/dbt_salesforce_formula_utils/releases/tag/v0.9.2), the parameter `full_statement_version=false` has now been fully sunset from the `sfdc_formula_view` macro. You will now need to remove this parameter to avoid a compilation error.
 
 ## Under the hood
 - Included auto-releaser GitHub Actions workflow to automate future releases.
