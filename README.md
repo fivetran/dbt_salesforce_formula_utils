@@ -21,7 +21,6 @@ This package includes macros and scipts to be used within a dbt project to accur
 To use this dbt package, you must have the following:
 - At least one Fivetran Salesforce connector syncing data into your destination. 
 - A **BigQuery**, **Snowflake**, **Redshift**, **PostgreSQL**, or **Databricks** destination.
-- **dbt Core**: This package is designed to work with dbt Core and is **not** compatible with dbt Cloud.
 
 ## Step 2: Install the package
 The [`sfdc_formula_view`](https://github.com/fivetran/dbt_salesforce_formula_utils#sfdc_formula_view-source) macro is intended to be leveraged within a dbt project that uses the source tables from Fivetran's Salesforce connector. To leverage the macro, you will add the below configuration to your `packages.yml` file (if you do not have a `packages.yml` file, create one in your root dbt project).
@@ -102,7 +101,7 @@ This macro generates the final sql needed to join the Salesforce formula fields 
 ----
 
 ## sfdc_formula_model_automation.sh ([source](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/sfdc_formula_model_automation.sh))
-This bash script is intended to be used in order to automatically create the desired salesforce models via the command line within your dbt project. This bash script will generate a model file within your dbt project that contains the [sfdc_formula_view](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/macros/sfdc_formula_view.sql) macro for the appropriately defined table(s). In order for this command to work you must be within the root directory of your dbt project.
+This bash script is intended to be used in order to automatically create the desired salesforce models via the command line within your dbt project. This bash script will generate a model file within your dbt project that contains the [sfdc_formula_view](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/macros/sfdc_formula_view.sql) macro for the appropriately defined table(s). In order for this command to work you must be within the root directory of your dbt project. Note that this script is designed for dbt Core and is **not** compatible with dbt Cloud.
 
 **Usage:**
 ```bash
