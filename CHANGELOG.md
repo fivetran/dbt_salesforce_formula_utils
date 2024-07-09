@@ -1,3 +1,22 @@
+# dbt_salesforce_formula_utils v0.10.0
+[PR #109](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/109) includes the following updates:
+
+## 🚨 Breaking Changes 🚨
+- As announced in the [v0.9.2 August 2023 release](https://github.com/fivetran/dbt_salesforce_formula_utils/releases/tag/v0.9.2), the `full_statement_version=false` parameter has been fully deprecated from the `sfdc_formula_view` macro. Please remove any references to this parameter to avoid errors.
+  - Additionally, the `reserved_table_name` and `fields_to_include` parameters have also been deprecated and should be removed.
+- The following macros have also been removed:
+  - `sfdc_current_formula_values`
+  - `sfdc_formula_pivot`
+  - `sfdc_formula_refactor`
+  - `sfdc_formula_view_fields`
+  - `sfdc_formula_view_sql`
+  - `sfdc_get_formula_column_values`
+  - `sfdc_star_exact`
+
+## Under the hood
+- Included auto-releaser GitHub Actions workflow to automate future releases.
+- Updated maintainer pull request template.
+
 # dbt_salesforce_formula_utils v0.9.3
 [PR #101](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/101) includes the following updates:
 
