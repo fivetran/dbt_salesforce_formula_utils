@@ -1,5 +1,5 @@
 name: 🐞 Bug (non-SQL-translation issues only)
-description: Report a bug or an issue you've found within the dbt package. For SQL translation issues, please contact Fivetran Support.
+description: Report a bug or an issue you've found within the dbt package. For SQL translation issues, please contact [Fivetran Support](https://support.fivetran.com/).
 title: "[Bug] <title>"
 labels: ["bug", "triage"]
 body:
