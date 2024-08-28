@@ -1,8 +1,5 @@
 contact_links:
-  - name: SQL Translation Issues
-    about: This dbt package only materializes the sql code provided in the `fivetran_formula_model` table and has no control over the translations themselves. For translation issues, please contact Fivetran Support.
-    url: https://support.fivetran.com/hc/
-  - name: Provide feedback or request a new package to our dbt package team
+  - name: Provide feedback to our dbt package team
     url: https://www.surveymonkey.com/r/DQ7K7WW
     about: Fill out our survey form to provide valuable feedback to the Fivetran team developing and maintaining the dbt packages.
   - name: Fivetran connector question
