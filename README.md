@@ -19,7 +19,7 @@ This package includes macros and scipts to be used within a dbt project to accur
 ## How do I use the dbt package?
 ### Step 1: Prerequisites
 To use this dbt package, you must have the following:
-- At least one Fivetran Salesforce connector syncing data into your destination.
+- At least one Fivetran Salesforce connection syncing data into your destination.
 - A **BigQuery**, **Snowflake**, **Redshift**, **PostgreSQL**, or **Databricks** destination.
 
 ### Step 2: Install the package
@@ -40,7 +40,7 @@ version: 2
 
 sources:
   - name: salesforce # It would be best to keep this named salesforce
-    schema: "{{ var('salesforce_schema', 'salesforce') }}" # Configure the salesforce_schema var from your dbt_project.yml (alternatively you can hard-code the schema here if only using one Salesforce connector)
+    schema: "{{ var('salesforce_schema', 'salesforce') }}" # Configure the salesforce_schema var from your dbt_project.yml (alternatively you can hard-code the schema here if only using one Salesforce connection)
     # Add the database where your Salesforce data resides if different from the target database. Eg. 'my_salesforce_database'. By default the target.database is used.
     tables:
       - name: fivetran_formula_model
