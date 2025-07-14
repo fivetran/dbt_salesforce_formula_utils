@@ -1,4 +1,6 @@
-<p align="center">
+# Fivetran Salesforce Formula Utils
+
+<p align="left">
     <a alt="License"
         href="https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/LICENSE">
         <img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" /></a>
@@ -10,11 +12,11 @@
         <img src="https://img.shields.io/badge/Contributions-welcome-blueviolet" /></a>
 </p>
 
-# Fivetran Salesforce Formula Utils
 ## What does this dbt package do?
-This package includes macros and scipts to be used within a dbt project to accurately map Salesforce Formulas to existing tables. It is designed to  work with data from [Fivetran's Salesforce connector](https://fivetran.com/docs/applications/salesforce) in the format described by [this ERD](https://fivetran.com/docs/applications/salesforce#schema).
+This package includes macros and scipts to be used within a dbt project to accurately map Salesforce Formulas to existing tables. It is designed to work with data from [Fivetran's Salesforce connector](https://fivetran.com/docs/applications/salesforce) in the format described by [this ERD](https://fivetran.com/docs/applications/salesforce#schema).
 
 > Note: this package is distinct from the [Salesforce dbt package](https://github.com/fivetran/dbt_salesforce), which _transforms_ Salesforce data and outputs analytics-ready end models.
+> Additionally, please this solution **does not support** formula field history mode. The formula fields recreated from this package will only use the most recent formula available in your Salesforce environment.
 
 ## How do I use the dbt package?
 ### Step 1: Prerequisites
@@ -113,91 +115,6 @@ Assuming the path to your directory is `"../dbt_salesforce"` and the table(s) yo
 ```bash
 source dbt_packages/salesforce_formula_utils/sfdc_formula_model_automation.sh "../dbt_salesforce" "opportunity,account"
 ```
-
-### Under the hood macros
-<details><summary>Expand to view documenation</summary>
-<br>
-
-#### sfdc_formula_pivot ([source](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/macros/sfdc_formula_pivot.sql))
-This macro pivots the dictionary results generated from the [sfdc_get_formula_column_values](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/macros/sfdc_get_formula_column_values.sql) macro to populate the formula field and sql for each record within the designated table this macro is used.
-
-**Usage:**
-```sql
-{{ salesforce_formula_utils.sfdc_formula_pivot(join_to_table='fivetran_sfdc_example_table') }}
-```
-**Args:**
-* `join_to_table` (required): The table with which you are joining the formula fields.
-* `source_name` (optional, default = `'salesforce'`): The dbt source containing the table you want to join with formula fields. Must also contain the `fivetran_formula` table.
-* `added_inclusion_fields` (optional, default = `none`): The list of fields you want to be included in the macro. If no fields are selected then all fields will be included.
-----
-
-#### sfdc_formula_refactor ([source](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/macros/sfdc_formula_refactor.sql))
-This macro checks the dictionary results generated from the [sfdc_get_formula_column_values](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/macros/sfdc_get_formula_column_values.sql) macro to determine if any formula fields reference other formula fields. If a formula references another generated formula field, then the macro will insert the first formula sql into the second formula. This ensures formulas that reference another formula field will be generated successfully.
-
-**Usage:**
-```sql
-{{ salesforce_formula_utils.sfdc_formula_refactor(join_to_table='fivetran_sfdc_example_table',source_name='salesforce') }}
-```
-**Args:**
-* `join_to_table` (required): The table with which you are joining the formula fields.
-* `source_name` (optional, default = `salesforce`): The name of the source defined.
-* `added_inclusion_fields` (optional, default = `none`): The list of fields you want to be included in the macro. If no fields are selected then all fields will be included.
-----
-#### sfdc_formula_view_fields ([source](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/macros/sfdc_formula_view_fields.sql))
-This macro checks the dictionary results generated from the [sfdc_get_formula_column_values](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/macros/sfdc_get_formula_column_values.sql) macro and returns the field name with the index of the view sql to be used in the primary select statement of the [sfdc_formula_view](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/macros/sfdc_formula_view.sql) macro.
-
-**Usage:**
-```sql
-{{ salesforce_formula_utils.sfdc_formula_field_views(join_to_table='fivetran_sfdc_example_table',source_name='salesforce') }}
-```
-**Args:**
-* `join_to_table` (required): The table with which you are joining the formula fields.
-* `source_name` (optional): The name of the source defined. Default is `salesforce`.
-* `inclusion_fields` (optional, default = `none`): The list of fields you want to be included in the macro. If no fields are selected then all fields will be included.
-----
-#### sfdc_formula_view_sql ([source](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/macros/sfdc_formula_view_sql.sql))
-This macro checks the dictionary results generated from the [sfdc_get_formula_column_values](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/macros/sfdc_get_formula_column_values.sql) macro and returns the view_sql value results while also replacing the `from` and `join` syntax to be specific to the source defined. Additionally, the where logic will be applied to ensure the view_sql is properly joined to the base table.
-
-**Usage:**
-```sql
-{{ salesforce_formula_utils.sfdc_formula_view_sql(join_to_table='fivetran_sfdc_example_table',source_name='salesforce') }}
-```
-**Args:**
-* `join_to_table` (required): The table with which you are joining the formula fields.
-* `source_name` (optional): The name of the source defined. Default is `salesforce`.
-* `inclusion_fields` (optional, default = `none`): The list of fields you want to be included in the macro. If no fields are selected then all fields will be included.
-----
-
-#### sfdc_get_formula_column_values ([source](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/macros/sfdc_get_formula_column_values.sql))
-This macro is designed to look within the users source defined `salesforce_schema` for the `fivetran_formula` table. The macro will then filter to only include records from the `join_to_table` argument, and search for distinct combinations of the `field` and `sql` columns. The distinct combination of columns for the join_table argument are then returned as a dictionary.
-Further, if there are any formula fields that are a third degree referential formula (eg. a formula field is contains a field that is a formula field, and that formula field also references another formula field) or greater then you can add those fields to the `sfdc_exclude_formulas` variable within your root `dbt_project.yml` file to exclude them from the macro as they will fail in the final view creation.
-> Note: This macro will not work accurately unless you have a `src.yml` configured appropriately. For reference, look within this packages [integration_tests](https://github.com/fivetran/dbt_salesforce_formula_utils/tree/main/integration_tests/models) folder for an example of a source configuration.
-
-**Usage:**
-```sql
-{{ salesforce_formula_utils.sfdc_get_formula_column_values(fivetran_formula='salesforce', key='field', value='sql', join_to_table='fivetran_sfdc_example_table') }}
-```
-**Args:**
-* `fivetran_formula` (required): The source configuration for the `fivetran_formula` table. If this is in a different source than the default `salesforce`, that source will also apply to the `join_to_table` parameter.
-* `key` (required): The key column within `fivetran_formula` you are querying. This argument is typically `field`.
-* `value` (required): The value column within `fivetran_formula` you are querying. This argument is typically `sql`.
-* `join_to_table` (required): The table with which you are joining the formula fields.
-* `added_inclusion_fields` (optional, default = `none`): The list of fields you want to be included in the macro. If no fields are selected then all fields will be included.
-* `no_nulls` (optional, default = `true`): Used by the macro to identify if the `null` fields within the `view_sql` column should be included.
-----
-
-#### sfdc_star_exact ([source](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/macros/sfdc_star_exact.sql))
-This macro mirrors the [dbt_utils.star()](https://github.com/dbt-labs/dbt-utils#star-source) macro with the minor adjustment to properly work with the return results of the [dbt_utils.get_column_values()](https://github.com/dbt-labs/dbt-utils#get_column_values-source). The major change being how the return result of the dbt_utils.get_column_values() macro returns results with single quotes, while the dbt_utils.star() macro exclusively requires double quotes.
-**Usage:**
-```sql
-{{ salesforce_formula_utils.sfdc_star_exact(from=ref('my_model'), relation_alias='my_table', except=["exclude_field_1", "exclude_field_2"]) }}
-```
-**Args:**
-* `from` (required): The table which you want to select all fields.
-* `relation_alias` (optional, default = `none`): Used if you would like to add a relation alias to the fields queried in the select star statement (i.e. `my_table.field_name`).
-* `except` (optional, default = `none`): A list of fields you would like to exclude from the select star statement.
-----
-</details>
 
 ## Does this package have dependencies?
 This dbt package is dependent on the following dbt packages. These dependencies are installed by default within this package. For more information on the following packages, refer to the [dbt hub](https://hub.getdbt.com/) site.
