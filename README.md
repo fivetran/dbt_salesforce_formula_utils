@@ -13,9 +13,10 @@
 </p>
 
 ## What does this dbt package do?
-This package includes macros and scipts to be used within a dbt project to accurately map Salesforce Formulas to existing tables. It is designed to  work with data from [Fivetran's Salesforce connector](https://fivetran.com/docs/applications/salesforce) in the format described by [this ERD](https://fivetran.com/docs/applications/salesforce#schema).
+This package includes macros and scipts to be used within a dbt project to accurately map Salesforce Formulas to existing tables. It is designed to work with data from [Fivetran's Salesforce connector](https://fivetran.com/docs/applications/salesforce) in the format described by [this ERD](https://fivetran.com/docs/applications/salesforce#schema).
 
 > Note: this package is distinct from the [Salesforce dbt package](https://github.com/fivetran/dbt_salesforce), which _transforms_ Salesforce data and outputs analytics-ready end models.
+> Additionally, please this solution **does not support** formula field history mode. The formula fields recreated from this package will only use the most recent formula available in your Salesforce environment.
 
 ## How do I use the dbt package?
 ### Step 1: Prerequisites
