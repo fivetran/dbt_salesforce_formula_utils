@@ -104,7 +104,7 @@ models:
     - name: website 
       description: The website of this account.
     - name: multiple number of employees by 2
-      description: Test formula created from joining the fivetran_formula using the sfdc_formula_pivot macro.
+      description: Test formula created from joining the fivetran_formula.
 
   - name: opportunity_view
     description: Represents an opportunity, which is a sale or pending deal.
@@ -182,7 +182,7 @@ models:
     - name: type
       description: Type of opportunity. For example, Existing Business or New Business.
     - name: amount times probability
-      description: Test formula created from joining the fivetran_formula using the sfdc_formula_pivot macro.
+      description: Test formula created from joining the fivetran_formula.
 
   - name: user_view
     description: Represents a user in your organization.
