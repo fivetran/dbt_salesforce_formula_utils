@@ -10,6 +10,8 @@ models:
   +schema: "salesforce_formula_{{ var('directed_schema','dev') }}"
 
 seeds:
+  +docs:
+    show: False
   salesforce_formula_integration_tests:
     +quote_columns: "{{ true if target.type == 'redshift' else false }}"
     opportunity:
@@ -23,3 +25,7 @@ seeds:
 dispatch:
   - macro_namespace: dbt_utils
     search_order: ['spark_utils', 'dbt_utils']
+
+flags:
+  send_anonymous_usage_stats: False
+  use_colors: True
