@@ -100,6 +100,7 @@ This macro generates the final sql needed to join the Salesforce formula fields 
 * `source_name` (optional, default = `'salesforce'`): The dbt source containing the table you want to join with formula fields (as defined [here](https://github.com/fivetran/dbt_salesforce_formula_utils/tree/main#step-3-define-required-source-tables)). Must contain the `fivetran_formula_model` table.
 * `using_quoted_identifiers` (optional, default = `false`): For warehouses with case sensitivity enabled this argument **must** be set to `true` in order for the underlying macros within this project to properly compile and execute successfully.
 * `materialization` (optional, default = `view`): By default the model will be materialized as a view. If you would like to materialize as a table, you can adjust using this argument.
+* `include_deleted_records` (optional, default = `true`): Whether to include deleted records in the formula field calculations. When set to `true`, the macro removes all `_fivetran_deleted` filtering logic from the generated SQL, allowing deleted records to be included in the results. When set to `false`, the original deletion filtering behavior is preserved. See [DELETED_RECORDS_GUIDE.md](DELETED_RECORDS_GUIDE.md) for detailed usage examples.
 ----
 
 ### sfdc_formula_model_automation.sh ([source](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/sfdc_formula_model_automation.sh))
