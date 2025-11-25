@@ -1,3 +1,10 @@
+# dbt_salesforce_formula_utils v0.11.0
+
+[PR #126](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/126) includes the following updates:
+
+## Features
+  - Increases the required dbt version upper limit to v3.0.0
+
 # dbt_salesforce_formula_utils v0.10.0
 [PR #109](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/109) includes the following updates:
 
