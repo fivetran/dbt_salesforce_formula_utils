@@ -3,9 +3,8 @@ version: '0.11.0'
 profile: 'integration_tests'
 config-version: 2
 vars:
-  salesforce_formula_integration_tests:
-    salesforce_schema: salesforce_formula_integrations_tests
-
+  salesforce_schema: salesforce_formula_integrations_tests
+    
 models:
   +schema: "salesforce_formula_{{ var('directed_schema','dev') }}"
 
