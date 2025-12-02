@@ -1,15 +1,17 @@
 name: 'salesforce_formula_integration_tests'
-version: '0.10.0'
+version: '0.11.0'
 profile: 'integration_tests'
 config-version: 2
 vars:
   salesforce_formula_integration_tests:
     salesforce_schema: salesforce_formula_integrations_tests
-
+    
 models:
   +schema: "salesforce_formula_{{ var('directed_schema','dev') }}"
 
 seeds:
+  +docs:
+    show: False
   salesforce_formula_integration_tests:
     +quote_columns: "{{ true if target.type == 'redshift' else false }}"
     opportunity:
@@ -23,3 +25,7 @@ seeds:
 dispatch:
   - macro_namespace: dbt_utils
     search_order: ['spark_utils', 'dbt_utils']
+
+flags:
+  send_anonymous_usage_stats: False
+  use_colors: True
