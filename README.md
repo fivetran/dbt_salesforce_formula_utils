@@ -1,4 +1,5 @@
-# Fivetran Salesforce Formula Utils
+<!--section="salesforce-formula-utils_transformation_model"-->
+# Salesforce Formula Utils dbt Package
 
 <p align="left">
     <a alt="License"
@@ -15,28 +16,68 @@
         <img src="https://img.shields.io/badge/Fivetran_Quickstart_Compatible%3F-yes-green.svg" /></a>
 </p>
 
+This dbt package transforms data from Fivetran's Salesforce Formula Utils connector into analytics-ready tables.
+
+## Resources
+
+- Number of materialized models¹: 0
+- Connector documentation
+  - [Salesforce Formula Utils connector documentation](https://fivetran.com/docs/connectors/applications/salesforce-formula-utils)
+  - [Salesforce Formula Utils ERD](https://fivetran.com/docs/connectors/applications/salesforce-formula-utils#schemainformation)
+- dbt package documentation
+  - [GitHub repository](https://github.com/fivetran/dbt_salesforce_formula_utils)
+  - [dbt Docs](https://fivetran.github.io/dbt_salesforce_formula_utils/#!/overview)
+  - [DAG](https://fivetran.github.io/dbt_salesforce_formula_utils/#!/overview?g_v=1)
+  - [Changelog](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/CHANGELOG.md)
+
 ## What does this dbt package do?
-This package includes macros and scipts to be used within a dbt project to accurately map Salesforce Formulas to existing tables. It is designed to work with data from [Fivetran's Salesforce connector](https://fivetran.com/docs/applications/salesforce) in the format described by [this ERD](https://fivetran.com/docs/applications/salesforce#schema).
+This package enables you to accurately map Salesforce formulas to existing tables through macros and scripts. It creates enriched models with formula fields integrated into your Salesforce data.
 
 > Note: this package is distinct from the [Salesforce dbt package](https://github.com/fivetran/dbt_salesforce), which _transforms_ Salesforce data and outputs analytics-ready end models.
 > Additionally, please this solution **does not support** formula field history mode. The formula fields recreated from this package will only use the most recent formula available in your Salesforce environment.
 
-## How do I use the dbt package?
-### Step 1: Prerequisites
+### Output schema
+Final output tables are generated in the following target schema:
+
+```
+<your_database>.<connector/schema_name>_salesforce_formula_utils
+```
+
+### Final output tables
+
+By default, this package materializes the following final tables:
+
+| Table | Description |
+| :---- | :---- |
+| Custom models | User-defined models that incorporate Salesforce formula fields using the `sfdc_formula_view` macro. |
+
+¹ Each Quickstart transformation job run materializes these models if all components of this data model are enabled. This count includes all staging, intermediate, and final models materialized as `view`, `table`, or `incremental`.
+---
+
+## Prerequisites
 To use this dbt package, you must have the following:
+
 - At least one Fivetran Salesforce connection syncing data into your destination.
 - A **BigQuery**, **Snowflake**, **Redshift**, **PostgreSQL**, or **Databricks** destination.
 
-### Step 2: Install the package
+## How do I use the dbt package?
+You can either add this dbt package in the Fivetran dashboard or import it into your dbt project:
+
+- To add the package in the Fivetran dashboard, follow our [Quickstart guide](https://fivetran.com/docs/transformations/dbt).
+- To add the package to your dbt project, follow the setup instructions in the dbt package's [README file](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/README.md#how-do-i-use-the-dbt-package) to use this package.
+
+<!--section-end-->
+
+### Install the package
 The [`sfdc_formula_view`](https://github.com/fivetran/dbt_salesforce_formula_utils#sfdc_formula_view-source) macro is intended to be leveraged within a dbt project that uses the source tables from Fivetran's Salesforce connector. To leverage the macro, you will add the below configuration to your `packages.yml` file (if you do not have a `packages.yml` file, create one in your root dbt project).
 > TIP: Check [dbt Hub](https://hub.getdbt.com/) for the latest installation instructions or [read the dbt docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
 ```yml
 packages:
   - package: fivetran/salesforce_formula_utils
-    version: [">=0.11.0", "<0.12.0"] # we recommend using ranges to capture non-breaking changes automatically
+    version: [">=0.12.0", "<0.13.0"] # we recommend using ranges to capture non-breaking changes automatically
 ```
 
-### Step 3: Define required source tables
+### Define required source tables
 In order to use the macros included in this package, you will need to have a properly configured Salesforce source named `salesforce` in your own dbt project. An example of a properly configured Salesforce source yml can be found in the `src_salesforce.yml` file in [integration_tests](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/integration_tests/models/src_fivetran_formula.yml). This integration_tests folder is just for testing purposes - your source file will need to be in the models folder of your root dbt project. You are welcome to copy/paste the [example](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/integration_tests/models/src_fivetran_formula.yml) source configuration into your `src_salesforce.yml` file and modify for your use case.
 
 In particular, you will need the following sources defined in your `src_salesforce.yml` file:
@@ -54,7 +95,7 @@ sources:
       ## Any other source tables you are creating models for should be defined here as well. They aren't required, but it is best organizational practice and allows Fivetran to compile data lineage graphs
 ```
 
-### Step 4: Create models
+### Create models
 #### Generate models using connector-made query
 
 To create a model that includes all formula fields:
@@ -77,10 +118,10 @@ source dbt_packages/salesforce_formula_utils/sfdc_formula_model_automation.sh ".
 
 > Note: In order for this command to work, you must currently be within the root directory of your dbt project.
 
-### Step 5: Execute models
+### Execute models
 Once you have created all your desired models and copied/modified the sql snippet into each model you will execute `dbt deps` to install the macro package, then execute `dbt run` to generate the models. Additionally, you can reference the [integration_tests](https://github.com/fivetran/dbt_salesforce_formula_utils/tree/main/integration_tests/models) folder for examples on how to use the macro within your models.
 
-### (Optional) Step 6: Orchestrate your models with Fivetran Transformations for dbt Core™
+### (Optional) Orchestrate your models with Fivetran Transformations for dbt Core™
 <details><summary>Expand to view details</summary>
 <br>
 
@@ -129,14 +170,18 @@ packages:
       version: [">=1.0.0", "<2.0.0"]
 ```
 
+<!--section="salesforce-formula-utils_maintenance"-->
 ## How is this package maintained and can I contribute?
+
 ### Package Maintenance
-The Fivetran team maintaining this package _only_ maintains the latest version of the package. We highly recommend that you stay consistent with the [latest version](https://hub.getdbt.com/fivetran/salesforce_formula_utils/latest/) of the package and refer to the [CHANGELOG](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/CHANGELOG.md) and release notes for more information on changes across versions.
+The Fivetran team maintaining this package only maintains the [latest version](https://hub.getdbt.com/fivetran/salesforce_formula_utils/latest/) of the package. We highly recommend you stay consistent with the latest version of the package and refer to the [CHANGELOG](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/CHANGELOG.md) and release notes for more information on changes across versions.
 
 ### Contributions
 A small team of analytics engineers at Fivetran develops these dbt packages. However, the packages are made better by community contributions.
 
-We highly encourage and welcome contributions to this package. Check out [this dbt Discourse article](https://discourse.getdbt.com/t/contributing-to-a-dbt-package/657) to learn how to contribute to a dbt package.
+We highly encourage and welcome contributions to this package. Learn how to contribute to a package in dbt's [Contributing to an external dbt package article](https://discourse.getdbt.com/t/contributing-to-a-dbt-package/657).
+
+<!--section-end-->
 
 ## Are there any resources available?
 - If you have questions or want to reach out for help, see the [GitHub Issue](https://github.com/fivetran/dbt_salesforce_formula_utils/issues/new/choose) section to find the right avenue of support for you.
