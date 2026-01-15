@@ -50,6 +50,7 @@ By default, this package materializes the following final tables:
 | Salesforce Object Name | Table which includes the base Salesforce object fields in addition to any applicable Salesforce formula fields. |
 
 ¹ Each Quickstart transformation job run materializes these models if all components of this data model are enabled. This count includes all formula field models materialized as `view`.
+
 ---
 
 ## Prerequisites
