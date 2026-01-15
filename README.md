@@ -16,18 +16,16 @@
         <img src="https://img.shields.io/badge/Fivetran_Quickstart_Compatible%3F-yes-green.svg" /></a>
 </p>
 
-This dbt package transforms data from Fivetran's Salesforce Formula Utils connector into analytics-ready tables.
+This dbt package provides a macro which can be used to generate views on top of Salesforce objects while recreating formula fields.
 
 ## Resources
 
-- Number of materialized models¹: 0
+- Number of materialized models¹: However many upstream salesforce objects include formula fields.
 - Connector documentation
-  - [Salesforce Formula Utils connector documentation](https://fivetran.com/docs/connectors/applications/salesforce-formula-utils)
-  - [Salesforce Formula Utils ERD](https://fivetran.com/docs/connectors/applications/salesforce-formula-utils#schemainformation)
+  - [Salesforce Formula documentation](https://fivetran.com/docs/connectors/applications/salesforce/formula#formulafields)
+  - [Salesforce Formula Quickstart](https://fivetran.com/docs/connectors/applications/salesforce/formula#salesforcequickstartmodel)
 - dbt package documentation
   - [GitHub repository](https://github.com/fivetran/dbt_salesforce_formula_utils)
-  - [dbt Docs](https://fivetran.github.io/dbt_salesforce_formula_utils/#!/overview)
-  - [DAG](https://fivetran.github.io/dbt_salesforce_formula_utils/#!/overview?g_v=1)
   - [Changelog](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/CHANGELOG.md)
 
 ## What does this dbt package do?
@@ -49,9 +47,9 @@ By default, this package materializes the following final tables:
 
 | Table | Description |
 | :---- | :---- |
-| Custom models | User-defined models that incorporate Salesforce formula fields using the `sfdc_formula_view` macro. |
+| Salesforce Object Name | Table which includes the base Salesforce object fields in addition to any applicable Salesforce formula fields. |
 
-¹ Each Quickstart transformation job run materializes these models if all components of this data model are enabled. This count includes all staging, intermediate, and final models materialized as `view`, `table`, or `incremental`.
+¹ Each Quickstart transformation job run materializes these models if all components of this data model are enabled. This count includes all formula field models materialized as `view`.
 ---
 
 ## Prerequisites
@@ -74,7 +72,7 @@ The [`sfdc_formula_view`](https://github.com/fivetran/dbt_salesforce_formula_uti
 ```yml
 packages:
   - package: fivetran/salesforce_formula_utils
-    version: [">=0.12.0", "<0.13.0"] # we recommend using ranges to capture non-breaking changes automatically
+    version: [">=0.11.0", "<0.12.0"] # we recommend using ranges to capture non-breaking changes automatically
 ```
 
 ### Define required source tables

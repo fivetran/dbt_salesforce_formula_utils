@@ -1,15 +1,3 @@
-# dbt_salesforce_formula_utils v0.12.0
-
-[PR #127](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/127) includes the following updates:
-
-## Documentation
-- Updates README with standardized Fivetran formatting.
-
-## Under the Hood
-- In the `quickstart.yml` file:
-  - Adds `table_variables` for relevant sources to prevent missing sources from blocking downstream Quickstart models.
-  - Adds `supported_vars` for Quickstart UI customization.
-
 # dbt_salesforce_formula_utils v0.11.0
 
 [PR #126](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/126) includes the following updates:
