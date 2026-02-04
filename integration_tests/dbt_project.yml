@@ -15,12 +15,19 @@ seeds:
   salesforce_formula_integration_tests:
     +quote_columns: "{{ true if target.type == 'redshift' else false }}"
     opportunity:
-      +columns_types:
+      +column_types:
         amount: float
         probability: float
     fivetran_formula:
       +column_types:
         view_sql: "{{ 'varchar(256)'  if target.type in ('redshift','postgres') else 'string'}}"
+    fivetran_formula_model: 
+      +enabled: "{{ false if target.type == 'redshift' else true }}"
+    fivetran_formula_model_redshift:
+      +enabled: "{{ true if target.type == 'redshift' else false }}"
+      +alias: fivetran_formula_model
+      +column_types:
+        model_large: super
 
 dispatch:
   - macro_namespace: dbt_utils

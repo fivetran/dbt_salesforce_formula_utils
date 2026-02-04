@@ -1,0 +1,5 @@
+object,model_large
+opportunity,"SELECT \n  mt.\""stage_name\"",\n  mt.\""amount\""\nFROM \""salesforce_formula_integrations_tests\"".\""opportunity\"" AS mt"
+account,"SELECT \n  mt.*,\n  (mt.\""number_of_employees\"" * 2) AS \""account_test_formula\""\nFROM \""salesforce_formula_integrations_tests\"".\""account\"" AS mt"
+user,"SELECT \n  mt.*,\n  CASE WHEN mt.\""is_active\"" = true THEN 'active' ELSE 'not active' END AS \""is_active_user\""\nFROM \""salesforce_formula_integrations_tests\"".\""user\"" AS mt\nWHERE NOT mt._fivetran_deleted"
+user_role,"SELECT \n  mt.*,\n  CONCAT(mt.\""developer_name\"", mt.\""id\"") AS \""developer_and_id\""\nFROM \""salesforce_formula_integrations_tests\"".\""user_role\"" AS mt\nWHERE NOT mt._fivetran_deleted"
