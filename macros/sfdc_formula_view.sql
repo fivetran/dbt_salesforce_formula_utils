@@ -24,19 +24,18 @@
     {% endif %}
 
     {% if using_quoted_identifiers %}
-    {%- set table_results = dbt_utils.get_column_values(
-        table=source(source_name, 'fivetran_formula_model'), 
-        column=adapter.quote(model_column_name), 
-        where=adapter.quote('OBJECT' if target.type == 'snowflake' else 'object') ~ " = '" ~ source_table ~ "'"
-        ) -%}
-
+        {%- set table_results = dbt_utils.get_column_values(
+            table=source(source_name, 'fivetran_formula_model'), 
+            column=adapter.quote(model_column_name), 
+            where=adapter.quote('OBJECT' if target.type == 'snowflake' else 'object') ~ " = '" ~ source_table ~ "'"
+            ) -%}
     {% else %}
-    {%- set table_results = dbt_utils.get_column_values(
-        table=source(source_name, 'fivetran_formula_model'),
-        column=model_column_name,
-        where="object = '" ~ source_table ~ "'"
-        ) -%}
-
+        {%- set table_results = dbt_utils.get_column_values(
+            table=source(source_name, 'fivetran_formula_model'),
+            column=model_column_name,
+            where="object = '" ~ source_table ~ "'"
+            ) -%}
+    {% endif %}
 
     {% if using_model_large %}
         {# Use dbt's built-in JSON parsing to handle all escape sequences automatically #}
