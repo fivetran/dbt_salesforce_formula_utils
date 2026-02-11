@@ -26,39 +26,9 @@
     {%- set table_results = dbt_utils.get_column_values(table=source(source_name, 'fivetran_formula_model'), column=adapter.quote(model_column_name) if using_quoted_identifiers else model_column_name, where="object = '" ~ source_table ~ "'") -%}
 
     {% if using_model_large %}
-        {# Extract SQL from model_large super column and remove escape characters #}
-        {% set raw_sql = table_results[0] %}
-        {% if raw_sql %}
-            {{ log("DEBUG: Raw SQL from super column: " ~ raw_sql, info=True) }}
-
-            {# Remove outer quotes if present (JSON string format) #}
-            {% if raw_sql.startswith('"') and raw_sql.endswith('"') %}
-                {% set clean_sql = raw_sql[1:-1] %}
-            {% else %}
-                {% set clean_sql = raw_sql %}
-            {% endif %}
-
-            {{ log("DEBUG: After removing outer quotes: " ~ clean_sql, info=True) }}
-
-            {# Process double-escaped characters from super column #}
-            {% set clean_sql = clean_sql.replace('\\\\n', '\n') %}
-            {% set clean_sql = clean_sql.replace('\\\\t', '\t') %}
-            {% set clean_sql = clean_sql.replace('\\\\\"', '"') %}
-            {% set clean_sql = clean_sql.replace('\\\\_', '_') %}
-
-            {# Clean up any remaining single-escaped characters #}
-            {% set clean_sql = clean_sql.replace('\\n', '\n') %}
-            {% set clean_sql = clean_sql.replace('\\t', '\t') %}
-            {% set clean_sql = clean_sql.replace('\\"', '"') %}
-            {% set clean_sql = clean_sql.replace('\\_', '_') %}
-
-            {# Remove any trailing empty quotes #}
-            {% set clean_sql = clean_sql.replace('""', '') %}
-            {% set clean_sql = clean_sql.rstrip('"') %}
-
-            {{ log("DEBUG: Final cleaned SQL: " ~ clean_sql, info=True) }}
-            {{ clean_sql }}
-        {% endif %}
+        {# Use dbt's built-in JSON parsing to handle all escape sequences automatically #}
+        {% set cleaned_table_results = fromjson(fromjson(table_results[0])) %}
+        {{ cleaned_table_results }}
     {% else %}
         {{ table_results[0] }}
     {% endif %}

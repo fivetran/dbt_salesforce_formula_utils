@@ -19,4 +19,6 @@ dbt deps
 dbt seed --target "$db" --full-refresh
 dbt run --target "$db" --full-refresh
 dbt test --target "$db"
+dbt run --vars '{using_quoted_identifiers: true}' --target "$db" --full-refresh
+dbt test --vars '{using_quoted_identifiers: true}' --target "$db"
 dbt run-operation fivetran_utils.drop_schemas_automation --target "$db"
