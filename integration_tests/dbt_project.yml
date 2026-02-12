@@ -27,8 +27,13 @@ seeds:
       +enabled: "{{ true if target.type == 'redshift' else false }}"
       +alias: fivetran_formula_model
       +column_types:
-        model_large: varchar(65535)
-      +post-hook: "alter table {{ this }} alter column model_large type super"
+        model_string: varchar(65535)
+      # Complex JSON with embedded commas/quotes causes CSV parsing errors.
+      # Load as VARCHAR first, then convert to SUPER using JSON_PARSE() in a post-hook.
+      # This is necessary for testing the SUPER datatype with seed data.
+      +post-hook:
+        - "alter table {{ this }} add column model_large super default null"
+        - "update {{ this }} set model_large = json_parse(model_string)"
 
 dispatch:
   - macro_namespace: dbt_utils
