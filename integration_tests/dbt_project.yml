@@ -27,7 +27,8 @@ seeds:
       +enabled: "{{ true if target.type == 'redshift' else false }}"
       +alias: fivetran_formula_model
       +column_types:
-        model_large: super
+        model_large: varchar(65535)
+      +post-hook: "alter table {{ this }} alter column model_large type super"
 
 dispatch:
   - macro_namespace: dbt_utils

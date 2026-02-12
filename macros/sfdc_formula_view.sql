@@ -16,9 +16,9 @@
     {% if target.type == 'redshift' %}
 
         {# Specifically for redshift we need to check if the model_large column exists and has_values. #}
-        {% set ffm_columns = adapter.get_columns_in_relation(source(source_name, 'fivetran_formula_model')) %}
-        {%- set ffm_column_names = ffm_columns | map(attribute='name') | map('lower') | list -%}
-        {%- set model_large_col_exists = 'model_large' in ffm_column_names -%}
+        {% set formula_model_columns = adapter.get_columns_in_relation(source(source_name, 'fivetran_formula_model')) %}
+        {%- set formula_model_column_names = formula_model_columns | map(attribute='name') | map('lower') | list -%}
+        {%- set model_large_col_exists = 'model_large' in formula_model_column_names -%}
 
         {%- if model_large_col_exists %}
             {%- set run_query %}
@@ -36,7 +36,7 @@
 
         {# Check datatype #}
         {%- set ns = namespace(column_type='string') -%}
-        {%- for column in ffm_columns if column.name|lower == model_column_name -%}
+        {%- for column in formula_model_columns if column.name|lower == model_column_name -%}
             {%- set ns.column_type = column.dtype|lower -%}
         {%- endfor -%}
         {%- set model_column_datatype = ns.column_type -%}
@@ -46,19 +46,14 @@
         {%- set model_column_datatype = 'string' -%}
     {% endif %}
 
-    {% if using_quoted_identifiers %}
-        {%- set table_results = dbt_utils.get_column_values(
-            table=source(source_name, 'fivetran_formula_model'), 
-            column=adapter.quote(model_column_name), 
-            where=adapter.quote('OBJECT' if target.type == 'snowflake' else 'object') ~ " = '" ~ source_table ~ "'"
-            ) -%}
-    {% else %}
-        {%- set table_results = dbt_utils.get_column_values(
-            table=source(source_name, 'fivetran_formula_model'),
-            column=model_column_name,
-            where="object = '" ~ source_table ~ "'"
-            ) -%}
-    {% endif %}
+    {%- set object_column = adapter.quote('OBJECT' if target.type == 'snowflake' else 'object') if using_quoted_identifiers else 'object' -%}
+    {%- set model_col = adapter.quote(model_column_name) if using_quoted_identifiers else model_column_name -%}
+
+    {%- set table_results = dbt_utils.get_column_values(
+        table=source(source_name, 'fivetran_formula_model'),
+        column=model_col,
+        where=object_column ~ " = '" ~ source_table ~ "'"
+    ) -%}
 
     {% if model_column_datatype == 'super' %} -- Defaults to string processing for non-Redshift warehouses
         {# Use dbt's built-in JSON parsing to handle all escape sequences automatically #}
