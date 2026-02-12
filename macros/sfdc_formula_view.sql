@@ -14,13 +14,36 @@
 
 {% else %}
     {% if target.type == 'redshift' %}
-        {% set columns = adapter.get_columns_in_relation(source(source_name, 'fivetran_formula_model')) %}
-        {% set column_names = columns | map(attribute='name') | list %}
-        {%- set using_model_large = 'model_large' in column_names -%}
-        {%- set model_column_name = 'model_large' if using_model_large else 'model' -%}
+
+        {# Specifically for redshift we need to check if the model_large column exists and has_values. #}
+        {% set ffm_columns = adapter.get_columns_in_relation(source(source_name, 'fivetran_formula_model')) %}
+        {%- set ffm_column_names = ffm_columns | map(attribute='name') | map('lower') | list -%}
+        {%- set model_large_col_exists = 'model_large' in ffm_column_names -%}
+
+        {%- if model_large_col_exists %}
+            {%- set run_query %}
+                select 'has_values'
+                from {{ source(source_name, 'fivetran_formula_model') }}
+                where model_large is not null
+                limit 1
+            {%- endset %}
+            {%- set model_large_has_values = dbt_utils.get_single_value(run_query) == 'has_values' -%}
+        {%- else %}
+            {%- set model_large_has_values = false -%}
+        {%- endif %}
+
+        {%- set model_column_name = 'model_large' if model_large_has_values else 'model' -%}
+
+        {# Check datatype #}
+        {%- set ns = namespace(column_type='string') -%}
+        {%- for column in ffm_columns if column.name|lower == model_column_name -%}
+            {%- set ns.column_type = column.dtype|lower -%}
+        {%- endfor -%}
+        {%- set model_column_datatype = ns.column_type -%}
+
     {% else %}
-        {%- set using_model_large = false -%}
         {%- set model_column_name = 'MODEL' if target.type == 'snowflake' else 'model' -%}
+        {%- set model_column_datatype = 'string' -%}
     {% endif %}
 
     {% if using_quoted_identifiers %}
@@ -37,9 +60,9 @@
             ) -%}
     {% endif %}
 
-    {% if using_model_large %}
+    {% if model_column_datatype == 'super' %} -- Defaults to string processing for non-Redshift warehouses
         {# Use dbt's built-in JSON parsing to handle all escape sequences automatically #}
-        {% set cleaned_table_results = fromjson(fromjson(table_results[0])) %}
+        {% set cleaned_table_results = fromjson(table_results[0]) %}
         {{ cleaned_table_results }}
     {% else %}
         {{ table_results[0] }}
