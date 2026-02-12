@@ -15,7 +15,7 @@
 {% else %}
     {% if target.type == 'redshift' %}
 
-        {# Specifically for redshift we need to check if the model_large column exists and has_values. #}
+        {# Specifically for redshift we need to check if the model_large column exists and has non-null values. #}
         {% set formula_model_columns = adapter.get_columns_in_relation(source(source_name, 'fivetran_formula_model')) %}
         {%- set formula_model_column_names = formula_model_columns | map(attribute='name') | map('lower') | list -%}
         {%- set model_large_col_exists = 'model_large' in formula_model_column_names -%}
@@ -55,13 +55,8 @@
         where=object_column ~ " = '" ~ source_table ~ "'"
     ) -%}
 
-    {% if model_column_datatype == 'super' %} -- Defaults to string processing for non-Redshift warehouses
-        {# Use dbt's built-in JSON parsing to handle all escape sequences automatically #}
-        {% set cleaned_table_results = fromjson(table_results[0]) %}
-        {{ cleaned_table_results }}
-    {% else %}
-        {{ table_results[0] }}
-    {% endif %}
+    {# Use dbt's built-in JSON parsing to handle all escape sequences for SUPER datatype #}
+    {{ fromjson(table_results[0]) if model_column_datatype == 'super' else table_results[0] }}
 
 {% endif %}
 {%- endmacro -%}
