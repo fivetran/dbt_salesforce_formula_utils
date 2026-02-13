@@ -28,7 +28,6 @@ seeds:
       +alias: fivetran_formula_model
       +column_types:
         model_string: varchar(65535)
-      # Complex JSON with embedded commas/quotes causes CSV parsing errors.
       # Load as VARCHAR first, then convert to SUPER using JSON_PARSE() in a post-hook.
       # This is necessary for testing the SUPER datatype with seed data.
       +post-hook:

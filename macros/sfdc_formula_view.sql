@@ -20,18 +20,15 @@
         {%- set formula_model_column_names = formula_model_columns | map(attribute='name') | map('lower') | list -%}
         {%- set model_large_col_exists = 'model_large' in formula_model_column_names -%}
 
-        {%- if model_large_col_exists %}
-            {%- set run_query %}
-                select 'has_values'
-                from {{ source(source_name, 'fivetran_formula_model') }}
-                where model_large is not null
-                limit 1
-            {%- endset %}
-            {%- set model_large_has_values = dbt_utils.get_single_value(run_query) == 'has_values' -%}
-        {%- else %}
-            {%- set model_large_has_values = false -%}
-        {%- endif %}
+        {%- set run_query %}
+            select 'has_values'
+            from {{ source(source_name, 'fivetran_formula_model') }}
+            where model_large is not null
+            limit 1
+        {%- endset %}
 
+        {# Use the run_query only if model_large_col_exists #}
+        {%- set model_large_has_values = (dbt_utils.get_single_value(run_query) == 'has_values') if model_large_col_exists else false -%}
         {%- set model_column_name = 'model_large' if model_large_has_values else 'model' -%}
 
         {# Check datatype #}
