@@ -2,7 +2,7 @@
 [PR #129](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/129) includes the following updates:
 
 ## Feature Update
-- Adds support for Redshift's `SUPER` data type in the `sfdc_formula_view` macro, enabling proper handling of large model configurations stored as JSON in the `fivetran_formula_model.model_large` column.
+- Applies **only** to Redshift: adds support for Redshift's `SUPER` data type in the `sfdc_formula_view` macro, enabling proper handling of large model configurations stored as JSON in the `fivetran_formula_model.model_large` column.
 
 ## Under the Hood
 - Refactors the handling of the `using_quoted_identifiers` argument of the `sfdc_formula_view` macro for readability and maintainability.
