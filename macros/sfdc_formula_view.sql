@@ -7,23 +7,53 @@
     )
 }}
 
--- Raise a warning if users are trying to use full_statement_version=false. We are keeping the variable in the macro, however, since we don't want errors if they previously set it to true.
+{# Raise a warning if users are trying to use full_statement_version=false. We are keeping the variable in the macro, however, since we don't want errors if they previously set it to true. #}
 {% if not full_statement_version %}
     {{ exceptions.warn("\nERROR: The full_statement_version=false, reserved_table_name, and fields_to_include parameters are no longer supported. Please update your " ~ this.identifier|upper ~ " model to remove these parameters.\n") }}
     See_full_model_error_in_log
 
 {% else %}
+    {% if target.type == 'redshift' %}
 
-    {% if using_quoted_identifiers %}
-    {%- set table_results = dbt_utils.get_column_values(table=source(source_name, 'fivetran_formula_model'), 
-                                                        column='"MODEL"' if target.type in ('snowflake') else '"model"' if target.type in ('postgres', 'redshift', 'snowflake') else '`model`', 
-                                                        where=("\"OBJECT\" = '" if target.type in ('snowflake') else "\"object\" = '" if target.type in ('postgres', 'redshift') else "`object` = '") ~ source_table ~ "'") -%}
+        {# Specifically for redshift we need to check if the model_large column exists and has non-null values. #}
+        {% set formula_model_columns = adapter.get_columns_in_relation(source(source_name, 'fivetran_formula_model')) %}
+        {%- set formula_model_column_names = formula_model_columns | map(attribute='name') | map('lower') | list -%}
+        {%- set model_large_col_exists = 'model_large' in formula_model_column_names -%}
+
+        {%- set run_query %}
+            select 'has_values'
+            from {{ source(source_name, 'fivetran_formula_model') }}
+            where model_large is not null
+            limit 1
+        {%- endset %}
+
+        {# Use the run_query only if model_large_col_exists #}
+        {%- set model_large_has_values = (dbt_utils.get_single_value(run_query) == 'has_values') if model_large_col_exists else false -%}
+        {%- set model_column_name = 'model_large' if model_large_has_values else 'model' -%}
+
+        {# Check datatype #}
+        {%- set ns = namespace(column_type='string') -%}
+        {%- for column in formula_model_columns if column.name|lower == model_column_name -%}
+            {%- set ns.column_type = column.dtype|lower -%}
+        {%- endfor -%}
+        {%- set model_column_datatype = ns.column_type -%}
 
     {% else %}
-    {%- set table_results = dbt_utils.get_column_values(table=source(source_name, 'fivetran_formula_model'), column='model', where="object = '" ~ source_table ~ "'") -%}
-
+        {%- set model_column_name = 'MODEL' if target.type == 'snowflake' else 'model' -%}
+        {%- set model_column_datatype = 'string' -%}
     {% endif %}
 
-    {{ table_results[0] }}
+    {%- set object_column = adapter.quote('OBJECT' if target.type == 'snowflake' else 'object') if using_quoted_identifiers else 'object' -%}
+    {%- set model_col = adapter.quote(model_column_name) if using_quoted_identifiers else model_column_name -%}
+
+    {%- set table_results = dbt_utils.get_column_values(
+        table=source(source_name, 'fivetran_formula_model'),
+        column=model_col,
+        where=object_column ~ " = '" ~ source_table ~ "'"
+    ) -%}
+
+    {# Use dbt's built-in JSON parsing to handle all escape sequences for SUPER datatype #}
+    {{ fromjson(table_results[0]) if model_column_datatype == 'super' else table_results[0] }}
+
 {% endif %}
 {%- endmacro -%}

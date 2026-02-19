@@ -1,5 +1,5 @@
 name: 'salesforce_formula_integration_tests'
-version: '0.11.0'
+version: '0.11.1'
 profile: 'integration_tests'
 config-version: 2
 vars:
@@ -15,12 +15,24 @@ seeds:
   salesforce_formula_integration_tests:
     +quote_columns: "{{ true if target.type == 'redshift' else false }}"
     opportunity:
-      +columns_types:
+      +column_types:
         amount: float
         probability: float
     fivetran_formula:
       +column_types:
         view_sql: "{{ 'varchar(256)'  if target.type in ('redshift','postgres') else 'string'}}"
+    fivetran_formula_model: 
+      +enabled: "{{ false if target.type == 'redshift' else true }}"
+    fivetran_formula_model_redshift:
+      +enabled: "{{ true if target.type == 'redshift' else false }}"
+      +alias: fivetran_formula_model
+      +column_types:
+        model_string: varchar(65535)
+      # Load as VARCHAR first, then convert to SUPER using JSON_PARSE() in a post-hook.
+      # This is necessary for testing the SUPER datatype with seed data.
+      +post-hook:
+        - "alter table {{ this }} add column model_large super default null"
+        - "update {{ this }} set model_large = json_parse(model_string)"
 
 dispatch:
   - macro_namespace: dbt_utils
