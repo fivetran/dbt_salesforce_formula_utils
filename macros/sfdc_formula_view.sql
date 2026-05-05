@@ -13,11 +13,13 @@
     See_full_model_error_in_log
 
 {% else %}
+
+    {% set formula_model_columns = adapter.get_columns_in_relation(source(source_name, 'fivetran_formula_model')) %}
+    {%- set formula_model_column_names = formula_model_columns | map(attribute='name') | map('lower') | list -%}
+
     {% if target.type == 'redshift' %}
 
         {# Specifically for redshift we need to check if the model_large column exists and has non-null values. #}
-        {% set formula_model_columns = adapter.get_columns_in_relation(source(source_name, 'fivetran_formula_model')) %}
-        {%- set formula_model_column_names = formula_model_columns | map(attribute='name') | map('lower') | list -%}
         {%- set model_large_col_exists = 'model_large' in formula_model_column_names -%}
 
         {%- set run_query %}
@@ -45,11 +47,16 @@
 
     {%- set object_column = adapter.quote('OBJECT' if target.type == 'snowflake' else 'object') if using_quoted_identifiers else 'object' -%}
     {%- set model_col = adapter.quote(model_column_name) if using_quoted_identifiers else model_column_name -%}
+    {%- set query_engine_col = adapter.quote('QUERY_ENGINE' if target.type == 'snowflake' else 'query_engine') if using_quoted_identifiers else 'query_engine' -%}
+    {%- set query_engine = target.type|lower if target.type|lower in ("bigquery", "snowflake", "redshift", "databricks") else "generic"  -%}
+
+    {# Detect if query_engine column exists — only MDLS destinations have it #}
+    {% set is_mdls = 'query_engine' in formula_model_column_names %}
 
     {%- set table_results = dbt_utils.get_column_values(
         table=source(source_name, 'fivetran_formula_model'),
         column=model_col,
-        where=object_column ~ " = '" ~ source_table ~ "'"
+        where=object_column ~ " = '" ~ source_table ~ "'" ~ (" and " ~ query_engine_col ~ " = '" ~ query_engine ~ "'" if is_mdls else "")
     ) -%}
 
     {# Use dbt's built-in JSON parsing to handle all escape sequences for SUPER datatype #}
