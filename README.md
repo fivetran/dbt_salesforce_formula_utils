@@ -19,7 +19,7 @@ This dbt package provides a macro which can be used to generate views on top of 
 This package enables you to accurately map Salesforce formulas to existing tables through macros and scripts. It creates enriched models with formula fields integrated into your Salesforce data.
 
 > Note: this package is distinct from the [Salesforce dbt package](https://github.com/fivetran/dbt_salesforce), which _transforms_ Salesforce data and outputs analytics-ready end models.
-> Additionally, please this solution **does not support** formula field history mode. The formula fields recreated from this package will only use the most recent formula available in your Salesforce environment.
+> Additionally, note that this solution **does not support** formula field history mode. The formula fields recreated from this package will only use the most recent formula available in your Salesforce environment.
 
 ### Output schema
 Final output tables are generated in the following target schema:
