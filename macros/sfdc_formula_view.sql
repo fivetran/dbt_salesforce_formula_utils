@@ -53,7 +53,7 @@
     {# Detect if query_engine column exists — only MDLS destinations have it #}
     {% set is_mdls = 'query_engine' in formula_model_column_names %}
 
-    {{ log('\nDestination: ' query_engine ~ '\nMDLS destination? ' ~ is_mdls|string, info=true) }}
+    {{ log('\nDestination: ' ~ query_engine ~ '\nMDLS destination? ' ~ is_mdls|string, info=true) }}
 
     {%- set table_results = dbt_utils.get_column_values(
         table=source(source_name, 'fivetran_formula_model'),
