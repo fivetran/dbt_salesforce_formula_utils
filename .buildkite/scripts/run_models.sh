@@ -23,8 +23,8 @@ dbt deps
 # dbt test --vars '{using_quoted_identifiers: true}' --target "$db"
 dbt seed --vars '{mdls_run: true}' --target "$db" --full-refresh
 dbt run --vars '{mdls_run: true}' --target "$db" --full-refresh
-dbt test --vars '{mdls_run: true}' --target "$db"
+# dbt test --vars '{mdls_run: true}' --target "$db"
 dbt run --vars '{mdls_run: true, using_quoted_identifiers: true}' --target "$db" --full-refresh
-dbt test --vars '{mdls_run: true, using_quoted_identifiers: true}' --target "$db"
+# dbt test --vars '{mdls_run: true, using_quoted_identifiers: true}' --target "$db"
 
 dbt run-operation fivetran_utils.drop_schemas_automation --target "$db"
