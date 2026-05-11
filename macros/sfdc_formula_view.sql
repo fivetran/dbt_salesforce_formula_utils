@@ -64,7 +64,7 @@
         ) -%}
 
         {# 2. Fall back to generic #}
-        {%- if results_ns.table_results | length == 0 -%}
+        {%- if not results_ns.table_results -%}
             {%- set results_ns.table_results = dbt_utils.get_column_values(
                 table=source(source_name, 'fivetran_formula_model'),
                 column=model_col,
@@ -73,7 +73,7 @@
         {%- endif -%}
 
         {# 3. Fall back to null query_engine #}
-        {%- if results_ns.table_results | length == 0 -%}
+        {%- if not results_ns.table_results -%}
             {%- set results_ns.table_results = dbt_utils.get_column_values(
                 table=source(source_name, 'fivetran_formula_model'),
                 column=model_col,
