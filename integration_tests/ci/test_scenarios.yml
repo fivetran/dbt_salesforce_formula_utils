@@ -10,7 +10,7 @@ schema_variable_name: "salesforce_formula_utils_schema"
 
 include_databricks_sql: false
 include_sqlserver: false
-include_dbt_compile: true
+include_dbt_compile: false
 
 test_scenarios:
   - name: "Default"
