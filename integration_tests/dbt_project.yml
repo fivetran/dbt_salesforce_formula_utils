@@ -1,5 +1,5 @@
 name: 'salesforce_formula_integration_tests'
-version: '0.11.1'
+version: '0.12.0'
 profile: 'integration_tests'
 config-version: 2
 vars:
@@ -22,9 +22,9 @@ seeds:
       +column_types:
         view_sql: "{{ 'varchar(256)'  if target.type in ('redshift','postgres') else 'string'}}"
     fivetran_formula_model: 
-      +enabled: "{{ false if target.type == 'redshift' else true }}"
+      +enabled: "{{ false if target.type == 'redshift' or var('mdls_run', false) else true }}"
     fivetran_formula_model_redshift:
-      +enabled: "{{ true if target.type == 'redshift' else false }}"
+      +enabled: "{{ true if target.type == 'redshift' and not var('mdls_run', false) else false }}"
       +alias: fivetran_formula_model
       +column_types:
         model_string: varchar(65535)
@@ -33,7 +33,10 @@ seeds:
       +post-hook:
         - "alter table {{ this }} add column model_large super default null"
         - "update {{ this }} set model_large = json_parse(model_string)"
-
+    fivetran_formula_model_mdls: 
+      +enabled: "{{ var('mdls_run', false) }}"
+      +alias: fivetran_formula_model
+      
 dispatch:
   - macro_namespace: dbt_utils
     search_order: ['spark_utils', 'dbt_utils']

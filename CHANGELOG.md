@@ -1,3 +1,8 @@
+# dbt_salesforce_formula_utils v0.12.0
+
+## Feature Update
+- Adds [Managed Data Lake Service](https://fivetran.com/docs/managed-data-lake-service) compatibility for **BigQuery**, **Snowflake**, **Redshift**, **Postgres**, and **Databricks** query engines.
+
 # dbt_salesforce_formula_utils v0.11.1
 [PR #129](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/129) includes the following updates:
 
