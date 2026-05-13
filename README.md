@@ -44,7 +44,7 @@ By default, this package materializes the following final tables:
 To use this dbt package, you must have the following:
 
 - At least one Fivetran Salesforce connection syncing data into your destination.
-- A **BigQuery**, **Snowflake**, **Redshift**, **PostgreSQL**, or **Databricks** destination. [Managed Data Lake Service](https://fivetran.com/docs/managed-data-lake-service#manageddatalakeservice) using **BigQuery**, **Snowflake**, **Redshift**, or **Databricks** as the query engine is also supported.
+- A **BigQuery**, **Snowflake**, **Redshift**, **PostgreSQL**, or **Databricks** destination. [Managed Data Lake Service](https://fivetran.com/docs/managed-data-lake-service#manageddatalakeservice) using these query engines is also supported.
 
 ## How do I use the dbt package?
 You can either add this dbt package in the Fivetran dashboard or import it into your dbt project:
