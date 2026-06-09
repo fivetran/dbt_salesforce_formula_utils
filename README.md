@@ -22,10 +22,14 @@ This package enables you to accurately map Salesforce formulas to existing table
 > Additionally, note that this solution **does not support** formula field history mode. The formula fields recreated from this package will only use the most recent formula available in your Salesforce environment.
 
 ### Output schema
-Final output tables are generated in the following target schema:
-
+Final output tables are generated in the following target schema for projects created on or after March 23, 2026:
 ```
-<your_database>.<connector/schema_name>_salesforce_formula_utils
+<your_database>.<connector/schema_name>_reports
+```
+
+Final output tables are generated in the following target schema for projects created before March 23, 2026:
+```
+<your_database>.<connector/schema_name>_quickstart
 ```
 
 ### Final output tables
