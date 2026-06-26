@@ -60,7 +60,7 @@
         {%- set results_ns.table_results = dbt_utils.get_column_values(
             table=source(source_name, 'fivetran_formula_model'),
             column=model_col,
-            where=object_column ~ " = '" ~ source_table ~ "' and " ~ query_engine_col ~ " = '" ~ query_engine ~ "'"
+            where=object_column ~ " = '" ~ source_table ~ "' and lower(" ~ query_engine_col ~ ") = '" ~ query_engine ~ "'"
         ) -%}
 
         {# 2. Fall back to generic #}
