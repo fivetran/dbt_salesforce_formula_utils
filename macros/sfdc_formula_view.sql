@@ -22,15 +22,15 @@
         {# Specifically for redshift we need to check if the model_large column exists and has non-null values. #}
         {%- set model_large_col_exists = 'model_large' in formula_model_column_names -%}
 
-        {%- set run_query %}
+        {%- set _model_large_check_query %}
             select 'has_values'
             from {{ source(source_name, 'fivetran_formula_model') }}
             where model_large is not null
             limit 1
         {%- endset %}
 
-        {# Use the run_query only if model_large_col_exists #}
-        {%- set model_large_has_values = (dbt_utils.get_single_value(run_query) == 'has_values') if model_large_col_exists else false -%}
+        {# Use the _model_large_check_query only if model_large_col_exists #}
+        {%- set model_large_has_values = (dbt_utils.get_single_value(_model_large_check_query) == 'has_values') if model_large_col_exists else false -%}
         {%- set model_column_name = 'model_large' if model_large_has_values else 'model' -%}
 
         {# Check datatype #}
@@ -56,29 +56,34 @@
     {%- set results_ns = namespace(table_results=[]) -%}
 
     {%- if is_mdls -%}
+        {# Use run_query directly to bypass dbt's relation cache, which excludes Redshift Spectrum external schemas #}
+
         {# 1. Try target-specific query_engine #}
-        {%- set results_ns.table_results = dbt_utils.get_column_values(
-            table=source(source_name, 'fivetran_formula_model'),
-            column=model_col,
-            where=object_column ~ " = '" ~ source_table ~ "' and lower(" ~ query_engine_col ~ ") = '" ~ query_engine ~ "'"
-        ) -%}
+        {%- set _q1 -%}
+            select {{ model_col }} as value
+            from {{ source(source_name, 'fivetran_formula_model') }}
+            where {{ object_column }} = '{{ source_table }}' and lower({{ query_engine_col }}) = '{{ query_engine }}'
+        {%- endset -%}
+        {%- set results_ns.table_results = run_query(_q1).columns[0].values() | list -%}
 
         {# 2. Fall back to generic #}
         {%- if not results_ns.table_results -%}
-            {%- set results_ns.table_results = dbt_utils.get_column_values(
-                table=source(source_name, 'fivetran_formula_model'),
-                column=model_col,
-                where=object_column ~ " = '" ~ source_table ~ "' and " ~ query_engine_col ~ " = 'generic'"
-            ) -%}
+            {%- set _q2 -%}
+                select {{ model_col }} as value
+                from {{ source(source_name, 'fivetran_formula_model') }}
+                where {{ object_column }} = '{{ source_table }}' and {{ query_engine_col }} = 'generic'
+            {%- endset -%}
+            {%- set results_ns.table_results = run_query(_q2).columns[0].values() | list -%}
         {%- endif -%}
 
         {# 3. Fall back to null query_engine #}
         {%- if not results_ns.table_results -%}
-            {%- set results_ns.table_results = dbt_utils.get_column_values(
-                table=source(source_name, 'fivetran_formula_model'),
-                column=model_col,
-                where=object_column ~ " = '" ~ source_table ~ "' and " ~ query_engine_col ~ " is null"
-            ) -%}
+            {%- set _q3 -%}
+                select {{ model_col }} as value
+                from {{ source(source_name, 'fivetran_formula_model') }}
+                where {{ object_column }} = '{{ source_table }}' and {{ query_engine_col }} is null
+            {%- endset -%}
+            {%- set results_ns.table_results = run_query(_q3).columns[0].values() | list -%}
         {%- endif -%}
 
     {%- else -%}
