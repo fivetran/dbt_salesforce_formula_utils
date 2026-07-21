@@ -1,6 +1,6 @@
 {%- macro sfdc_formula_view(source_table, source_name='salesforce', materialization='view', using_quoted_identifiers=False, full_statement_version=true, reserved_table_name=none, fields_to_include=none) -%}
 
--- Best practice for this model is to be materialized as view. That is why we have set that here.
+-- Default materialization is view. Redshift MDLS users must pass materialization='table' — Redshift Spectrum external schemas do not support views.
 {{
     config(
         materialized = materialization

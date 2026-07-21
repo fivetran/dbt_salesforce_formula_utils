@@ -1,7 +1,11 @@
 # dbt_salesforce_formula_utils v0.12.0
 
+[PR #132](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/132) includes the following updates:
+
 ## Feature Update
-- Adds [Managed Data Lake Service](https://fivetran.com/docs/managed-data-lake-service) compatibility for **BigQuery**, **Snowflake**, **Redshift**, **Postgres**, and **Databricks** query engines.
+- Adds [Managed Data Lake Service](https://fivetran.com/docs/managed-data-lake-service) (MDLS) compatibility for **BigQuery**, **Databricks**, and **Redshift** query engines.
+
+> Redshift MDLS limitation: Formula field models must be materialized as tables instead of views. Set the `materialization` argument in the `sfdc_formula_view()` macro to `'table'`.
 
 # dbt_salesforce_formula_utils v0.11.1
 [PR #129](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/129) includes the following updates:
