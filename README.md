@@ -44,7 +44,9 @@ By default, this package materializes the following final tables:
 To use this dbt package, you must have the following:
 
 - At least one Fivetran Salesforce connection syncing data into your destination.
-- A **BigQuery**, **Snowflake**, **Redshift**, **PostgreSQL**, or **Databricks** destination. [Managed Data Lake Services](https://fivetran.com/docs/managed-data-lake-service#manageddatalakeservice) (MDLS) using BigQuery, Redshift, or Databricks query engines are also supported.
+- A **BigQuery**, **Snowflake**, **Redshift**, **PostgreSQL**, or **Databricks** destination. [Managed Data Lake Services](https://fivetran.com/docs/managed-data-lake-service#manageddatalakeservice) (MDLS) using BigQuery, Redshift², or Databricks query engines are also supported.
+
+² Redshift MDLS is supported with a limitation: package models must be materialized as tables instead of views.
 
 ## How do I use the dbt package?
 You can either add this dbt package in the Fivetran dashboard or import it into your dbt project:
@@ -86,7 +88,9 @@ sources:
 
 To create a model that includes all formula fields:
 1. Create a new file in your models folder and name it `your_table_name_here.sql` (e.g. `customer.sql`; this is not necessary but recommended as best practice).
-2. Add the below snippet calling the [`sfdc_formula_view`](https://github.com/fivetran/dbt_salesforce_formula_utils#sfdc_formula_view-source) macro into the file. Update the `source_table` argument to be the source table name for which you are generating the model (e.g. `customer`). Set `materialization='table'` if you are using a Redshift Managed Data Lake Service.
+2. Add the below snippet calling the [`sfdc_formula_view`](https://github.com/fivetran/dbt_salesforce_formula_utils#sfdc_formula_view-source) macro into the file. Update the `source_table` argument to be the source table name for which you are generating the model (e.g. `customer`).
+3. Set the `materialization` to `'table'` if you are using a Redshift Managed Data Lake Service.
+
 ```sql
 {{ salesforce_formula_utils.sfdc_formula_view(source_table='your_source_table_name_here') }}
 ```
