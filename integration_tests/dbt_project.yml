@@ -34,7 +34,7 @@ seeds:
         - "alter table {{ this }} add column model_large super default null"
         - "update {{ this }} set model_large = json_parse(model_string)"
     fivetran_formula_model_mdls: 
-      +enabled: "{{ var('mdls_run', false) }}"
+      +enabled: "{{ true if var('mdls_run', false) and target.type != 'redshift' else false }}"
       +alias: fivetran_formula_model
     fivetran_formula_model_redshift_mdls:
       +enabled: "{{ true if target.type == 'redshift' and var('mdls_run', false) else false }}"
