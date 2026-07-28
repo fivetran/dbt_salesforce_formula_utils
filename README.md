@@ -48,9 +48,11 @@ By default, this package materializes the following final tables:
 To use this dbt package, you must have the following:
 
 - At least one Fivetran Salesforce connection syncing data into your destination.
-- A **BigQuery**, **Snowflake**, **Redshift**, **PostgreSQL**, or **Databricks** destination. [Managed Data Lake Services](https://fivetran.com/docs/managed-data-lake-service#manageddatalakeservice) (MDLS) using BigQuery, Redshift², or Databricks query engines are also supported.
+- A **BigQuery**, **Snowflake**, **Redshift**, **PostgreSQL**, or **Databricks** destination. [Managed Data Lake Services](https://fivetran.com/docs/managed-data-lake-service#manageddatalakeservice) (MDLS) using BigQuery, Databricks, Redshift², or Snowflake³ query engines are also supported.
 
-² Redshift MDLS is supported with a limitation: package models must be materialized as tables instead of views.
+² When using Redshift MDLS, package models must be materialized as tables instead of views.
+
+³ As of today, Snowflake MDLS requires the manual creation of a catalog integration in Fivetran and one external iceberg table per object in a native Snowflake database. This is a temporary solution that will be replaced and made more seamless.
 
 ## How do I use the dbt package?
 You can either add this dbt package in the Fivetran dashboard or import it into your dbt project:

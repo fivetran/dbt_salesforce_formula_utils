@@ -3,9 +3,11 @@
 [PR #132](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/132) includes the following updates:
 
 ## Feature Update
-- Adds [Managed Data Lake Service](https://fivetran.com/docs/managed-data-lake-service) (MDLS) compatibility for **BigQuery**, **Databricks**, and **Redshift** query engines.
+- Adds [Managed Data Lake Service](https://fivetran.com/docs/managed-data-lake-service) (MDLS) compatibility for **BigQuery**, **Databricks**, **Redshift²**, and **Snowflake³** query engines.
 
-> Redshift MDLS limitation: Formula field models must be materialized as tables instead of views. Set the `materialization` argument in the `sfdc_formula_view()` macro to `'table'`.
+² Redshift MDLS: Formula field models must be materialized as tables instead of views. Set the `materialization` argument in the `sfdc_formula_view()` macro to `'table'`.
+
+³ As of today, Snowflake MDLS requires the manual creation of a catalog integration in Fivetran and one external iceberg table per object in a native Snowflake database. This is a temporary solution that will be replaced and made more seamless.
 
 # dbt_salesforce_formula_utils v0.11.1
 [PR #129](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/129) includes the following updates:
