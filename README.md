@@ -48,7 +48,13 @@ By default, this package materializes the following final tables:
 To use this dbt package, you must have the following:
 
 - At least one Fivetran Salesforce connection syncing data into your destination.
-- A **BigQuery**, **Snowflake**, **Redshift**, **PostgreSQL**, or **Databricks** destination.
+- A **BigQuery**, **Snowflake**, **Redshift**, **PostgreSQL**, or **Databricks** destination. [Managed Data Lake Services](https://fivetran.com/docs/managed-data-lake-service#manageddatalakeservice)² (MDLS) using BigQuery, Databricks, Redshift³, or Snowflake⁴ query engines are also supported.
+
+² MDLS requires the same database to be used for source and output data.
+
+³ When using Redshift MDLS, package models must be materialized as tables instead of views.
+
+⁴ As of today, Snowflake MDLS requires the manual creation of a catalog integration in Fivetran and one external iceberg table per object in a native Snowflake database. This is a temporary solution that will be replaced and made more seamless.
 
 ## How do I use the dbt package?
 You can either add this dbt package in the Fivetran dashboard or import it into your dbt project:
@@ -64,7 +70,7 @@ The [`sfdc_formula_view`](https://github.com/fivetran/dbt_salesforce_formula_uti
 ```yml
 packages:
   - package: fivetran/salesforce_formula_utils
-    version: [">=0.11.0", "<0.12.0"] # we recommend using ranges to capture non-breaking changes automatically
+    version: [">=0.12.0", "<0.13.0"] # we recommend using ranges to capture non-breaking changes automatically
 ```
 
 ### Define required source tables
@@ -91,6 +97,8 @@ sources:
 To create a model that includes all formula fields:
 1. Create a new file in your models folder and name it `your_table_name_here.sql` (e.g. `customer.sql`; this is not necessary but recommended as best practice).
 2. Add the below snippet calling the [`sfdc_formula_view`](https://github.com/fivetran/dbt_salesforce_formula_utils#sfdc_formula_view-source) macro into the file. Update the `source_table` argument to be the source table name for which you are generating the model (e.g. `customer`).
+3. Set the `materialization` to `'table'` if you are using a Managed Data Lake Service with Redshift as the query engine.
+
 ```sql
 {{ salesforce_formula_utils.sfdc_formula_view(source_table='your_source_table_name_here') }}
 ```
@@ -131,7 +139,8 @@ This macro generates the final sql needed to join the Salesforce formula fields 
 * `source_table` (required): The table with which you are joining the formula fields.
 * `source_name` (optional, default = `'salesforce'`): The dbt source containing the table you want to join with formula fields (as defined [here](https://github.com/fivetran/dbt_salesforce_formula_utils/tree/main#step-3-define-required-source-tables)). Must contain the `fivetran_formula_model` table.
 * `using_quoted_identifiers` (optional, default = `false`): For warehouses with case sensitivity enabled this argument **must** be set to `true` in order for the underlying macros within this project to properly compile and execute successfully.
-* `materialization` (optional, default = `view`): By default the model will be materialized as a view. If you would like to materialize as a table, you can adjust using this argument.
+* `materialization` (optional, default = `view`): By default the model will be materialized as a view. If you would like to materialize as a table, you can adjust using this argument. **Redshift users running on Managed Data Lake Service (MDLS) must set this to `'table'`**, as Redshift Spectrum external schemas do not support views.
+
 ----
 
 ### sfdc_formula_model_automation.sh ([source](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/sfdc_formula_model_automation.sh))

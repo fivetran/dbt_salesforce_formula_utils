@@ -1,6 +1,6 @@
 {%- macro sfdc_formula_view(source_table, source_name='salesforce', materialization='view', using_quoted_identifiers=False, full_statement_version=true, reserved_table_name=none, fields_to_include=none) -%}
 
--- Best practice for this model is to be materialized as view. That is why we have set that here.
+-- Default materialization is view. Redshift MDLS users must pass materialization='table' — Redshift Spectrum external schemas do not support views.
 {{
     config(
         materialized = materialization
@@ -13,22 +13,24 @@
     See_full_model_error_in_log
 
 {% else %}
+
+    {% set formula_model_columns = adapter.get_columns_in_relation(source(source_name, 'fivetran_formula_model')) %}
+    {%- set formula_model_column_names = formula_model_columns | map(attribute='name') | map('lower') | list -%}
+
     {% if target.type == 'redshift' %}
 
         {# Specifically for redshift we need to check if the model_large column exists and has non-null values. #}
-        {% set formula_model_columns = adapter.get_columns_in_relation(source(source_name, 'fivetran_formula_model')) %}
-        {%- set formula_model_column_names = formula_model_columns | map(attribute='name') | map('lower') | list -%}
         {%- set model_large_col_exists = 'model_large' in formula_model_column_names -%}
 
-        {%- set run_query %}
+        {%- set _model_large_check_query %}
             select 'has_values'
             from {{ source(source_name, 'fivetran_formula_model') }}
             where model_large is not null
             limit 1
         {%- endset %}
 
-        {# Use the run_query only if model_large_col_exists #}
-        {%- set model_large_has_values = (dbt_utils.get_single_value(run_query) == 'has_values') if model_large_col_exists else false -%}
+        {# Use the _model_large_check_query only if model_large_col_exists #}
+        {%- set model_large_has_values = (dbt_utils.get_single_value(_model_large_check_query) == 'has_values') if model_large_col_exists else false -%}
         {%- set model_column_name = 'model_large' if model_large_has_values else 'model' -%}
 
         {# Check datatype #}
@@ -45,15 +47,55 @@
 
     {%- set object_column = adapter.quote('OBJECT' if target.type == 'snowflake' else 'object') if using_quoted_identifiers else 'object' -%}
     {%- set model_col = adapter.quote(model_column_name) if using_quoted_identifiers else model_column_name -%}
+    {%- set query_engine_col = adapter.quote('QUERY_ENGINE' if target.type == 'snowflake' else 'query_engine') if using_quoted_identifiers else 'query_engine' -%}
+    {%- set query_engine = target.type|lower -%}
 
-    {%- set table_results = dbt_utils.get_column_values(
-        table=source(source_name, 'fivetran_formula_model'),
-        column=model_col,
-        where=object_column ~ " = '" ~ source_table ~ "'"
-    ) -%}
+    {# Detect if query_engine column exists — only MDLS destinations have it #}
+    {% set is_mdls = 'query_engine' in formula_model_column_names %}
+
+    {%- set results_ns = namespace(table_results=[]) -%}
+
+    {%- if is_mdls -%}
+        {# Use run_query directly to bypass dbt's relation cache, which excludes Redshift Spectrum external schemas #}
+
+        {# 1. Try target-specific query_engine #}
+        {%- set _q1 -%}
+            select {{ model_col }} as value
+            from {{ source(source_name, 'fivetran_formula_model') }}
+            where {{ object_column }} = '{{ source_table }}' and lower({{ query_engine_col }}) = '{{ query_engine }}'
+        {%- endset -%}
+        {%- set results_ns.table_results = run_query(_q1).columns[0].values() | list -%}
+
+        {# 2. Fall back to generic #}
+        {%- if not results_ns.table_results -%}
+            {%- set _q2 -%}
+                select {{ model_col }} as value
+                from {{ source(source_name, 'fivetran_formula_model') }}
+                where {{ object_column }} = '{{ source_table }}' and {{ query_engine_col }} = 'generic'
+            {%- endset -%}
+            {%- set results_ns.table_results = run_query(_q2).columns[0].values() | list -%}
+        {%- endif -%}
+
+        {# 3. Fall back to null query_engine #}
+        {%- if not results_ns.table_results -%}
+            {%- set _q3 -%}
+                select {{ model_col }} as value
+                from {{ source(source_name, 'fivetran_formula_model') }}
+                where {{ object_column }} = '{{ source_table }}' and {{ query_engine_col }} is null
+            {%- endset -%}
+            {%- set results_ns.table_results = run_query(_q3).columns[0].values() | list -%}
+        {%- endif -%}
+
+    {%- else -%}
+        {%- set results_ns.table_results = dbt_utils.get_column_values(
+            table=source(source_name, 'fivetran_formula_model'),
+            column=model_col,
+            where=object_column ~ " = '" ~ source_table ~ "'"
+        ) -%}
+    {%- endif -%}
 
     {# Use dbt's built-in JSON parsing to handle all escape sequences for SUPER datatype #}
-    {{ fromjson(table_results[0]) if model_column_datatype == 'super' else table_results[0] }}
+    {{ fromjson(results_ns.table_results[0]) if model_column_datatype == 'super' else results_ns.table_results[0] }}
 
 {% endif %}
 {%- endmacro -%}

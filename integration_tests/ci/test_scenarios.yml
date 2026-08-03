@@ -21,3 +21,14 @@ test_scenarios:
     vars:
       using_quoted_identifiers: true
     include_incremental: false
+
+  - name: "MDLS"
+    vars:
+      mdls_run: true
+    include_incremental: false
+
+  - name: "MDLS quoted identifiers"
+    vars:
+      mdls_run: true
+      using_quoted_identifiers: true
+    include_incremental: false
