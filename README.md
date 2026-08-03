@@ -97,7 +97,7 @@ sources:
 To create a model that includes all formula fields:
 1. Create a new file in your models folder and name it `your_table_name_here.sql` (e.g. `customer.sql`; this is not necessary but recommended as best practice).
 2. Add the below snippet calling the [`sfdc_formula_view`](https://github.com/fivetran/dbt_salesforce_formula_utils#sfdc_formula_view-source) macro into the file. Update the `source_table` argument to be the source table name for which you are generating the model (e.g. `customer`).
-3. Set the `materialization` to `'table'` if you are using a Redshift Managed Data Lake Service.
+3. Set the `materialization` to `'table'` if you are using a Managed Data Lake Service with Redshift as the query engine.
 
 ```sql
 {{ salesforce_formula_utils.sfdc_formula_view(source_table='your_source_table_name_here') }}
