@@ -1,3 +1,11 @@
+# dbt_salesforce_formula_utils v0.12.1
+
+[PR #137](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/137) includes the following updates:
+
+## Feature Updates
+- Adds DuckDB as a supported destination.
+
+
 # dbt_salesforce_formula_utils v0.12.0
 
 [PR #132](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/132) includes the following updates:
