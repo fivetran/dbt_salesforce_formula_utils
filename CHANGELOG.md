@@ -1,4 +1,4 @@
-# dbt_salesforce_formula_utils v0.13.0
+# dbt_salesforce_formula_utils v0.13.0-a1
 
 [PR #136](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/136) includes the following updates:
 

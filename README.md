@@ -70,7 +70,7 @@ The [`sfdc_formula_view`](https://github.com/fivetran/dbt_salesforce_formula_uti
 ```yml
 packages:
   - package: fivetran/salesforce_formula_utils
-    version: [">=0.12.0", "<0.13.0"] # we recommend using ranges to capture non-breaking changes automatically
+    version: 0.13.0-a1
 ```
 
 ### Define required source tables

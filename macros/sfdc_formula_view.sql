@@ -14,9 +14,11 @@
 
 {% else %}
 
+    {# Identifiers for the destination. #}
     {%- set object_column = adapter.quote('OBJECT' if target.type == 'snowflake' else 'object') if using_quoted_identifiers else 'object' -%}
     {%- set target_engine = target.type | lower -%}
 
+    {# One warehouse query per model. `select *` so the returned columns tell us the destination shape. #}
     {%- set formula_query -%}
         select *
         from {{ source(source_name, 'fivetran_formula_model') }}
@@ -28,12 +30,13 @@
         {%- set results = run_query(formula_query) -%}
         {%- set column_names = results.column_names | map('lower') | list -%}
 
+        {# Find columns by name, read rows by position, so identifier casing doesn't matter. `query_engine` exists on MDLS only, `model_large` on Redshift only. #}
         {%- set model_idx = column_names.index('model') if 'model' in column_names else none -%}
         {%- set model_large_idx = column_names.index('model_large') if 'model_large' in column_names else none -%}
         {%- set query_engine_idx = column_names.index('query_engine') if 'query_engine' in column_names else none -%}
-        {%- set synced_idx = column_names.index('_fivetran_synced') if '_fivetran_synced' in column_names else none -%}
 
-        {%- set ns = namespace(best_row=none, best_rank=none, best_synced=none, used_model_large=false) -%}
+        {# Collect each usable row, keyed by its query engine. #}
+        {%- set by_engine = {} -%}
 
         {%- for row in results.rows -%}
 
@@ -44,38 +47,26 @@
             {%- set stored_engine = row[query_engine_idx] if query_engine_idx is not none else none -%}
             {%- set engine = ((stored_engine | trim | lower) or none) if stored_engine is not none else none -%}
 
-            {%- set row_rank = 1 if query_engine_idx is none
-                            else (1 if engine == target_engine
-                            else (2 if engine == 'generic'
-                            else (3 if engine is none else none))) -%}
-
-            {%- set row_synced = row[synced_idx] if synced_idx is not none else none -%}
-
-            {%- set supersedes_best = row_rank is not none
-                                    and (ns.best_rank is none
-                                        or row_rank < ns.best_rank
-                                        or (row_rank == ns.best_rank and row_synced is not none
-                                            and (ns.best_synced is none or row_synced > ns.best_synced))) -%}
-
-            {%- if row_value is not none and supersedes_best -%}
-                {%- set ns.best_row = row -%}
-                {%- set ns.best_rank = row_rank -%}
-                {%- set ns.best_synced = row_synced -%}
-                {%- set ns.used_model_large = row_model_large is not none -%}
+            {%- if row_value is not none -%}
+                {%- do by_engine.update({engine: row}) -%}
             {%- endif -%}
 
         {%- endfor -%}
 
-        {%- if ns.best_row is none -%}
+        {# Use the row matching this destination's engine, then 'generic', then unset. Non-MDLS has no query_engine column, so its single row lands under the unset key. #}
+        {%- set best_row = by_engine.get(target_engine) or by_engine.get('generic') or by_engine.get(none) -%}
+
+        {%- if best_row is none -%}
             {{ exceptions.raise_compiler_error("sfdc_formula_view: no formula model found for object '" ~ source_table ~ "'. Verify the object name matches a row in the fivetran_formula_model table") }}
         {%- endif -%}
 
-        {%- if ns.used_model_large and target.type == 'redshift' -%}
-            {{ fromjson(ns.best_row[model_large_idx]) }}
-        {%- elif ns.used_model_large -%}
-            {{ ns.best_row[model_large_idx] }}
+        {# Emit the model. Redshift returns model_large as a JSON-encoded SUPER value, so it needs unwrapping. #}
+        {%- set best_model_large = best_row[model_large_idx] if model_large_idx is not none else none -%}
+
+        {%- if best_model_large is not none -%}
+            {{ fromjson(best_model_large) }}
         {%- else -%}
-            {{ ns.best_row[model_idx] }}
+            {{ best_row[model_idx] }}
         {%- endif -%}
 
     {%- else -%}
