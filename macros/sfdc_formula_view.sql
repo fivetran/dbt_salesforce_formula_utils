@@ -14,88 +14,73 @@
 
 {% else %}
 
-    {% set formula_model_columns = adapter.get_columns_in_relation(source(source_name, 'fivetran_formula_model')) %}
-    {%- set formula_model_column_names = formula_model_columns | map(attribute='name') | map('lower') | list -%}
-
-    {% if target.type == 'redshift' %}
-
-        {# Specifically for redshift we need to check if the model_large column exists and has non-null values. #}
-        {%- set model_large_col_exists = 'model_large' in formula_model_column_names -%}
-
-        {%- set _model_large_check_query %}
-            select 'has_values'
-            from {{ source(source_name, 'fivetran_formula_model') }}
-            where model_large is not null
-            limit 1
-        {%- endset %}
-
-        {# Use the _model_large_check_query only if model_large_col_exists #}
-        {%- set model_large_has_values = (dbt_utils.get_single_value(_model_large_check_query) == 'has_values') if model_large_col_exists else false -%}
-        {%- set model_column_name = 'model_large' if model_large_has_values else 'model' -%}
-
-        {# Check datatype #}
-        {%- set ns = namespace(column_type='string') -%}
-        {%- for column in formula_model_columns if column.name|lower == model_column_name -%}
-            {%- set ns.column_type = column.dtype|lower -%}
-        {%- endfor -%}
-        {%- set model_column_datatype = ns.column_type -%}
-
-    {% else %}
-        {%- set model_column_name = 'MODEL' if target.type == 'snowflake' else 'model' -%}
-        {%- set model_column_datatype = 'string' -%}
-    {% endif %}
-
     {%- set object_column = adapter.quote('OBJECT' if target.type == 'snowflake' else 'object') if using_quoted_identifiers else 'object' -%}
-    {%- set model_col = adapter.quote(model_column_name) if using_quoted_identifiers else model_column_name -%}
-    {%- set query_engine_col = adapter.quote('QUERY_ENGINE' if target.type == 'snowflake' else 'query_engine') if using_quoted_identifiers else 'query_engine' -%}
-    {%- set query_engine = target.type|lower -%}
+    {%- set target_engine = target.type | lower -%}
 
-    {# Detect if query_engine column exists — only MDLS destinations have it #}
-    {% set is_mdls = 'query_engine' in formula_model_column_names %}
+    {%- set formula_query -%}
+        select *
+        from {{ source(source_name, 'fivetran_formula_model') }}
+        where {{ object_column }} = '{{ source_table }}'
+    {%- endset -%}
 
-    {%- set results_ns = namespace(table_results=[]) -%}
+    {%- if execute -%}
 
-    {%- if is_mdls -%}
-        {# Use run_query directly to bypass dbt's relation cache, which excludes Redshift Spectrum external schemas #}
+        {%- set results = run_query(formula_query) -%}
+        {%- set column_names = results.column_names | map('lower') | list -%}
 
-        {# 1. Try target-specific query_engine #}
-        {%- set _q1 -%}
-            select {{ model_col }} as value
-            from {{ source(source_name, 'fivetran_formula_model') }}
-            where {{ object_column }} = '{{ source_table }}' and lower({{ query_engine_col }}) = '{{ query_engine }}'
-        {%- endset -%}
-        {%- set results_ns.table_results = run_query(_q1).columns[0].values() | list -%}
+        {%- set model_idx = column_names.index('model') if 'model' in column_names else none -%}
+        {%- set model_large_idx = column_names.index('model_large') if 'model_large' in column_names else none -%}
+        {%- set query_engine_idx = column_names.index('query_engine') if 'query_engine' in column_names else none -%}
+        {%- set synced_idx = column_names.index('_fivetran_synced') if '_fivetran_synced' in column_names else none -%}
 
-        {# 2. Fall back to generic #}
-        {%- if not results_ns.table_results -%}
-            {%- set _q2 -%}
-                select {{ model_col }} as value
-                from {{ source(source_name, 'fivetran_formula_model') }}
-                where {{ object_column }} = '{{ source_table }}' and {{ query_engine_col }} = 'generic'
-            {%- endset -%}
-            {%- set results_ns.table_results = run_query(_q2).columns[0].values() | list -%}
+        {%- set ns = namespace(best_row=none, best_rank=none, best_synced=none, used_model_large=false) -%}
+
+        {%- for row in results.rows -%}
+
+            {%- set row_model_large = row[model_large_idx] if model_large_idx is not none else none -%}
+            {%- set row_model = row[model_idx] if model_idx is not none else none -%}
+            {%- set row_value = row_model_large if row_model_large is not none else row_model -%}
+
+            {%- set stored_engine = row[query_engine_idx] if query_engine_idx is not none else none -%}
+            {%- set engine = ((stored_engine | trim | lower) or none) if stored_engine is not none else none -%}
+
+            {%- set row_rank = 1 if query_engine_idx is none
+                            else (1 if engine == target_engine
+                            else (2 if engine == 'generic'
+                            else (3 if engine is none else none))) -%}
+
+            {%- set row_synced = row[synced_idx] if synced_idx is not none else none -%}
+
+            {%- set supersedes_best = row_rank is not none
+                                    and (ns.best_rank is none
+                                        or row_rank < ns.best_rank
+                                        or (row_rank == ns.best_rank and row_synced is not none
+                                            and (ns.best_synced is none or row_synced > ns.best_synced))) -%}
+
+            {%- if row_value is not none and supersedes_best -%}
+                {%- set ns.best_row = row -%}
+                {%- set ns.best_rank = row_rank -%}
+                {%- set ns.best_synced = row_synced -%}
+                {%- set ns.used_model_large = row_model_large is not none -%}
+            {%- endif -%}
+
+        {%- endfor -%}
+
+        {%- if ns.best_row is none -%}
+            {{ exceptions.raise_compiler_error("sfdc_formula_view: no formula model found for object '" ~ source_table ~ "'. Verify the object name matches a row in the fivetran_formula_model table") }}
         {%- endif -%}
 
-        {# 3. Fall back to null query_engine #}
-        {%- if not results_ns.table_results -%}
-            {%- set _q3 -%}
-                select {{ model_col }} as value
-                from {{ source(source_name, 'fivetran_formula_model') }}
-                where {{ object_column }} = '{{ source_table }}' and {{ query_engine_col }} is null
-            {%- endset -%}
-            {%- set results_ns.table_results = run_query(_q3).columns[0].values() | list -%}
+        {%- if ns.used_model_large and target.type == 'redshift' -%}
+            {{ fromjson(ns.best_row[model_large_idx]) }}
+        {%- elif ns.used_model_large -%}
+            {{ ns.best_row[model_large_idx] }}
+        {%- else -%}
+            {{ ns.best_row[model_idx] }}
         {%- endif -%}
 
     {%- else -%}
-        {%- set results_ns.table_results = dbt_utils.get_column_values(
-            table=source(source_name, 'fivetran_formula_model'),
-            column=model_col,
-            where=object_column ~ " = '" ~ source_table ~ "'"
-        ) -%}
+        select 1 as _fivetran_formula_placeholder where false
     {%- endif -%}
-
-    {# Use dbt's built-in JSON parsing to handle all escape sequences for SUPER datatype #}
-    {{ fromjson(results_ns.table_results[0]) if model_column_datatype == 'super' else results_ns.table_results[0] }}
 
 {% endif %}
 {%- endmacro -%}

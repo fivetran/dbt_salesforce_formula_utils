@@ -1,3 +1,13 @@
+# dbt_salesforce_formula_utils v0.13.0
+
+[PR #136](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/136) includes the following updates:
+
+## Bug Fixes
+- Reduces the `sfdc_formula_view` macro from up to five warehouse queries per model down to one, addressing the potential for intermittent failures when leveraging many formula field models.
+
+## Dependencies
+- Removes the `dbt_utils` dependency, which is no longer used by this package.
+
 # dbt_salesforce_formula_utils v0.12.0
 
 [PR #132](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/132) includes the following updates:
