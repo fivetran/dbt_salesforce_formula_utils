@@ -1,9 +1,23 @@
+# dbt_salesforce_formula_utils v0.13.0
+
+[PR #138](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/138) includes the following updates:
+
+## Bug Fixes
+- Reduces the `sfdc_formula_view` macro from up to five warehouse queries per model down to one, addressing the potential for intermittent failures when leveraging many formula field models.
+
 # dbt_salesforce_formula_utils v0.13.0-a1
 
 [PR #138](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/138) includes the following updates:
 
 ## Bug Fixes
 - Reduces the `sfdc_formula_view` macro from up to five warehouse queries per model down to one, addressing the potential for intermittent failures when leveraging many formula field models.
+
+# dbt_salesforce_formula_utils v0.12.1
+
+[PR #137](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/137) includes the following updates:
+
+## Feature Updates
+- Adds DuckDB as a supported destination.
 
 # dbt_salesforce_formula_utils v0.12.0
 

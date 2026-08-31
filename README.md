@@ -48,7 +48,7 @@ By default, this package materializes the following final tables:
 To use this dbt package, you must have the following:
 
 - At least one Fivetran Salesforce connection syncing data into your destination.
-- A **BigQuery**, **Snowflake**, **Redshift**, **PostgreSQL**, or **Databricks** destination. [Managed Data Lake Services](https://fivetran.com/docs/managed-data-lake-service#manageddatalakeservice)² (MDLS) using BigQuery, Databricks, Redshift³, or Snowflake⁴ query engines are also supported.
+- A **BigQuery**, **Snowflake**, **Redshift**, **PostgreSQL**, **Databricks**, or **DuckDB** destination. [Managed Data Lake Services](https://fivetran.com/docs/managed-data-lake-service#manageddatalakeservice)² (MDLS) using BigQuery, Databricks, Redshift³, or Snowflake⁴ query engines are also supported.
 
 ² MDLS requires the same database to be used for source and output data.
 
