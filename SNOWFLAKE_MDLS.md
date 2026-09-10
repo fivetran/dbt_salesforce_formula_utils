@@ -71,8 +71,7 @@ catalogs:
           iceberg_version: 3
           catalog_linked_database: my_lakehouse   # the CLD's name
 ```
-```yaml
-# dbt_project.yml
+`dbt_project.yml`:
 models:
   +materialized: table       # required — see drawbacks below
   +table_format: iceberg
@@ -143,9 +142,9 @@ database. Views, dynamic tables, streams, tasks, cloning of everything
 *except* the Iceberg tables themselves, replication — all work normally, and
 coexist with the registered Iceberg tables without restriction.
 
-**dbt config for reading from this path** — since these are just native
+**dbt config for reading from this path:** Since these are just native
 tables from dbt's point of view, no special `catalogs.yml` entry is required
-to *read* them:
+to *read* them. Only a `source` configuration is necessary:
 ```yaml
 # models/sources.yml
 sources:
@@ -216,10 +215,10 @@ recommendation — the table above is this guide's synthesis from the
 individual CLD/Iceberg-table doc pages, not a quoted Snowflake position.
 Treat it as guidance, not gospel.
 
-## 3. Package compatibility notes (apply to either path)
+## 3. Package compatibility notes (applies to either path)
 
-- **Require `fivetran/salesforce_formula_utils >= 0.12.0`.** Versions before
-  that fail against any MDLS/catalog-backed source (CLD or otherwise) with a
+- **Requires `fivetran/salesforce_formula_utils >= 0.12.0`.** Prior versions
+  fail against any MDLS/catalog-backed source (CLD or otherwise) with a
   `load_relation()` error inside `dbt_utils.get_column_values()`.
 - The v0.12.0+ macro's MDLS code path has **no explicit tie-breaker**
   (`ORDER BY`/`LIMIT`) if `fivetran_formula_model` ever has more than one row
@@ -265,10 +264,8 @@ sources:
 ```
 ```sql
 -- models/account.sql
-{{ config(materialized='table') }}
 {{ salesforce_formula_utils.sfdc_formula_view(source_table='account', materialization='table') }}
 
 -- models/user_role.sql
-{{ config(materialized='table') }}
 {{ salesforce_formula_utils.sfdc_formula_view(source_table='user_role', materialization='table') }}
 ```
