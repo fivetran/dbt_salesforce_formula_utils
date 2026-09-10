@@ -4,8 +4,6 @@
 
 ## Bug Fixes
 - Fixes a Redshift-specific compilation error where `sfdc_formula_view` emits the literal string `None` when `fivetran_formula_model.model_large` is a plain `VARCHAR` column rather than a `SUPER` column.
-  - Root cause: the v0.13.0 query redesign calls `fromjson()` unconditionally on `model_large`. When the column holds raw SQL text instead of JSON, `fromjson()` silently returns its `none` default, which Jinja renders as the literal string `None` in the compiled SQL — producing a `syntax error at or near "None"` at runtime.
-  - Fix: attempt `fromjson()` and fall back to emitting the raw column value when parsing fails, so both `SUPER` and `VARCHAR` destinations are handled correctly.
 
 # dbt_salesforce_formula_utils v0.13.0
 
