@@ -27,7 +27,7 @@ seeds:
       +enabled: "{{ true if target.type == 'duckdb' and not var('mdls_run', false) else false }}"
       +alias: fivetran_formula_model
     fivetran_formula_model_redshift:
-      +enabled: "{{ true if target.type == 'redshift' and not var('mdls_run', false) and not var('varchar_run', false) else false }}"
+      +enabled: "{{ true if target.type == 'redshift' and not var('mdls_run', false) else false }}"
       +alias: fivetran_formula_model
       +column_types:
         model_string: varchar(65535)
@@ -39,11 +39,6 @@ seeds:
     fivetran_formula_model_mdls: 
       +enabled: "{{ true if var('mdls_run', false) and target.type != 'redshift' else false }}"
       +alias: fivetran_formula_model
-    fivetran_formula_model_redshift_varchar:
-      +enabled: "{{ true if target.type == 'redshift' and var('varchar_run', false) else false }}"
-      +alias: fivetran_formula_model
-      +column_types:
-        model_large: varchar(65535)
     fivetran_formula_model_redshift_mdls:
       +enabled: "{{ true if target.type == 'redshift' and var('mdls_run', false) else false }}"
       +alias: fivetran_formula_model
