@@ -57,8 +57,9 @@ shows up as an **externally managed Iceberg table** automatically — no
 manual registration, ever. This includes every new Salesforce object a
 customer enables in Fivetran later.
 
-**dbt config (`catalogs.yml`) for this path:**
-```yaml
+**dbt config for this path:**
+```yml
+# catalogs.yml
 catalogs:
   - name: my_catalog_writer
     active_write_integration: snowflake_write_integration
@@ -71,9 +72,10 @@ catalogs:
           iceberg_version: 3
           catalog_linked_database: my_lakehouse   # the CLD's name
 ```
-`dbt_project.yml`:
+
+```yml
+# dbt_project.yml
 models:
-  +materialized: table       # required — see drawbacks below
   +table_format: iceberg
   +catalog_name: my_catalog_writer
 ```
@@ -145,7 +147,7 @@ coexist with the registered Iceberg tables without restriction.
 **dbt config for reading from this path:** Since these are just native
 tables from dbt's point of view, no special `catalogs.yml` entry is required
 to *read* them. Only a `source` configuration is necessary:
-```yaml
+```yml
 # models/sources.yml
 sources:
   - name: salesforce
@@ -157,12 +159,12 @@ sources:
 **dbt config for writing from this path** — write plain Snowflake objects,
 not new Iceberg tables, by pointing at the native database directly and
 opting out of the Iceberg catalog machinery:
-```sql
-{{ config(
-    materialized='view',        -- or 'table' — both work here, unlike a CLD
-    catalog_name=none,          -- unset the project's default Iceberg catalog
-    database='my_native_db'
-) }}
+```yml
+# dbt_project.yml
+models:
+  +table_format: iceberg
+  +catalog_name: my_catalog_writer # unset the project's default Iceberg catalog
+  +database: my_native_db
 ```
 
 **Not yet validated:** having *dbt itself* create new, individually-cataloged
@@ -225,15 +227,15 @@ Treat it as guidance, not gospel.
   for the same `(object, query_engine)` pair — e.g. after a resync leaves
   stale rows around. Worth monitoring against a fresh sync.
 - `packages.yml`:
-  ```yaml
+```yml
   packages:
     - package: fivetran/salesforce_formula_utils
       version: [">=0.12.0", "<0.13.0"]
-  ```
+```
 
 ## 4. Example: Path A (CLD) end to end
 
-```yaml
+```yml
 # catalogs.yml
 catalogs:
   - name: my_catalog_writer
@@ -247,14 +249,15 @@ catalogs:
           iceberg_version: 3
           catalog_linked_database: my_lakehouse
 ```
-```yaml
+```yml
 # dbt_project.yml (relevant excerpt)
 models:
   +materialized: table
   +table_format: iceberg
   +catalog_name: my_catalog_writer
 ```
-```yaml
+
+```yml
 # models/sources.yml
 sources:
   - name: salesforce
@@ -262,6 +265,7 @@ sources:
     database: my_lakehouse
     tables: [fivetran_formula_model, account, user_role]
 ```
+
 ```sql
 -- models/account.sql
 {{ salesforce_formula_utils.sfdc_formula_view(source_table='account', materialization='table') }}
