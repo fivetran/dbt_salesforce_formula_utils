@@ -21,8 +21,8 @@ Two things matter specifically for `salesforce_formula_utils`:
   replicate that computation as static data. Instead, `fivetran_formula_model`
   ships the *computation itself* as generated SQL text: one row per
   Salesforce object per target query engine (`object`, `query_engine`,
-  `model`, `_fivetran_synced` columns). `salesforce_formula_utils.sfdc_formula_view()`
-  reads the right row for your engine and materializes it as a model.
+  `model`, `_fivetran_synced` columns). The `salesforce_formula_utils.sfdc_formula_view()`
+  macro reads the right row for your engine and materializes it as a model.
 
 **Prerequisite this guide assumes you've already done:** created a Snowflake
 [catalog integration](https://docs.snowflake.com/en/user-guide/tables-iceberg-configure-catalog-integration-rest)
@@ -88,14 +88,11 @@ models:
   require v3.
 - **Materialize as `table`, never `view`.** CLDs only support schemas,
   externally managed Iceberg tables, and database roles — nothing else. A
-  view will fail with `This operation is not supported in a catalog-linked
-  database`.
+  view will fail with `This operation is not supported in a catalog-linked database`.
+  The materialization can be set as an argument in `sfdc_formula_view()`.
 - Make sure `ALLOWED_WRITE_OPERATIONS = ALL` is set on the CLD (it's the
   default, but confirm) — `NONE` makes it read-only and every dbt write
   fails.
-- Use **`fivetran/salesforce_formula_utils` v0.12.0 or later.** Earlier
-  versions fail against CLD sources with a `load_relation()` error inside
-  `dbt_utils.get_column_values()`.
 
 **Drawbacks:**
 - No views, dynamic tables, streams, tasks, or any non-Iceberg object type —
@@ -168,10 +165,9 @@ models:
 ```
 
 **Not yet validated:** having *dbt itself* create new, individually-cataloged
-(non-CLD) Iceberg tables via `catalogs.yml`. If you need dbt to *write new
-Iceberg tables* under Path B (as opposed to writing plain views/tables, or
-reading pre-registered Iceberg tables), test that specifically — don't
-assume it works the same way as Path A.
+(non-CLD) Iceberg tables via `catalogs.yml`. If you need dbt to *write new Iceberg tables* 
+under Path B (as opposed to writing plain views/tables, or reading pre-registered Iceberg tables), 
+test that specifically — don't assume it works the same way as Path A.
 
 **Best practices:**
 - Use this path when you only need a **curated subset** of the MDLS catalog —
@@ -181,9 +177,6 @@ assume it works the same way as Path A.
 - Budget for registration overhead: every new Salesforce object Fivetran adds
   later needs an explicit `CREATE ICEBERG TABLE` here. Nothing appears
   automatically the way it does in a CLD.
-- Still use v0.12.0+ of the package — the MDLS compatibility fix in the macro
-  itself (detecting the `query_engine` column) applies regardless of which
-  Snowflake pattern reads the table.
 
 **Drawbacks:**
 - Manual, ongoing registration effort — no auto-discovery of new
@@ -215,23 +208,11 @@ of objects.
 Snowflake's own docs don't publish this comparison as a stated
 recommendation — the table above is this guide's synthesis from the
 individual CLD/Iceberg-table doc pages, not a quoted Snowflake position.
-Treat it as guidance, not gospel.
 
 ## 3. Package compatibility notes (applies to either path)
 
 - **Requires `fivetran/salesforce_formula_utils >= 0.12.0`.** Prior versions
-  fail against any MDLS/catalog-backed source (CLD or otherwise) with a
-  `load_relation()` error inside `dbt_utils.get_column_values()`.
-- The v0.12.0+ macro's MDLS code path has **no explicit tie-breaker**
-  (`ORDER BY`/`LIMIT`) if `fivetran_formula_model` ever has more than one row
-  for the same `(object, query_engine)` pair — e.g. after a resync leaves
-  stale rows around. Worth monitoring against a fresh sync.
-- `packages.yml`:
-```yml
-  packages:
-    - package: fivetran/salesforce_formula_utils
-      version: [">=0.12.0", "<0.13.0"]
-```
+  fail against any MDLS/catalog-backed source (CLD or otherwise).
 
 ## 4. Example: Path A (CLD) end to end
 
@@ -252,7 +233,6 @@ catalogs:
 ```yml
 # dbt_project.yml (relevant excerpt)
 models:
-  +materialized: table
   +table_format: iceberg
   +catalog_name: my_catalog_writer
 ```
