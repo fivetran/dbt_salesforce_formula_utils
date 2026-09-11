@@ -1,3 +1,10 @@
+# dbt_salesforce_formula_utils v0.13.1
+
+[PR #139](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/139) includes the following updates:
+
+## Bug Fixes
+- Fixes a Redshift-specific compilation error where `sfdc_formula_view` emits the literal string `None` when `fivetran_formula_model.model_large` is a plain `VARCHAR` column rather than a `SUPER` column.
+
 # dbt_salesforce_formula_utils v0.13.0
 
 [PR #138](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/138) includes the following updates:

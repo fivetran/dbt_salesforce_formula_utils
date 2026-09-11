@@ -5,3 +5,7 @@ logs/
 env/
 package-lock.yml
 dbt_internal_packages/
+models/lead_table.sql
+models/lead_view.sql
+models/lead_quoted_table.sql
+models/lead_quoted_view.sql
