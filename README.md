@@ -54,7 +54,7 @@ To use this dbt package, you must have the following:
 
 ³ When using Redshift MDLS, package models must be materialized as tables instead of views.
 
-⁴ As of today, Snowflake MDLS requires the manual creation of a catalog integration in Fivetran and one external iceberg table per object in a native Snowflake database. This is a temporary solution that will be replaced and made more seamless.
+⁴ As of today, Snowflake MDLS requires the manual creation of a catalog integration in Fivetran and one external iceberg table per object in a native Snowflake database. This is a temporary solution that will be replaced and made more seamless. See [SNOWFLAKE_MDLS.md](SNOWFLAKE_MDLS.md) for a detailed guide on setting this up, including the tradeoffs between a catalog-linked database and individually-registered tables.
 
 ## How do I use the dbt package?
 You can either add this dbt package in the Fivetran dashboard or import it into your dbt project:
