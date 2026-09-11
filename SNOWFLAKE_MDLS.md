@@ -163,7 +163,7 @@ opting out of the Iceberg catalog machinery:
 # dbt_project.yml
 models:
   +table_format: iceberg
-  +catalog_name: my_catalog_writer # unset the project's default Iceberg catalog
+  +catalog_name: # unset the project's default Iceberg catalog
   +database: my_native_db
 ```
 
