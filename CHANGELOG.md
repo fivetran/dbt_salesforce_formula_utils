@@ -5,6 +5,9 @@
 ## Bug Fixes
 - Fixes a Redshift-specific compilation error where `sfdc_formula_view` emits the literal string `None` when `fivetran_formula_model.model_large` is a plain `VARCHAR` column rather than a `SUPER` column.
 
+## Feature Updates
+- Documents required architectural decisions prior to running the package using Fivetran's Managed Data Lake Service (MDLS) with **Snowflake** as the query engine specifically. See the guide [here](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/SNOWFLAKE_MDLS.md).
+
 # dbt_salesforce_formula_utils v0.13.0
 
 [PR #138](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/138) includes the following updates:
