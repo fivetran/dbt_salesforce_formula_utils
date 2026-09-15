@@ -60,11 +60,16 @@
             {{ exceptions.raise_compiler_error("sfdc_formula_view: no formula model found for object '" ~ source_table ~ "'. Verify the object name matches a row in the fivetran_formula_model table") }}
         {%- endif -%}
 
-        {# Emit the model. Redshift returns model_large as a JSON-encoded SUPER value, so it needs unwrapping. #}
+        {# Emit the model. On Redshift, model_large may be a JSON-encoded SUPER value that needs unwrapping
+           via fromjson(), or it may be plain VARCHAR holding raw SQL. Fall back to the raw value when
+           fromjson() returns none (parse failure), so a VARCHAR model_large never silently becomes None. #}
         {%- set best_model_large = best_row[model_large_idx] if model_large_idx is not none else none -%}
+        {%- set unwrapped = fromjson(best_model_large) if best_model_large is not none else none -%}
 
-        {%- if best_model_large is not none -%}
-            {{ fromjson(best_model_large) }}
+        {%- if unwrapped is not none -%}
+            {{ unwrapped }}
+        {%- elif best_model_large is not none -%}
+            {{ best_model_large }}
         {%- else -%}
             {{ best_row[model_idx] }}
         {%- endif -%}
