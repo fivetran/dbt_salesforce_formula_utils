@@ -7,22 +7,9 @@ engine.
 
 ## 1. The common architecture
 
-Fivetran syncs Salesforce and lands the data as **Apache Iceberg** tables in
+Fivetran syncs Salesforce and lands Salesforce data as **Apache Iceberg** tables in
 cloud object storage, cataloged in a Fivetran-hosted **Polaris** (Iceberg
 REST) catalog. This is true no matter which Snowflake pattern you pick below.
-
-Two things matter specifically for `salesforce_formula_utils`:
-
-- **Raw object tables** (`account`, `contact`, `opportunity`, `user_role`, ...)
-  land as ordinary Iceberg tables, one per Salesforce object.
-- **`fivetran_formula_model`** is a special metadata table Fivetran also
-  lands. Salesforce formula fields (fields computed from other fields) aren't
-  stored values — Salesforce computes them at read time, and Fivetran can't
-  replicate that computation as static data. Instead, `fivetran_formula_model`
-  ships the *computation itself* as generated SQL text: one row per
-  Salesforce object per target query engine (`object`, `query_engine`,
-  `model`, `_fivetran_synced` columns). The `salesforce_formula_utils.sfdc_formula_view()`
-  macro reads the right row for your engine and materializes it as a model.
 
 **Prerequisite this guide assumes you've already done:** created a Snowflake
 [catalog integration](https://docs.snowflake.com/en/user-guide/tables-iceberg-configure-catalog-integration-rest)
