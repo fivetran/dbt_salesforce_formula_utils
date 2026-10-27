@@ -11,6 +11,10 @@
 
 schema_variable_name: "salesforce_schema"
 
+# TEMPORARY: testing solution_analytics#23 (explicit DuckDB CI database) before it merges to main.
+# Revert this line before merging this PR.
+test_branch: "bot/duckdb-v2-explicit-database"
+
 include_databricks_sql: false
 include_sqlserver: false
 include_duckdb: true
