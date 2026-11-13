@@ -1,0 +1,9 @@
+version: 0.13.2
+pr_number: 142
+under_the_hood:
+- description: Updates the column documentation for the `account_view`, `opportunity_view`,
+    `user_view`, and `user_role_view` models so the published dbt docs match the columns
+    the `sfdc_formula_view` macro generates. Corrects two renamed formula columns,
+    removes a duplicate `Pricebook2Id` entry, and documents the previously missing
+    `is_active_user` and `developer_and_id` columns.
+date: '2026-11-13'

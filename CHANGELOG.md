@@ -1,3 +1,10 @@
+# dbt_salesforce_formula_utils v0.13.2
+
+[PR #142](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/142) includes the following updates:
+
+## Under the Hood
+- Updates the column documentation for the `account_view`, `opportunity_view`, `user_view`, and `user_role_view` models so the published dbt docs match the columns the `sfdc_formula_view` macro generates. Corrects two renamed formula columns, removes a duplicate `Pricebook2Id` entry, and documents the previously missing `is_active_user` and `developer_and_id` columns.
+
 # dbt_salesforce_formula_utils v0.13.1
 
 [PR #140](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/140) includes the following updates:
