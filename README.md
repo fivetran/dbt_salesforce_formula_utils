@@ -13,7 +13,7 @@ This dbt package provides a macro which can be used to generate views on top of 
   - [GitHub repository](https://github.com/fivetran/dbt_salesforce_formula_utils)
   - [Changelog](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/CHANGELOG.md)
 - dbt Core™ supported versions
-  - `>=1.3.0, <3.0.0`
+  - `>=1.10.0, <3.0.0`
 
 ## What does this dbt package do?
 This package enables you to accurately map Salesforce formulas to existing tables through macros and scripts. It creates enriched models with formula fields integrated into your Salesforce data.
@@ -70,7 +70,7 @@ The [`sfdc_formula_view`](https://github.com/fivetran/dbt_salesforce_formula_uti
 ```yml
 packages:
   - package: fivetran/salesforce_formula_utils
-    version: [">=0.13.0", "<0.14.0"] # we recommend using ranges to capture non-breaking changes automatically
+    version: [">=0.15.0", "<0.16.0"] # we recommend using ranges to capture non-breaking changes automatically
 ```
 
 ### Define required source tables
@@ -178,7 +178,7 @@ The Fivetran team maintaining this package only maintains the [latest version](h
 ### Contributions
 A small team of analytics engineers at Fivetran develops these dbt packages. However, the packages are made better by community contributions.
 
-We highly encourage and welcome contributions to this package. Learn how to contribute to a package in dbt's [Contributing to an external dbt package article](https://discourse.getdbt.com/t/contributing-to-a-dbt-package/657).
+We highly encourage and welcome contributions to this package. Learn how to contribute to a package by reading the guidelines in our [CONTRIBUTING.md](https://github.com/fivetran/dbt_salesforce_formula_utils/blob/main/CONTRIBUTING.md) document.
 
 <!--section-end-->
 
