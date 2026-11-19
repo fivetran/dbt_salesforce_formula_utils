@@ -3,14 +3,5 @@ pr_number: 143
 new_features:
 - description: Raises the minimum dbt version to 1.10.0.
 under_the_hood:
-- description: Renames `multiple number of employees by 2` to `account_test_formula`
-    in the `account_view` model of the `stg_fivetran_formula.yml` file.
-- description: Removes `Pricebook2Id` from the `opportunity_view` model of the `stg_fivetran_formula.yml`
-    file.
-- description: Renames `amount times probability` to `opportunity_test_formula` in
-    the `opportunity_view` model of the `stg_fivetran_formula.yml` file.
-- description: Adds `is_active_user` to the `user_view` model of the `stg_fivetran_formula.yml`
-    file.
-- description: Adds `developer_and_id` to the `user_role_view` model of the `stg_fivetran_formula.yml`
-    file.
+- description: Updates yml column documentation to match model output.
 date: '2026-11-19'
