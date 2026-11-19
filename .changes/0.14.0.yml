@@ -13,3 +13,4 @@ under_the_hood:
     file.
 - description: Adds `developer_and_id` to the `user_role_view` model of the `stg_fivetran_formula.yml`
     file.
+date: '2026-11-19'
