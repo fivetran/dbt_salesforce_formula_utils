@@ -6,11 +6,7 @@
 - Raises the minimum dbt version to 1.10.0.
 
 ## Under the Hood
-- Renames `multiple number of employees by 2` to `account_test_formula` in the `account_view` model of the `stg_fivetran_formula.yml` file.
-- Removes `Pricebook2Id` from the `opportunity_view` model of the `stg_fivetran_formula.yml` file.
-- Renames `amount times probability` to `opportunity_test_formula` in the `opportunity_view` model of the `stg_fivetran_formula.yml` file.
-- Adds `is_active_user` to the `user_view` model of the `stg_fivetran_formula.yml` file.
-- Adds `developer_and_id` to the `user_role_view` model of the `stg_fivetran_formula.yml` file.
+- Updates yml column documentation to match model output.
 
 # dbt_salesforce_formula_utils v0.13.1
 
