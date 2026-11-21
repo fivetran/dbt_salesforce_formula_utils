@@ -1,3 +1,13 @@
+# dbt_salesforce_formula_utils v0.14.0
+
+[PR #143](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/143) includes the following updates:
+
+## Feature Update
+- **Breaking change**: Raises the minimum dbt version to 1.10.0.
+
+## Under the Hood
+- Updates yml column documentation to match model output.
+
 # dbt_salesforce_formula_utils v0.13.1
 
 [PR #140](https://github.com/fivetran/dbt_salesforce_formula_utils/pull/140) includes the following updates:
